@@ -67,11 +67,13 @@ angular.module('bahmni.clinical')
             };
 
             $scope.$on("event:printVisitTab", function () {
+                $scope.isBeingPrinted = true;
                 printer.printFromScope("common/views/visitTabPrint.html", $scope);
             });
 
             $scope.$on("event:clearVisitBoard", function () {
                 $scope.clearBoard = true;
+                $scope.isBeingPrinted = false;
                 $timeout(function () {
                     $scope.clearBoard = false;
                 });
@@ -99,7 +101,9 @@ angular.module('bahmni.clinical')
 
             var printOnPrint = function () {
                 if ($stateParams.print) {
+                    $scope.isBeingPrinted = true;
                     printer.printFromScope("common/views/visitTabPrint.html", $scope, function () {
+                        $scope.isBeingPrinted = false;
                         window.close();
                     });
                 }

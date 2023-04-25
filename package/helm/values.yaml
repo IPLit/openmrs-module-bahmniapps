@@ -10,8 +10,8 @@ metadata:
     environment: dev
 
 image:
-  repository: bahmni
-  name: bahmni-web
+  repository: infoiplitin
+  name: bahmni-iplit-web
   tag: latest
 
 service:

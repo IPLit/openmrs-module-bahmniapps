@@ -10,7 +10,20 @@
         <i class="fa fa-external-link"></i>
     </h2>
     <div>
-        <section class="block hierarchy"  ng-if="::config.showHeader" ng-hide="::noOrdersMessage">
+		<div ng-if="::!isOnDashboard">
+			<span ng-repeat="bahmniOrder in ::bahmniOrders">
+				<span ng-if="bahmniOrder.commentToFulfiller" class="header">
+					<strong>{{::translatedLabel(bahmniOrder.concept)}}</strong>
+					<span> ({{bahmniOrder.commentToFulfiller}})</span>
+				</span>
+				<span ng-if="!bahmniOrder.commentToFulfiller" class="header">
+					<strong>{{::translatedLabel(bahmniOrder.concept)}}</strong>
+				</span>
+				<span ng-if="!$last">, </span>
+			</span>
+		</div>
+
+        <section class="block hierarchy"  ng-if="::(config.showHeader && isOnDashboard)" ng-hide="::noOrdersMessage">
             <ul class="form-field">
                 <li ng-repeat="bahmniOrder in ::bahmniOrders">
                     <span class="tree-list-item row-click toggle-container" toggle="bahmniOrder.isOpen">
@@ -33,7 +46,7 @@
                 </li>
             </ul>
         </section>
-        <section class="block hierarchy"  ng-if="::!config.showHeader" ng-hide="noOrdersMessage">
+        <section class="block hierarchy"  ng-if="::(!config.showHeader && isOnDashboard)" ng-hide="noOrdersMessage">
             <ul class="form-field">
                 <li ng-repeat="bahmniOrder in ::bahmniOrders">
                     <ul ng-if="!bahmniOrder.hideIfEmpty">

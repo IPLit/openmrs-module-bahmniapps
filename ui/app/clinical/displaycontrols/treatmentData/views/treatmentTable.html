@@ -4,7 +4,7 @@
         <p class="placeholder-text" ng-if="!isDataPresent()">{{::'NO_TREATMENTS_MESSAGE' | translate}} </p>
         <table ng-repeat="drugOrderSection in ::drugOrderSections | orderBy: drugOrderSection.visitDate"
                class="repeated-table drug-order-table">
-            <thead>
+            <thead ng-if="!printing">
             <th colspan="4" ng-if="::!isOtherActiveSection(drugOrderSection.visitDate)">
                 {{::'VISIT_ON_TRANSLATION_KEY'|translate}} {{::drugOrderSection.visitDate | bahmniDate}}
                 <div class="share-prescription-icon" ng-if="::!params.visitUuids" bm-pop-over autoclose="true">
@@ -20,7 +20,8 @@
                 {{::drugOrderSection.visitDate}}
             </th>
             </thead>
-            <tbody treatment-table-row drug-order="::drugOrder" params="::params"
+			
+            <tbody treatment-table-row drug-order="::drugOrder" params="::params" printing="::printing"
                    ng-repeat="drugOrder in ::drugOrderSection.drugOrders | orderBy: '::effectiveStartDate'"
                    ng-class="::{'drug-discontinued': drugOrder.isDiscontinuedOrStopped()}"
                    ng-if="::drugOrderSection.drugOrders.length > 0">
