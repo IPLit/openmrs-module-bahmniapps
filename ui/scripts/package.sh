@@ -12,7 +12,7 @@ rm -rf $ROOT_DIR/target/${ZIP_FILE_NAME}*.zip
 
 yarn install --frozen-lock-file
 yarn bundle
-yarn uglify-and-rename
+yarn uglify-and-rename --force
 
 cd $ROOT_DIR
 
