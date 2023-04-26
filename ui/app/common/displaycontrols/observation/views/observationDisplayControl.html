@@ -66,6 +66,26 @@
                                    </span>
                                 </span>
                            </li>
+                           <li ng-if="$index===0 && obs.groupMembers.length === 2" class="tree-list-item left">
+                               <span class="testUnderPanel left" style="overflow:auto;">
+                                  <label class="obs-label left" style="font-size:13px;font-family:OpenSans;padding-left:0.3em;">
+                                    {{(obs.groupMembers[$index].concept.shortName || obs.groupMembers[$index].concept.name)}}
+                                    /
+                                    {{(obs.groupMembers[$index+1].concept.shortName || obs.groupMembers[$index+1].concept.name)}}
+                                  </label>
+                                </span>
+                                <span class="testUnderPanel left" ng-class="::{
+                                           'text-only': (obs.concept.dataType ==='Text' && print),
+                                           'value-text-only': !(obs.concept.dataType ==='Text' && print)
+                                           }">
+                                    <span>{{::obs.groupMembers[$index].getDisplayValue() | titleTranslate}}
+                                    <span class="label-add-on">{{::obs.groupMembers[$index].concept.units}}</span>
+                                    /&nbsp;
+                                    {{::obs.groupMembers[$index+1].getDisplayValue() | titleTranslate}}
+                                    <span class="label-add-on">{{::obs.groupMembers[$index+1].concept.units}}</span>
+                                   </span>
+                                </span>
+                           </li>
                         </ul>
                     </div>
 
