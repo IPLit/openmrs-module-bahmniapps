@@ -72,7 +72,7 @@ jobs:
           persist-credentials: false
 
       - name: Copy Helm Archive
-        run: cp bahmni-iplit-web-${{ env.ARTIFACT_VERSION }}.tgz helm-charts/bahmni-iplit-web/
+        run: mkdir -p helm-charts/bahmni-iplit-web/ && cp bahmni-iplit-web-${{ env.ARTIFACT_VERSION }}.tgz helm-charts/bahmni-iplit-web/
 
       - name: Helm Index
         working-directory: helm-charts/
