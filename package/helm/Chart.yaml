@@ -1,5 +1,5 @@
 apiVersion: v2
-name: bahmni-web
+name: bahmni-iplit-web
 description: Helm chart for bahmni-web
 type: application
 version: 1.0.0
