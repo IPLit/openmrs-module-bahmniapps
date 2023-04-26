@@ -11,7 +11,7 @@ metadata:
 
 image:
   repository: infoiplitin
-  name: bahmni-iplit-web
+  name: bahmni-web
   tag: latest
 
 service:
