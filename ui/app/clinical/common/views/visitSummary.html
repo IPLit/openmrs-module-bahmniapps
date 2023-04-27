@@ -58,7 +58,7 @@
             </div>
             <div ng-switch-when="diagnosis" class="section"
                 style="margin:0px !important;padding:0px 0px !important;">
-                <section ng-if="::section.config" class="block dashboard-section section-title has-link">
+                <section ng-if="::(section.config && ((allDiagnoses && allDiagnoses.length > 0) || !isBeingPrinted))" class="block dashboard-section section-title has-link">
                     <h2 ng-hide="::hideTitle" class="section-title" ng-class="::{'hidden-print': (allDiagnoses && allDiagnoses.length == 0)}">
                         <span> {{::section | titleTranslate}} </span>
                     </h2>

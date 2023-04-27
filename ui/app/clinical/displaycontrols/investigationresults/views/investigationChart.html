@@ -1,10 +1,10 @@
 <section class="block section-grid expand-investigation-chart">
-    <h2 class="section-title row-click">
+    <h2 class="section-title row-click" ng-if="accessions.tabularResult.orders.length > 0 || !printing">
         <span>{{'LAB_ORDERS_KEY' | translate }}</span>
     </h2>
     <div>
         <div>
-            <div ng-if="accessions.tabularResult.orders.length == 0">
+            <div ng-if="accessions.tabularResult.orders.length == 0 && !printing">
                 <p class="placeholder-text">{{'NO_LAB_ORDERS_FOR_PATIENT_MESSAGE_KEY' | translate}}</p>
             </div>
             <table class="investigation-chart" bindonce="accessions">

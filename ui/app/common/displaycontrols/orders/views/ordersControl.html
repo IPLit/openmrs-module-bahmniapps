@@ -1,5 +1,5 @@
 <section class="dashboard-section ng-scope">
-    <h2 ng-if="::hasTitleToBeShown()" class="section-title">{{::section | titleTranslate}}</h2>
+    <h2 ng-if="hasTitleToBeShown() && (bahmniOrders.length > 0 || isOnDashboard)" class="section-title">{{::section | titleTranslate}}</h2>
 
     <h2 ng-if="::isClickable()" ng-dialog="../common/displaycontrols/orders/views/allOrdersDetails.html"
         ng-dialog-controller="AllOrdersDetailsController"
@@ -57,7 +57,7 @@
                 </li>
             </ul>
         </section>
-        <div ng-show="::noOrdersMessage">
+        <div ng-show="::noOrdersMessage" ng-if="isOnDashboard">
             <div class="placeholder-text" ><p translate="DISPLAY_CONTROL_ERROR_MESSAGE_KEY" translate-values="{displayControl : '{{::noOrdersMessage}}'}"></p></div>
         </div>
     </div>
