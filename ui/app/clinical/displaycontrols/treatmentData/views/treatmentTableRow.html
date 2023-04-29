@@ -15,7 +15,7 @@
         <span class="fr">{{::drugOrder.effectiveStartDate | bahmniDate}}</span>
     </td>
 	
-    <td class="notes test-notes" ng-if="::(drugOrder.additionalInstructions && printing)" ng-class="::{'has-test-notes': drugOrder.additionalInstructions}">
+    <td class="test-notes" ng-if="::(drugOrder.additionalInstructions && printing)" ng-class="::{'has-test-notes': drugOrder.additionalInstructions}">
         <i class="fa fa-comments left"></i>
         <pre class="left">{{::drugOrder.additionalInstructions}}</pre>
         <div class="footer-note right">
