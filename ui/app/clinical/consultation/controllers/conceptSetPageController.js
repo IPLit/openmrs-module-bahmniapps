@@ -250,7 +250,9 @@ angular.module('bahmni.clinical')
                         forms.push(newForm);
                     }
                 });
-
+                if (forms.length > 0) {
+                    forms = _.sortBy(forms, "order");
+                }
                 return forms;
             };
             $scope.isFormEditableByTheUser = function (form) {

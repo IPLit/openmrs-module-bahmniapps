@@ -23,6 +23,7 @@ Bahmni.ObservationForm = function (formUuid, user, formName, formVersion, observ
         self.isOpen = self.observations.length > 0;
         self.id = "concept-set-" + formUuid;
         self.options = extension ? (extension.extensionParams || {}) : {};
+        self.order = extension ? (extension.order || undefined) : undefined;
         self.privileges = [];
     };
 
