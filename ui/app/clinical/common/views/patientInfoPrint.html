@@ -17,7 +17,8 @@
             <td colspan="3">Visit Date: <span class="value">{{(visitDate | bahmniDate) || (visitSummary.startDateTime | bahmniDate)}}</span></td>
         </tr>
         <tr ng-switch-default>
-            <td colspan="2">Visit Date: <span class="value">{{(visitDate | bahmniDate) || (visitSummary.startDateTime | bahmniDate)}}</span></td>
+            <td>Visit Date: <span class="value">{{(visitDate | bahmniDate) || (visitSummary.startDateTime | bahmniDate)}}</span></td>
+			<td>Mobile No: <span class="value">{{patient.phoneNumber.value}}</span></td>
             <td>Doctor Name:
                 <span ng-show="providerNames || drugOrders[drugOrders.length-1].provider.name" class="ng-binding">
                     {{providerNames ? providerNames : drugOrders[drugOrders.length-1].provider.name }}
