@@ -113,13 +113,12 @@
             enumerable: true,
             get: isFreeTextAutocompleteType(this.conceptUIConfig) ? getFreeTextPrimaryObservation : getFirstObservation
         });
-
         this.isObservationNode = true;
         this.uniqueId = _.uniqueId('observation_');
         this.durationObs = findObservationByClassName(this.groupMembers, Bahmni.Common.Constants.durationConceptClassName);
         this.abnormalObs = findObservationByClassName(this.groupMembers, Bahmni.Common.Constants.abnormalConceptClassName);
         this.unknownObs = findObservationByClassName(this.groupMembers, Bahmni.Common.Constants.unknownConceptClassName);
-        this.markedAsNonCoded = this.primaryObs.concept.dataType !== "Coded" && this.primaryObs.uuid;
+        this.markedAsNonCoded = true;
 
         if (savedObs) {
             this.uuid = savedObs.uuid;

@@ -10,6 +10,7 @@
         <i class="fa fa-external-link"></i>
     </h2>
     <div>
+        <!-- ng-repeat="observation in ::bahmniOrder.bahmniObservations[0]" -->
 		<div ng-if="::!isOnDashboard">
 			<span ng-repeat="bahmniOrder in ::bahmniOrders">
 				<span ng-if="bahmniOrder.commentToFulfiller" class="header">
@@ -19,6 +20,10 @@
 				<span ng-if="!bahmniOrder.commentToFulfiller" class="header">
 					<strong>{{::translatedLabel(bahmniOrder.concept)}}</strong>
 				</span>
+				<!-- <ul ng-if="::bahmniOrder.bahmniObservations.length > 0">
+			    <show-observation patient="::patient"
+			         style="margin:0px !important;padding:0px 0px !important" 
+			         observation="bahmniOrder.bahmniObservations[0]" level="2"></show-observation></ul> -->
 				<span ng-if="!$last">, </span>
 			</span>
 		</div>

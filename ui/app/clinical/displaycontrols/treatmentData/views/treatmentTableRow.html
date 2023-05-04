@@ -10,19 +10,12 @@
         <span ng-if="::!(params.showRoute == true)" ng-class="::{'strike-text':drugOrder.isDiscontinuedOrStopped()}">{{::drugOrder.getDescriptionWithoutRouteAndDuration()}}</span>
         <span>{{::drugOrder.getSpanDetails()}}</span>
         <span ng-if="::drugOrder.isDiscontinuedOrStopped()" ng-class="::{'discontinued-text':drugOrder.isDiscontinuedOrStopped()}">{{'MEDICATION_STOPPED_ON'|translate}} {{::drugOrder.effectiveStopDate | bahmniDate}}</span>
+        <span class="test-notes" ng-if="::(drugOrder.additionalInstructions && printing)" ng-class="::{'has-test-notes': drugOrder.additionalInstructions}">
+	        (<i class="fa fa-comments left"></i>{{::drugOrder.additionalInstructions}})
+        </span>
     </td>
     <td class="days" ng-if="::(!params.hideVisitDate)">
         <span class="fr">{{::drugOrder.effectiveStartDate | bahmniDate}}</span>
-    </td>
-	
-    <td class="test-notes" ng-if="::(drugOrder.additionalInstructions && printing)" ng-class="::{'has-test-notes': drugOrder.additionalInstructions}">
-        <i class="fa fa-comments left"></i>
-        <pre class="left">{{::drugOrder.additionalInstructions}}</pre>
-        <div class="footer-note right">
-            <span class="provider" ng-if="::params.showProvider">
-                <provider-directive creator-name="{{::drugOrder.creatorName}}" provider-name="{{::drugOrder.provider.name}}" provider-date="::drugOrder.effectiveStartDate"></provider-directive>
-            </span>
-        </div>
     </td>
 
     <td class="toggle-btn" toggle="drugOrder.showDetails" ng-if="::((params.showDetailsButton == true) && !drugOrder.additionalInstructions)">
