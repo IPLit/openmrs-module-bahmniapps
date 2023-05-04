@@ -345,7 +345,7 @@ Bahmni.ConceptSet.ObservationMapper = function () {
         );
     };
     var getObservationValue = function (groupMembers, $translate) {
-        var chiefComplaint = "";
+        var chiefComplaint = null;
         var symptomDuration = "";
         var durationUnit = "";
         _.forEach(groupMembers, function (member) {
@@ -356,6 +356,15 @@ Bahmni.ConceptSet.ObservationMapper = function () {
                 chiefComplaint = member.get(
           $translate.instant("CHIEF_COMPLAINT_CODED_KEY")
         );
+            }
+            if (
+                    !chiefComplaint &&
+                    member &&
+                    member.has($translate.instant("CHIEF_COMPLAINT_TEXT_KEY"))
+                  ) {
+                            chiefComplaint = member.get(
+                      $translate.instant("CHIEF_COMPLAINT_TEXT_KEY")
+                    );
             }
             if (
         member &&
@@ -374,6 +383,7 @@ Bahmni.ConceptSet.ObservationMapper = function () {
         );
             }
         });
+        chiefComplaint = chiefComplaint || "";
         return getChiefComplaintDisplayValue(
       chiefComplaint,
       symptomDuration,
@@ -383,6 +393,7 @@ Bahmni.ConceptSet.ObservationMapper = function () {
     };
     var getGroupMemberValue = function (observation, $translate) {
         const chiefComplaintCoded = $translate.instant("CHIEF_COMPLAINT_CODED_KEY");
+        const chiefComplaintText = $translate.instant("CHIEF_COMPLAINT_TEXT_KEY");
         const symptomDuration = $translate.instant("SIGN_SYMPTOM_DURATION_KEY");
         const durationUnit = $translate.instant(
       "CHIEF_COMPLAINT_DURATION_UNIT_KEY"
@@ -395,6 +406,13 @@ Bahmni.ConceptSet.ObservationMapper = function () {
         chiefComplaintCoded,
         getObservationDisplayValue(observation)
       );
+        } else if (
+          observation.concept.name === chiefComplaintText
+        ) {
+                return new Map().set(
+                chiefComplaintText,
+            getObservationDisplayValue(observation)
+          );
         }
         if (
       typeof observation.concept === "object" &&
