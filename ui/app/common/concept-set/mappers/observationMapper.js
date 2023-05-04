@@ -358,13 +358,13 @@ Bahmni.ConceptSet.ObservationMapper = function () {
         );
             }
             if (
-                    !chiefComplaint &&
-                    member &&
-                    member.has($translate.instant("CHIEF_COMPLAINT_TEXT_KEY"))
-                  ) {
-                            chiefComplaint = member.get(
-                      $translate.instant("CHIEF_COMPLAINT_TEXT_KEY")
-                    );
+        !chiefComplaint &&
+        member &&
+        member.has($translate.instant("CHIEF_COMPLAINT_TEXT_KEY"))
+      ) {
+                chiefComplaint = member.get(
+          $translate.instant("CHIEF_COMPLAINT_TEXT_KEY")
+        );
             }
             if (
         member &&
@@ -409,7 +409,7 @@ Bahmni.ConceptSet.ObservationMapper = function () {
         } else if (
           observation.concept.name === chiefComplaintText
         ) {
-                return new Map().set(
+            return new Map().set(
                 chiefComplaintText,
             getObservationDisplayValue(observation)
           );
