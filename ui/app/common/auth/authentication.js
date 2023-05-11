@@ -29,7 +29,10 @@ angular.module('authentication')
     }]).service('sessionService', ['$rootScope', '$http', '$q', '$bahmniCookieStore', 'userService', function ($rootScope, $http, $q, $bahmniCookieStore, userService) {
         var sessionResourcePath = Bahmni.Common.Constants.RESTWS_V1 + '/session?v=custom:(uuid)';
 
-        var getAuthFromServer = function (username, password, otp) {
+        var getAuthFromServer = function (username, password, otp, restrictLoginLocationToUser, location) {
+            if (restrictLoginLocationToUser) {
+                sessionResourcePath = Bahmni.Common.Constants.RESTWS_V1 + '/bahmnicore/distro/authenticateUser?loginLocationUuid=' + location.uuid;
+            }
             var btoa = otp ? username + ':' + password + ':' + otp : username + ':' + password;
             return $http.get(sessionResourcePath, {
                 headers: {'Authorization': 'Basic ' + window.btoa(btoa)},
@@ -45,10 +48,10 @@ angular.module('authentication')
             });
         };
 
-        var createSession = function (username, password, otp) {
+        var createSession = function (username, password, otp, restrictLoginLocationToUser, location) {
             var deferrable = $q.defer();
 
-            getAuthFromServer(username, password, otp).then(function (response) {
+            getAuthFromServer(username, password, otp, restrictLoginLocationToUser, location).then(function (response) {
                 if (response.status == 204) {
                     deferrable.resolve({"firstFactAuthorization": true});
                 }
@@ -95,9 +98,9 @@ angular.module('authentication')
             return deferrable.promise;
         };
 
-        this.loginUser = function (username, password, location, otp) {
+        this.loginUser = function (username, password, location, otp, restrictLoginLocationToUser) {
             var deferrable = $q.defer();
-            createSession(username, password, otp).then(function (data) {
+            createSession(username, password, otp, restrictLoginLocationToUser, location).then(function (data) {
                 if (data.authenticated) {
                     $bahmniCookieStore.put(Bahmni.Common.Constants.currentUser, username, {path: '/', expires: 7});
                     if (location != undefined) {

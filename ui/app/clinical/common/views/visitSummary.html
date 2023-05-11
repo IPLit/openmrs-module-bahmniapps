@@ -32,7 +32,7 @@
             </div>
             <div ng-switch-when="vitals" class="section"
                 style="margin:0px !important;padding:0px 0px !important;">
-                <div ng-if="::section.config" id="vital-section">
+                <div ng-if="::(section.config && !isBeingPrinted)" id="vital-section">
                     <section class="block observation dashboard-section" id="vitalSection">
                         <ul bm-gallery access-impression="true">
                             <bahmni-observation patient="::patient" visit-uuid="{{::visitUuid}}"
