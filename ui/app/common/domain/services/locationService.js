@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bahmni.common.domain')
-    .factory('locationService', ['$http', '$bahmniCookieStore', 'appService', '$cookies', function ($http, $bahmniCookieStore, appService, $cookies) {
+    .factory('locationService', ['$http', '$bahmniCookieStore', 'appService', function ($http, $bahmniCookieStore, appService) {
         var getAllByTag = function (tags, operator) {
             var userInSession = $bahmniCookieStore.get(Bahmni.Common.Constants.currentUser);
             var restrictLoginLocationToUser = appService.getAppDescriptor().getConfigValue('restrictLoginLocationToUser') || false;
