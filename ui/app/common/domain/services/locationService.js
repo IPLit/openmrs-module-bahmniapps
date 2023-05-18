@@ -1,8 +1,13 @@
 'use strict';
 
 angular.module('bahmni.common.domain')
-    .factory('locationService', ['$http', '$bahmniCookieStore', function ($http, $bahmniCookieStore) {
+    .factory('locationService', ['$http', '$bahmniCookieStore', 'appService', '$cookies', function ($http, $bahmniCookieStore, appService, $cookies) {
         var getAllByTag = function (tags, operator) {
+            var userInSession = $bahmniCookieStore.get(Bahmni.Common.Constants.currentUser);
+            var restrictLoginLocationToUser = appService.getAppDescriptor().getConfigValue('restrictLoginLocationToUser') || false;
+            if (userInSession && restrictLoginLocationToUser) {
+                return getLoginUserLocations(tags);
+            }
             return $http.get(Bahmni.Common.Constants.locationUrl, {
                 params: {s: "byTags", tags: tags || "", v: "default", operator: operator || "ALL"},
                 cache: true
@@ -34,6 +39,12 @@ angular.module('bahmni.common.domain')
                 cache: true
             }).then(function (response) {
                 return response.data;
+            });
+        };
+
+        var getLoginUserLocations = function (byTag) {
+            return $http.get(Bahmni.Common.Constants.distroUrl + "/loginUserLocations", {
+                params: {byTag: byTag || ""}
             });
         };
 
