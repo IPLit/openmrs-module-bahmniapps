@@ -10,11 +10,7 @@ angular.module('bahmni.home')
                 });
             };
             return function () {
-                if (!appService.getAppDescriptor()) {
-                    return spinner.forPromise(initApp());
-                } else {
-                    return appService.getAppDescriptor();
-                }
+                return spinner.forPromise(initApp());
             };
         }
     ]);

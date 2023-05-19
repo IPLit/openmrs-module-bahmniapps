@@ -30,11 +30,12 @@ angular.module('authentication')
         var sessionResourcePath = Bahmni.Common.Constants.RESTWS_V1 + '/session?v=custom:(uuid)';
 
         var getAuthFromServer = function (username, password, otp, restrictLoginLocationToUser, location) {
+            var authenticateUserDistroUrl = sessionResourcePath;
             if (restrictLoginLocationToUser) {
-                sessionResourcePath = Bahmni.Common.Constants.distroUrl + '/authenticateUser?loginLocationUuid=' + location.uuid;
+                authenticateUserDistroUrl = Bahmni.Common.Constants.distroUrl + '/authenticateUser?loginLocationUuid=' + location.uuid;
             }
             var btoa = otp ? username + ':' + password + ':' + otp : username + ':' + password;
-            return $http.get(sessionResourcePath, {
+            return $http.get(authenticateUserDistroUrl, {
                 headers: {'Authorization': 'Basic ' + window.btoa(btoa)},
                 cache: false
             });
