@@ -28,7 +28,9 @@ angular.module('bahmni.home')
             };
 
             return function () {
-                spinner.forPromise(initApp());
+                if (!appService.getAppDescriptor()) {
+                    spinner.forPromise(initApp());
+                }
                 return spinner.forPromise(init());
             };
         }
