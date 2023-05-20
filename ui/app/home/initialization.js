@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('bahmni.home')
-    .factory('initialization', ['$rootScope', 'appService', 'spinner',
-        function ($rootScope, appService, spinner) {
+    .factory('initialization', ['$rootScope', 'appService', 'spinner', '$q',
+        function ($rootScope, appService, spinner, $q) {
             var initApp = function () {
                 return appService.initApp('home', {
                     'app': true,
@@ -10,7 +10,11 @@ angular.module('bahmni.home')
                 });
             };
             return function () {
-                return spinner.forPromise(initApp());
+                if (!appService.getAppDescriptor()) {
+                    return spinner.forPromise(initApp());
+                } else {
+                    return $q.when(appService.getAppDescriptor());
+                }
             };
         }
     ]);

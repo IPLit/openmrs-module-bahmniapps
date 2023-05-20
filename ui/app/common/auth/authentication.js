@@ -79,11 +79,7 @@ angular.module('authentication')
         var self = this;
 
         var destroySessionFromServer = function () {
-            try {
-                return $http.delete(sessionResourcePath);
-            } catch (e) {
-                return $q.when({});
-            }
+            return $http.delete(sessionResourcePath);
         };
 
         var sessionCleanup = function () {
@@ -101,7 +97,7 @@ angular.module('authentication')
                 deferrable.resolve();
             }, function () {
                 sessionCleanup();
-                deferrable.resolve();
+                deferrable.reject();
             });
             return deferrable.promise;
         };
@@ -135,11 +131,12 @@ angular.module('authentication')
             var deferrable = $q.defer();
             var currentUser = $bahmniCookieStore.get(Bahmni.Common.Constants.currentUser);
             if (!currentUser) {
-                this.destroy().finally(function () {
+                /* this.destroy().finally(function () { // IPLit
                     $rootScope.$broadcast('event:auth-loginRequired');
-                    // deferrable.reject("No User in session. Please login again.");
-                    deferrable.resolve();
-                });
+                    deferrable.reject("No User in session. Please login again.");
+                }); */
+                $rootScope.$broadcast('event:auth-loginRequired');
+                deferrable.reject("No User in session. Please login again.");
                 return deferrable.promise;
             }
             userService.getUser(currentUser).then(function (data) {
