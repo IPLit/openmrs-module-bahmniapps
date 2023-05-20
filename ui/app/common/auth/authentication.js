@@ -79,7 +79,11 @@ angular.module('authentication')
         var self = this;
 
         var destroySessionFromServer = function () {
-            return $http.delete(sessionResourcePath);
+            try {
+                return $http.delete(sessionResourcePath);
+            } catch (e) {
+                return $q.when({});
+            }
         };
 
         var sessionCleanup = function () {
@@ -92,18 +96,13 @@ angular.module('authentication')
 
         this.destroy = function () {
             var deferrable = $q.defer();
-            try {
-                destroySessionFromServer().then(function () {
-                    sessionCleanup();
-                    deferrable.resolve();
-                }, function (error) {
-                    sessionCleanup();
-                    deferrable.reject(error);
-                });
-            } catch (e) {
+            destroySessionFromServer().then(function () {
                 sessionCleanup();
-                deferrable.reject(e);
-            }
+                deferrable.resolve();
+            }, function (error) {
+                sessionCleanup();
+                deferrable.reject(error);
+            });
             return deferrable.promise;
         };
 
