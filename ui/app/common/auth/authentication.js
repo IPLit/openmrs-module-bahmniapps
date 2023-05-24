@@ -135,6 +135,7 @@ angular.module('authentication')
                     $rootScope.$broadcast('event:auth-loginRequired');
                     deferrable.reject("No User in session. Please login again.");
                 }); */
+                sessionCleanup();
                 $rootScope.$broadcast('event:auth-loginRequired');
                 deferrable.reject("No User in session. Please login again.");
                 return deferrable.promise;
