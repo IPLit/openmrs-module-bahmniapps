@@ -75,6 +75,9 @@ angular.module('bahmni.common.conceptSet')
             };
 
             $scope.canRemove = function (index) {
+                if ($scope.allTemplates[index].followupForm) {
+                    return false;
+                }
                 var observations = $scope.allTemplates[index].observations;
                 if (observations === undefined || _.isEmpty(observations)) {
                     return true;

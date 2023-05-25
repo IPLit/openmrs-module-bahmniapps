@@ -173,6 +173,19 @@ angular.module('consultation')
                     }
                 }
             })
+            .state('patient.dashboard.show.followup', {
+                url: '/follow-up/:conceptSetGroupName',
+                params: {
+                    cachebuster: null,
+                    lastOpenedTemplate: null
+                },
+                views: {
+                    'consultation-content': {
+                        templateUrl: 'consultation/views/followup.html',
+                        controller: 'ConceptSetPageController'
+                    }
+                }
+            })
             .state('patient.dashboard.show.diagnosis', {
                 url: '/diagnosis',
                 params: {

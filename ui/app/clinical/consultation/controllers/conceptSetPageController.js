@@ -119,6 +119,11 @@ angular.module('bahmni.clinical')
                 $scope.consultation.selectedObsTemplate = _.filter($scope.allTemplates, function (template) {
                     return template.isDefault() || template.alwaysShow;
                 });
+                $scope.consultation.followUpTemplate = _.filter($scope.allTemplates, function (template) {
+                    return template.conceptName === "Follow Up";
+                });
+                $scope.consultation.followUpTemplate[0].isAdded = true;
+                $scope.consultation.followUpTemplate[0].followupForm = true;
             };
 
             $scope.filterTemplates = function () {

@@ -7,6 +7,7 @@ Bahmni.Clinical.StateNameEvenTypeMap = {
     "patient.dashboard.show.disposition": "VIEWED_DISPOSITION_TAB",
     "patient.dashboard.show.summary": "VIEWED_DASHBOARD_SUMMARY",
     "patient.dashboard.show.orders": "VIEWED_ORDERS_TAB",
+    "patient.dashboard.show.followup": "VIEWED_FOLLOWUP_TAB",
     "patient.dashboard.show.bacteriology": "VIEWED_BACTERIOLOGY_TAB",
     "patient.dashboard.show.investigation": "VIEWED_INVESTIGATION_TAB",
     "patient.visit.summaryprint": "VIEWED_SUMMARY_PRINT",
