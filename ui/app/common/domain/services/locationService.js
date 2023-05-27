@@ -4,9 +4,11 @@ angular.module('bahmni.common.domain')
     .factory('locationService', ['$http', '$bahmniCookieStore', 'appService', function ($http, $bahmniCookieStore, appService) {
         var getAllByTag = function (tags, operator) {
             var userInSession = $bahmniCookieStore.get(Bahmni.Common.Constants.currentUser);
-            var restrictLoginLocationToUser = (appService.getAppDescriptor() && appService.getAppDescriptor().getConfigValue('restrictLoginLocationToUser')) || false;
-            if (userInSession && restrictLoginLocationToUser) {
-                return getLoginUserLocations(tags);
+            if (userInSession) {
+                var restrictLoginLocationToUser = (appService.getAppDescriptor() && appService.getAppDescriptor().getConfigValue('restrictLoginLocationToUser')) || false;
+                if (restrictLoginLocationToUser) {
+                    return getLoginUserLocations(tags);
+                }
             }
             return $http.get(Bahmni.Common.Constants.locationUrl, {
                 params: {s: "byTags", tags: tags || "", v: "default", operator: operator || "ALL"},
