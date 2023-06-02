@@ -5,8 +5,8 @@ angular.module('bahmni.common.domain')
         var getAllByTag = function (tags, operator) {
             var userInSession = $bahmniCookieStore.get(Bahmni.Common.Constants.currentUser);
             if (userInSession) {
-                var restrictLoginLocationToUser = (appService.getAppDescriptor() && appService.getAppDescriptor().getConfigValue('restrictLoginLocationToUser')) || false;
-                if (restrictLoginLocationToUser) {
+                var restrictLocationToUser = (appService.getAppDescriptor() && appService.getAppDescriptor().getConfigValue('restrictLocationToUser')) || false;
+                if (restrictLocationToUser) {
                     return getLoginUserLocations(tags);
                 }
             }

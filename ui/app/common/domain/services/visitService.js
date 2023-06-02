@@ -49,8 +49,8 @@ angular.module('bahmni.common.domain')
         };
 
         this.search = function (parameters) {
-            var restrictLoginLocationToUser = (appService.getAppDescriptor() && appService.getAppDescriptor().getConfigValue('restrictLoginLocationToUser')) || false;
-            if (restrictLoginLocationToUser) {
+            var restrictLocationToUser = (appService.getAppDescriptor() && appService.getAppDescriptor().getConfigValue('restrictLocationToUser')) || false;
+            if (restrictLocationToUser) {
                 return $http.get(Bahmni.Common.Constants.distroLocVisitUrl, {
                     params: parameters,
                     withCredentials: true

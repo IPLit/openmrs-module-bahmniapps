@@ -281,7 +281,9 @@ Bahmni.Common = Bahmni.Common || {};
         maxImageUploadSize: 9000000, // to ensure, extreme max size and prevent choking up server capacity (max size is 9MB)
         adhocTeleconsultationLinkServiceUrl: RESTWS_V1 + "/adhocTeleconsultation/generateAdhocTeleconsultationLink",
         distroUrl: BAHMNI_CORE + "/distro",
-        distroLocVisitUrl: BAHMNI_CORE + "/distro/visit/searchByLocation"
+        distroLocVisitUrl: BAHMNI_CORE + "/distro/visit/searchByLocation",
+        bahmniDistroDrugOrderUrl: BAHMNI_CORE + "/distro/drugOrders",
+        bahmniDistroOrderUrl: BAHMNI_CORE + "/distro/orders"
     };
 })();
 
