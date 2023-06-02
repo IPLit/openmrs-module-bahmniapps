@@ -132,8 +132,8 @@ angular.module('bahmni.home')
                     });
                 };
 
-                var restrictLoginLocationToUser = appService.getAppDescriptor().getConfigValue('restrictLoginLocationToUser') || false;
-                sessionService.loginUser($scope.loginInfo.username, $scope.loginInfo.password, $scope.loginInfo.currentLocation, $scope.loginInfo.otp, restrictLoginLocationToUser).then(
+                var restrictLocationToUser = appService.getAppDescriptor().getConfigValue('restrictLocationToUser') || false;
+                sessionService.loginUser($scope.loginInfo.username, $scope.loginInfo.password, $scope.loginInfo.currentLocation, $scope.loginInfo.otp, restrictLocationToUser).then(
                     function (data) {
                         ensureNoSessionIdInRoot();
                         if (data && data.firstFactAuthorization) {
