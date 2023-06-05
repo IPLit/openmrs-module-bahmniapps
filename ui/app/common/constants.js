@@ -282,8 +282,9 @@ Bahmni.Common = Bahmni.Common || {};
         adhocTeleconsultationLinkServiceUrl: RESTWS_V1 + "/adhocTeleconsultation/generateAdhocTeleconsultationLink",
         distroUrl: BAHMNI_CORE + "/distro",
         distroLocVisitUrl: BAHMNI_CORE + "/distro/visit/searchByLocation",
-        bahmniDistroDrugOrderUrl: BAHMNI_CORE + "/distro/drugOrders",
-        bahmniDistroOrderUrl: BAHMNI_CORE + "/distro/orders"
+        bahmniDistroDrugOrderUrl: BAHMNI_CORE + "/distro/filters/drugOrders",
+        bahmniDistroOrderUrl: BAHMNI_CORE + "/distro/filters/orders",
+        bahmniDistroLabOrderResultsUrl: BAHMNI_CORE + "/distro/filters/labOrderResults"
     };
 })();
 

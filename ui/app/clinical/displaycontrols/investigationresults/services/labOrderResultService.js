@@ -96,8 +96,15 @@ angular.module('bahmni.clinical')
                     paramsToBeSent.numberOfVisits = params.numberOfVisits;
                 }
             }
-
-            $http.get(Bahmni.Common.Constants.bahmniLabOrderResultsUrl, {
+            var labResultsUrl = Bahmni.Common.Constants.bahmniLabOrderResultsUrl;
+            var userInSession = $bahmniCookieStore.get(Bahmni.Common.Constants.currentUser);
+            if (userInSession) {
+                var restrictLocationToUser = (appService.getAppDescriptor() && appService.getAppDescriptor().getConfigValue('restrictLocationToUser')) || false;
+                if (restrictLocationToUser) {
+                    labResultsUrl = Bahmni.Common.Constants.bahmniDistroLabOrderResultsUrl;
+                }
+            }
+            $http.get(labResultsUrl, {
                 method: "GET",
                 params: paramsToBeSent,
                 withCredentials: true
