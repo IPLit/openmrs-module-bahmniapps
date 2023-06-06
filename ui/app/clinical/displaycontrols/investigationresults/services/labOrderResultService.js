@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bahmni.clinical')
-    .factory('labOrderResultService', ['$http', '$q', 'configurationService', function ($http, $q, configurationService) {
+    .factory('labOrderResultService', ['$http', '$q', 'configurationService', 'appService', '$bahmniCookieStore', function ($http, $q, configurationService, appService, $bahmniCookieStore) {
         var allTestsAndPanelsConcept = {};
         configurationService.getConfigurations(['allTestsAndPanelsConcept']).then(function (configurations) {
             allTestsAndPanelsConcept = configurations.allTestsAndPanelsConcept.results[0];
