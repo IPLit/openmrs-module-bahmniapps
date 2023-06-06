@@ -16,6 +16,13 @@ angular.module('bahmni.common.domain')
 
         this.getDiagnoses = function (patientUuid, visitUuid) {
             var url = Bahmni.Common.Constants.bahmniDiagnosisUrl;
+            var userInSession = $bahmniCookieStore.get(Bahmni.Common.Constants.currentUser);
+            if (userInSession) {
+                var restrictLocationToUser = (appService.getAppDescriptor() && appService.getAppDescriptor().getConfigValue('restrictLocationToUser')) || false;
+                if (restrictLocationToUser) {
+                    url = Bahmni.Common.Constants.bahmniDistroDiagnosisUrl;
+                }
+            }
             return $http.get(url, {
                 params: { patientUuid: patientUuid, visitUuid: visitUuid}
             });

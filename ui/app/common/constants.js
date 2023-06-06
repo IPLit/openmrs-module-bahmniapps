@@ -284,7 +284,8 @@ Bahmni.Common = Bahmni.Common || {};
         distroLocVisitUrl: BAHMNI_CORE + "/distro/visit/searchByLocation",
         bahmniDistroDrugOrderUrl: BAHMNI_CORE + "/distro/filters/drugOrders",
         bahmniDistroOrderUrl: BAHMNI_CORE + "/distro/filters/orders",
-        bahmniDistroLabOrderResultsUrl: BAHMNI_CORE + "/distro/filters/labOrderResults"
+        bahmniDistroLabOrderResultsUrl: BAHMNI_CORE + "/distro/filters/labOrderResults",
+        bahmniDistroDiagnosisUrl: BAHMNI_CORE + "/distro/filters/diagnosis/search"
     };
 })();
 
