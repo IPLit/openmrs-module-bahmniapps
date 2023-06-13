@@ -124,6 +124,7 @@ angular.module('bahmni.clinical')
                 });
                 $scope.consultation.followUpTemplate[0].isAdded = true;
                 $scope.consultation.followUpTemplate[0].followupForm = true;
+                $scope.consultation.followUpTemplate[0].klass = "active";
             };
 
             $scope.filterTemplates = function () {
