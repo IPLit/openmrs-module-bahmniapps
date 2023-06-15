@@ -45,7 +45,7 @@ angular.module('bahmni.common.domain')
         };
 
         var getLoginUserLocations = function (byTag) {
-            return $http.get(Bahmni.Common.Constants.distroUrl + "/loginUserLocations", {
+            return $http.get(Bahmni.Common.Constants.distroLoginUserLocationsUrl, {
                 params: {byTag: byTag || ""}
             });
         };
