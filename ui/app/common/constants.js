@@ -287,7 +287,8 @@ Bahmni.Common = Bahmni.Common || {};
         bahmniDistroOrderUrl: BAHMNI_CORE + "/distro/filters/orders",
         bahmniDistroLabOrderResultsUrl: BAHMNI_CORE + "/distro/filters/labOrderResults",
         bahmniDistroDiagnosisUrl: BAHMNI_CORE + "/distro/filters/diagnosis/search",
-        bahmniDistroObservationsUrl: BAHMNI_CORE + "/distro/filters/observations"
+        bahmniDistroObservationsUrl: BAHMNI_CORE + "/distro/filters/observations",
+        bahmniDistroUserLocationValidUrl: BAHMNI_CORE + "/distro/filters/userLocationValid"
     };
 })();
 
