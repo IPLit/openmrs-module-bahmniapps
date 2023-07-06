@@ -122,9 +122,11 @@ angular.module('bahmni.clinical')
                 $scope.consultation.followUpTemplate = _.filter($scope.allTemplates, function (template) {
                     return template.conceptName === "Follow Up";
                 });
-                $scope.consultation.followUpTemplate[0].isAdded = true;
-                $scope.consultation.followUpTemplate[0].followupForm = true;
-                $scope.consultation.followUpTemplate[0].klass = "active";
+                if ($scope.consultation.followUpTemplate.length > 0) {
+                    $scope.consultation.followUpTemplate[0].isAdded = true;
+                    $scope.consultation.followUpTemplate[0].followupForm = true;
+                    $scope.consultation.followUpTemplate[0].klass = "active";
+                }
             };
 
             $scope.filterTemplates = function () {
