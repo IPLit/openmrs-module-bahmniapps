@@ -522,7 +522,7 @@
     padding: 5px;
     box-sizing: border-box;
     position: relative;
-    width: 86px;
+    width: 100%;
     border: none;
     text-align: center;
     vertical-align: top;
@@ -532,8 +532,8 @@
 
         .img-concept,
         .pdf-link {
-            width: 60px;
-            height: 60px;
+            width:200px;
+            height: 200px;
             float: left;
             overflow: hidden;
             margin: 0;
