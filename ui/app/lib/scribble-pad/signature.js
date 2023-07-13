@@ -26,15 +26,9 @@ angular.module('signature').directive('signaturePad', ['$interval', '$timeout', 
         },
       controller: [  '$scope',     
         function ($scope) {
-          $scope.accept = function () {           
-           // $scope.activeVisit = $scope.visitHistory.activeVisit;
-            //console.log("activeVisit", activeVisit);
-            // visitHistory = sessionStorage.getItem("visit");
-            // console.log("activeVisit", activeVisit);History and Examinations,All Observation Templates
+          $scope.accept = function () {
             $scope.opdSummaryConceptName = "Hand Note";                       
             var visit = JSON.parse(sessionStorage["visit"]); //Get from
-            console.log("visit data",visit)      
-            //console.log("Saving Image ", JSON.parse (sessionStorage.getItem("visit")));
             if ($scope.dataurl !== undefined || $scope.dataurl !== EMPTY_IMAGE) {
               var locationUuid = sessionService.getLoginLocationUuid();
               var observationMapper = new Bahmni.ConceptSet.ObservationMapper();
@@ -47,22 +41,15 @@ angular.module('signature').directive('signaturePad', ['$interval', '$timeout', 
               var patientUuid = sessionStorage.getItem("patient.uuid");
               var template = null;
               var fileName = "notes_" + Date.now();
-             // var visit = sessionStorage.getItem("visit");
-              //console.log("activeVisit", visit);
               visitDocumentService.saveFile($scope.dataurl, sessionStorage.getItem("patient.uuid"), "Consultation", "notes_" + Date.now() , "image").then(function (response) {
                 var fileUrl = Bahmni.Common.Constants.documentsPath + '/' + response.data.url;
                 //var savedFile = visit.addFile(fileUrl); 
-                var imagename = response.data.url;             
-                console.log(response.data.url);
-                console.log(visit["uuid"]);
-                console.log(patientUuid);
-                console.log($scope.opdSummaryConceptName);               
+                var imagename = response.data.url;
                 spinner.forPromise(observationsService.fetch(patientUuid, $scope.opdSummaryConceptName,
                   'latest', 1, visit["uuid"],
                   null, null))
                   .then(function (result) {
                       var obsArray = [];
-                      console.log("result.data", result.data);
                       if(result.data.length > 0) {
                           _.each(result.data, function (obs) {
                               var matched = _.find(obs.providers, {uuid: providerUuid});
@@ -76,17 +63,11 @@ angular.module('signature').directive('signaturePad', ['$interval', '$timeout', 
                           name: $scope.opdSummaryConceptName,
                           v: "bahmni"
                       }).then(function (cResponse) {
-                        console.log("cResponse", cResponse);
                           template = cResponse.data.results[0];
-                          console.log("result.data [0]", cResponse.data.results[0]);
                           $scope.conceptSet = template;
-                         // $scope.conceptSet.conceptName = $scope.opdSummaryConceptName;
-                          console.log("obsArray", obsArray);
-                         // obsOpdSummary = observationMapper.map(obsArray, template, conceptsConfig);
+                          $scope.conceptSet.conceptName = $scope.opdSummaryConceptName;
                           obsOpdSummarynew = observationMapper.map(response.data, template, conceptsConfig);
-                          console.log("obsOpdSummarynew", obsOpdSummarynew);
-                         
-                          var groupmember={} ;   
+                          var groupmember={} ;
                           var conscept = {"uuid":"2636ad6a-cd11-4edf-876f-adb40277acc3","name":"Image Note"};
                           groupmember.conscept = conscept;
                           groupmember = obsOpdSummarynew.groupMembers[0];
@@ -94,28 +75,9 @@ angular.module('signature').directive('signaturePad', ['$interval', '$timeout', 
                           groupmember.valueAsString=imagename;
                           obsOpdSummarynew.groupMembers[0]=groupmember;
                           obsOpdSummarynew.value = imagename;
-                          
-                          console.log("obsOpdSummarynew after groupmember ", obsOpdSummarynew);                                            
-                         
-                          $scope.conceptSet.observations = [obsOpdSummary];                           
-                          
                           $rootScope.$emit('pushObservation',obsOpdSummarynew);
-                          //$scope.currentScope.consultation.observations.push(observations[0]);                          
-                          //encounterService.create(getEncounterDataFor(observations));
                   }));
-              });
-
-              var getEncounterDataFor = function (obs) {
-                var encounterData = {};
-                encounterData.patientUuid = patientUuid;
-                //encounterData.encounterTypeUuid =  $rootScope.encounterConfig.getConsultationEncounterTypeUuid();
-                encounterData.visitTypeUuid = visit["uuid"];
-                encounterData.observations = obs,
-                encounterData.locationUuid = locationUuid;
-                return encounterData;
-            };
-
-              //  encounterService.create(encounterData);
+              });                          
                 ngDialog.close();
               });
             }
@@ -129,7 +91,7 @@ angular.module('signature').directive('signaturePad', ['$interval', '$timeout', 
             // };
 
             
-          };         
+          };
 
           $scope.onMouseup = function () {
             $scope.updateModel();

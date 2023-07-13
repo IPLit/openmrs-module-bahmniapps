@@ -386,10 +386,13 @@ angular.module('bahmni.clinical').controller('ConsultationController',
             var preSavePromise = function () {
                 var deferred = $q.defer();
                 var observationFilter = new Bahmni.Common.Domain.ObservationFilter();
-                // $scope.consultation.preSaveHandler.fire();
+                $scope.consultation.preSaveHandler.fire();
                 $scope.lastvisited = $scope.consultation.lastvisited;
                 var selectedObsTemplate = $scope.consultation.selectedObsTemplate;
                 var tempConsultation = angular.copy($scope.consultation);
+                if (!_.isUndefined(tempConsultation.scribble)) {
+                    tempConsultation.scribble = observationFilter.filter(tempConsultation.scribble);
+                }
                 tempConsultation.observations = observationFilter.filter(tempConsultation.observations);
                 tempConsultation.consultationNote = observationFilter.filter([tempConsultation.consultationNote])[0];
                 tempConsultation.labOrderNote = observationFilter.filter([tempConsultation.labOrderNote])[0];
@@ -608,10 +611,8 @@ angular.module('bahmni.clinical').controller('ConsultationController',
             };
 
             $rootScope.$on("pushObservation", function (event, args) {
-                console.log("1s", args);
-                console.log($scope.consultation.observations);
+                $scope.consultation.scribble = [args];
                 $scope.consultation.observations = [args];
-                console.log($scope.consultation.observations);
                 // $scope.pushObservation(args.observations);
             });
 

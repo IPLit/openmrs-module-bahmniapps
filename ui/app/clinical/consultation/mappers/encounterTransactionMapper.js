@@ -108,6 +108,9 @@ Bahmni.Clinical.EncounterTransactionMapper = function () {
                 });
                 encounterData.observations = encounterData.observations.concat(_.flatten(orderAttributes));
             }
+            if (consultation.scribble) {
+                encounterData.observations = encounterData.observations.concat(_.flatten(consultation.scribble));
+            }
         };
 
         addObservationsToEncounter();
