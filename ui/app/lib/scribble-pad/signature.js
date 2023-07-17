@@ -21,31 +21,25 @@ angular.module('signature').directive('signaturePad', ['$interval', '$timeout', 
         dataurl: '=?',
         height: '@',
         width: '@',
-        notifyDrawing: '&onDrawing',  
-        currentScope:'=',      
+        notifyDrawing: '&onDrawing'
         },
       controller: [  '$scope',     
         function ($scope) {
           $scope.accept = function () {
-            $scope.opdSummaryConceptName = "Hand Note";                       
-            var visit = JSON.parse(sessionStorage["visit"]); //Get from
-            if ($scope.dataurl !== undefined || $scope.dataurl !== EMPTY_IMAGE) {
-              var locationUuid = sessionService.getLoginLocationUuid();
+            $scope.handNoteConceptName = "Hand Note";            
+            var visit = $scope.$parent.ngDialogData.visit;
+            if ($scope.dataurl !== undefined || $scope.dataurl !== EMPTY_IMAGE) {              
               var observationMapper = new Bahmni.ConceptSet.ObservationMapper();
               var conceptsConfig = conceptSetUiConfigService.getConfig();
               var providerUuid = $rootScope.currentProvider.uuid;
-              var observations = [];
-              var obsOpdSummary = null;
-              var obsOpdSummarynew= null;
-              var obsSummary= null;
-              var patientUuid = sessionStorage.getItem("patient.uuid");
+              var handnotes= null;
+              var patientUuid = $scope.$parent.ngDialogData.patientUuid;
               var template = null;
-              var fileName = "notes_" + Date.now();
-              visitDocumentService.saveFile($scope.dataurl, sessionStorage.getItem("patient.uuid"), "Consultation", "notes_" + Date.now() , "image").then(function (response) {
-                var fileUrl = Bahmni.Common.Constants.documentsPath + '/' + response.data.url;
+              visitDocumentService.saveFile($scope.dataurl, patientUuid, "Consultation", "notes_" + Date.now() , "image").then(function (response) {
+                // var fileUrl = Bahmni.Common.Constants.documentsPath + '/' + response.data.url;
                 //var savedFile = visit.addFile(fileUrl); 
                 var imagename = response.data.url;
-                spinner.forPromise(observationsService.fetch(patientUuid, $scope.opdSummaryConceptName,
+                spinner.forPromise(observationsService.fetch(patientUuid, $scope.handNoteConceptName,
                   'latest', 1, visit["uuid"],
                   null, null))
                   .then(function (result) {
@@ -60,22 +54,22 @@ angular.module('signature').directive('signaturePad', ['$interval', '$timeout', 
                           $scope.openmrsOpdSummaryObs = new Bahmni.Common.Obs.ObservationMapper().map(obsArray, conceptsConfig);
                       }
                       spinner.forPromise(conceptSetService.getConcept({
-                          name: $scope.opdSummaryConceptName,
+                          name: $scope.handNoteConceptName,
                           v: "bahmni"
                       }).then(function (cResponse) {
                           template = cResponse.data.results[0];
                           $scope.conceptSet = template;
-                          $scope.conceptSet.conceptName = $scope.opdSummaryConceptName;
-                          obsOpdSummarynew = observationMapper.map(response.data, template, conceptsConfig);
+                          $scope.conceptSet.conceptName = $scope.handNoteConceptName;
+                          handnotes = observationMapper.map(response.data, template, conceptsConfig);
                           var groupmember={} ;
                           var conscept = {"uuid":"2636ad6a-cd11-4edf-876f-adb40277acc3","name":"Image Note"};
                           groupmember.conscept = conscept;
-                          groupmember = obsOpdSummarynew.groupMembers[0];
+                          groupmember = handnotes.groupMembers[0];
                           groupmember.value = imagename;
                           groupmember.valueAsString=imagename;
-                          obsOpdSummarynew.groupMembers[0]=groupmember;
-                          obsOpdSummarynew.value = imagename;
-                          $rootScope.$emit('pushObservation',obsOpdSummarynew);
+                          handnotes.groupMembers[0]=groupmember;
+                          handnotes.value = imagename;
+                          $rootScope.$emit('pushObservation',handnotes);
                   }));
               });                          
                 ngDialog.close();
@@ -84,13 +78,6 @@ angular.module('signature').directive('signaturePad', ['$interval', '$timeout', 
             else {
               messagingService.showMessage('error', "Can't save empty image");
             }
-
-            // return {
-            //   isEmpty: $scope.dataurl === EMPTY_IMAGE,
-            //   dataUrl: $scope.dataurl
-            // };
-
-            
           };
 
           $scope.onMouseup = function () {

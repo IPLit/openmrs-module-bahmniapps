@@ -583,25 +583,17 @@ angular.module('bahmni.clinical').controller('ConsultationController',
             initialize();
 
             $scope.openScribble = function () {
-                sessionStorage.setItem("patient.uuid", $scope.patient.uuid);
-                $scope.saveHistory = angular.toJson(visitHistory.activeVisit);
-                sessionStorage.setItem('visit', $scope.saveHistory);
-                $scope.DataFromJson = JSON.parse(sessionStorage["visit"]); // Get from
-                console.log("data on scribble", $scope.DataFromJson);
                 ngDialog.open({
                     template: './consultation/views/scribble-pad.html',
                     className: 'ngdialog-theme-default',
                     height: "80%",
                     width: "70%",
                     data: {
-                        currentScope: $scope,
                         patientUuid: $scope.patient.uuid,
                         visit: visitHistory.activeVisit
                     },
                     preCloseCallback: function (value) {
                         if (confirm('Are you sure you want to close?')) {
-                            sessionStorage.removeItem("patient.uuid");
-                            sessionStorage.removeItem("visit");
                             return true;
                         }
                         return false;
