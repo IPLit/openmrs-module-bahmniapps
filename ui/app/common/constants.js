@@ -30,7 +30,6 @@ Bahmni.Common = Bahmni.Common || {};
         return tenantContext;
     };
 
-
     var serverErrorMessages = [
         {
             serverMessage: "Cannot have more than one active order for the same orderable and care setting at same time",
