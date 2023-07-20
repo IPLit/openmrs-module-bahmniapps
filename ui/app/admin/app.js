@@ -56,6 +56,10 @@ angular.module('admin')
                     backLinks: [{label: "Home", state: "admin.dashboard", icon: "fa-home"}]
                 }
             });
+
+            // MT IPLit
+            $httpProvider.defaults.headers.common[Bahmni.Common.Constants.tenantHeaderName] = Bahmni.Common.Constants.tenantContext;
+
             $httpProvider.defaults.headers.common['Disable-WWW-Authenticate'] = true;
             $bahmniTranslateProvider.init({app: 'admin', shouldMerge: true});
         }

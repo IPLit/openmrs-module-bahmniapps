@@ -53,6 +53,10 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
                 resolve: {
                 }
             });
+
+            // MT IPLit
+            $httpProvider.defaults.headers.common[Bahmni.Common.Constants.tenantHeaderName] = Bahmni.Common.Constants.tenantContext;
+
             $httpProvider.defaults.headers.common['Disable-WWW-Authenticate'] = true;
             $bahmniTranslateProvider.init({app: 'home', shouldMerge: true});
         }]).run(['$rootScope', '$templateCache', '$window', function ($rootScope, $templateCache, $window) {

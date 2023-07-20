@@ -68,6 +68,10 @@ angular
                     }
                 }
             });
+
+            // MT IPLit
+            $httpProvider.defaults.headers.common[Bahmni.Common.Constants.tenantHeaderName] = Bahmni.Common.Constants.tenantContext;
+
             $bahmniTranslateProvider.init({app: 'orders', shouldMerge: true});
         }]
 

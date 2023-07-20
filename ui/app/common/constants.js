@@ -16,6 +16,21 @@ Bahmni.Common = Bahmni.Common || {};
     var CUSTOM_URL = hostUrl + "/implementation_config/openmrs/apps/";
     var IE_APPS_API = RESTWS_V1 + "/bahmniie";
 
+    // MT IPLit
+    var getMTTenantContext = function () {
+        var tenantContext = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
+        if (tenantContext && tenantContext !== '') {
+            tenantContext = tenantContext.replaceAll('/', '');
+            if (tenantContext === 'bahmni') {
+                tenantContext = '';
+            }
+        } else {
+            tenantContext = '';
+        }
+        return tenantContext;
+    };
+
+
     var serverErrorMessages = [
         {
             serverMessage: "Cannot have more than one active order for the same orderable and care setting at same time",
@@ -288,7 +303,9 @@ Bahmni.Common = Bahmni.Common || {};
         bahmniDistroLabOrderResultsUrl: BAHMNI_CORE + "/distro/filters/labOrderResults",
         bahmniDistroDiagnosisUrl: BAHMNI_CORE + "/distro/filters/diagnosis/search",
         bahmniDistroObservationsUrl: BAHMNI_CORE + "/distro/filters/observations",
-        bahmniDistroUserLocationValidUrl: BAHMNI_CORE + "/distro/filters/userLocationValid"
+        bahmniDistroUserLocationValidUrl: BAHMNI_CORE + "/distro/filters/userLocationValid",
+        tenantContext: getMTTenantContext(),
+        tenantHeaderName: 'X-Tenant-Id'
     };
 })();
 
