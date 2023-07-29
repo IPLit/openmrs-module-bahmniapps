@@ -304,7 +304,8 @@ Bahmni.Common = Bahmni.Common || {};
         bahmniDistroObservationsUrl: BAHMNI_CORE + "/distro/filters/observations",
         bahmniDistroUserLocationValidUrl: BAHMNI_CORE + "/distro/filters/userLocationValid",
         tenantContext: getMTTenantContext(),
-        tenantHeaderName: 'X-Tenant-Id'
+        tenantHeaderName: 'X-Tenant-Id',
+        bahmniDistroDispositionByPatientUrl: BAHMNI_CORE + "/distro/filters/disposition/patientWithLocale"
     };
 })();
 

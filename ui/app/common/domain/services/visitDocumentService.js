@@ -39,7 +39,7 @@ angular.module('bahmni.common.domain')
             if (fileType === "video") {
                 format = _.last(_.split(fileName, "."));
             }
-            var url = Bahmni.Common.Constants.RESTWS_V1 + "/bahmnicore/visitDocument/uploadDocument";
+            var url = Bahmni.Common.Constants.RESTWS_V1 + "/bahmnicore/distro/visitDocument/mt/uploadDocument";
             return $http.post(url, {
                 content: file.substring(file.indexOf(searchStr) + searchStr.length, file.length),
                 format: format,

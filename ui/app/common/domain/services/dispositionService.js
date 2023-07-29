@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bahmni.common.domain')
-    .factory('dispositionService', ['$http', '$rootScope', function ($http, $rootScope) {
+    .factory('dispositionService', ['$http', '$rootScope', '$bahmniCookieStore', 'appService', function ($http, $rootScope, $bahmniCookieStore, appService) {
         var getDispositionActions = function () {
             return $http.get(Bahmni.Common.Constants.conceptSearchByFullNameUrl +
                 "&name=" + Bahmni.Common.Constants.dispositionConcept +
@@ -22,7 +22,15 @@ angular.module('bahmni.common.domain')
         };
 
         var getDispositionByPatient = function (patientUuid, numberOfVisits) {
-            return $http.get(Bahmni.Common.Constants.bahmniDispositionByPatientUrl, {
+            var dispositionUrl = Bahmni.Common.Constants.bahmniDispositionByPatientUrl;
+            var userInSession = $bahmniCookieStore.get(Bahmni.Common.Constants.currentUser);
+            if (userInSession) {
+                var restrictLocationToUser = (appService.getAppDescriptor() && appService.getAppDescriptor().getConfigValue('restrictLocationToUser')) || false;
+                if (restrictLocationToUser) {
+                    dispositionUrl = Bahmni.Common.Constants.bahmniDistroDispositionByPatientUrl;
+                }
+            }
+            return $http.get(dispositionUrl, {
                 params: {
                     patientUuid: patientUuid,
                     numberOfVisits: numberOfVisits,
