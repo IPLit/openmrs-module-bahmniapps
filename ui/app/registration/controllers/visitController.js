@@ -256,6 +256,9 @@ angular.module('bahmni.registration')
                 if (forwardUrl != null) {
                     $window.location.href = appService.getAppDescriptor().formatUrl(forwardUrl, {'patientUuid': patientUuid});
                 } else if (dashboardUrl != null && redirectToDashboard) {
+                    if (Bahmni.Common.Constants.tenantContext && Bahmni.Common.Constants.tenantContext !== '') {
+                        dashboardUrl = "/" + Bahmni.Common.Constants.tenantContext + dashboardUrl;
+                    }
                     $window.location.href = appService.getAppDescriptor().formatUrl(dashboardUrl, {'patientUuid': patientUuid});
                 } else {
                     $state.transitionTo($state.current, $state.params, {
