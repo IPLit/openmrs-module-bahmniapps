@@ -62,7 +62,15 @@ angular.module('signature').directive('signaturePad', ['$interval', '$timeout', 
                           $scope.conceptSet.conceptName = $scope.handNoteConceptName;
                           handnotes = observationMapper.map(response.data, template, conceptsConfig);
                           var groupmember={} ;
-                          var conscept = {"uuid":"2636ad6a-cd11-4edf-876f-adb40277acc3","name":"Image Note"};
+                          spinner.forPromise(conceptSetService.getConcept({
+                            name: "Image Note",
+                            v: "bahmni"
+                        }).then(function (iResponse) {
+                          var imgConcept = null;
+                          imgConcept = iResponse.data.results[0];
+                          var name = imgConcept.name.name;
+                          var uuid = imgConcept.name.uuid;
+                          var conscept = {"uuid":uuid,"name":name};
                           groupmember.conscept = conscept;
                           groupmember = handnotes.groupMembers[0];
                           groupmember.value = imagename;
@@ -70,6 +78,7 @@ angular.module('signature').directive('signaturePad', ['$interval', '$timeout', 
                           handnotes.groupMembers[0]=groupmember;
                           handnotes.value = imagename;
                           $rootScope.$emit('pushObservation',handnotes);
+                        }));
                   }));
               });                          
                 ngDialog.close();
