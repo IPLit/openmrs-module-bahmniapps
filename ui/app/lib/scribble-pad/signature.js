@@ -120,7 +120,7 @@ angular.module('signature').directive('signaturePad', ['$interval', '$timeout', 
               return;
             }
 
-            $scope.setDataUrl(dataUrl);
+           /* $scope.setDataUrl(dataUrl);*/
           });
         }
       ],
