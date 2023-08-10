@@ -9,6 +9,9 @@ var EncounterConfig = (function () {
         getConsultationEncounterTypeUuid: function () {
             return this.getEncounterTypeUuid("Consultation");
         },
+        getRegistrationEncounterTypeUuid: function () {
+            return this.getEncounterTypeUuid("REG");
+        },
         getAdmissionEncounterTypeUuid: function () {
             return this.getEncounterTypeUuid("ADMISSION");
         },

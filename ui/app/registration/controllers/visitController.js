@@ -13,7 +13,16 @@ angular.module('bahmni.registration')
             var regEncounterTypeUuid = $rootScope.regEncounterConfiguration.encounterTypes[Bahmni.Registration.Constants.registrationEncounterType];
             var visitLocationUuid = $rootScope.visitLocation;
             var redirectToDashboard = false;
+            var getPreviousVisitData = appService.getAppDescriptor().getConfigValue("getPreviousVisitData");
+            getPreviousVisitData = getPreviousVisitData || false;
+            var conceptsToGetFromPrevVisit = appService.getAppDescriptor().getConfigValue("previousVisitConceptNamesToPull");
+            conceptsToGetFromPrevVisit = conceptsToGetFromPrevVisit || [];
+            var getPreviousObs = conceptsToGetFromPrevVisit.join(',');
             $scope.enableDashboardRedirect = _.some($rootScope.currentUser.privileges, {name: "app:clinical"}) && (appService.getAppDescriptor().getConfigValue("enableDashboardRedirect") || Bahmni.Registration.Constants.enableDashboardRedirect);
+
+            if ($rootScope.startedVisit === false) {
+                getPreviousVisitData = false;
+            }
 
             var getPatient = function () {
                 var deferred = $q.defer();
@@ -28,14 +37,67 @@ angular.module('bahmni.registration')
 
             var getActiveEncounter = function () {
                 var deferred = $q.defer();
-                encounterService.find({
+                encounterService.findWith({
                     "patientUuid": patientUuid,
                     "providerUuids": !_.isEmpty($scope.currentProvider.uuid) ? [$scope.currentProvider.uuid] : null,
                     "includeAll": false,
                     locationUuid: locationUuid,
                     encounterTypeUuids: [regEncounterTypeUuid]
-                }).then(function (response) {
+                }, getPreviousVisitData, getPreviousObs).then(function (response) {
                     deferred.resolve(response);
+                    if (response.data && response.data.context && response.data.context.visitAttributesTypes) {
+                        var attrTypes = [];
+                        for (var i = 2; i < response.data.context.visitAttributesTypes.length; i++) {
+                            var attrTypeObject = response.data.context.visitAttributesTypes[i];
+                            if (attrTypeObject) {
+                                var dataClassName = attrTypeObject.DatatypeClassname;
+                                var preferredHandlerClassname = attrTypeObject.PreferredHandlerClassname;
+                                var attrName = attrTypeObject.Name;
+                                var attrValue = attrTypeObject.Value;
+                                var attrDescription = attrTypeObject.Description;
+                                var handlerConfig = [];
+                                if (attrTypeObject.HandlerConfig && attrTypeObject.HandlerConfig.length > 0) {
+                                    handlerConfig = attrTypeObject.HandlerConfig.split(',');
+                                }
+                                if (preferredHandlerClassname && preferredHandlerClassname.length > 0) {
+                                    preferredHandlerClassname = preferredHandlerClassname.substr(preferredHandlerClassname.lastIndexOf(".") + 1);
+                                } else {
+                                    preferredHandlerClassname = "textHandler";
+                                    if (attrName === 'Token#') {
+                                        attrValue = Number(attrValue);
+                                    }
+                                }
+                                var initialValue = handlerConfig && handlerConfig.length > 0 ? handlerConfig[0] : "";
+                                if (attrName === 'Follow-up Date') {
+                                    attrValue = attrValue ? moment(attrValue).toDate() : "";
+                                }
+                                var attrType = {
+                                    "preferredHandlerClassname": preferredHandlerClassname,
+                                    "attrName": attrName,
+                                    "attrDescription": attrDescription,
+                                    "handlerConfig": handlerConfig,
+                                    "attrValue": attrValue || initialValue
+                                };
+                                attrTypes.push(attrType);
+                            }
+                        }
+                        if (attrTypes.length > 0) {
+                            $scope.attrTypes = attrTypes;
+                        }
+                    }
+                    if (response.data.observations && conceptsToGetFromPrevVisit.length > 0 && $rootScope.startedVisit) {
+                        var observations = [];
+                        var conceptNames = conceptsToGetFromPrevVisit;
+                        for (var i = 0; i < conceptNames.length; i++) {
+                            var observation = getMatchingConceptObservation(conceptNames[i], response.data.observations);
+                            if (observation) {
+                                observations.push(observation);
+                            }
+                        }
+                        $scope.observations = observations;
+                    } else {
+                        $scope.observations = response.data.observations;
+                    }
                     $scope.encounterUuid = response.data.encounterUuid;
                     $scope.observations = response.data.observations;
                 });
@@ -74,13 +136,29 @@ angular.module('bahmni.registration')
             };
 
             var save = function () {
+                var visitAttributesTypes = [];
+                if ($scope.attrTypes && $scope.attrTypes.length > 0) {
+                    for (var i = 0; i < $scope.attrTypes.length; i++) {
+                        var valueAttr = $scope.attrTypes[i].attrValue;
+                        if ($scope.attrTypes[i].attrName === 'Follow-up Date') {
+                            valueAttr = valueAttr ? moment(valueAttr).toDate().toString() : null;
+                        }
+                        var objAttr = {
+                            "Name": $scope.attrTypes[i].attrName,
+                            "Value": valueAttr || ""
+                        };
+                        visitAttributesTypes.push(objAttr);
+                    }
+                }
+
                 $scope.encounter = {
                     patientUuid: $scope.patient.uuid,
                     locationUuid: locationUuid,
                     encounterTypeUuid: regEncounterTypeUuid,
                     orders: [],
                     drugOrders: [],
-                    extensions: {}
+                    extensions: {},
+                    context: {"visitAttributesTypes": visitAttributesTypes}
                 };
 
                 $bahmniCookieStore.put(Bahmni.Common.Constants.grantProviderAccessDataCookieName, selectedProvider, {
@@ -92,6 +170,7 @@ angular.module('bahmni.registration')
                 $scope.encounter.observations = new Bahmni.Common.Domain.ObservationFilter().filter($scope.encounter.observations);
 
                 addFormObservations($scope.encounter.observations);
+                $rootScope.startedVisit = false;
 
                 var createPromise = encounterService.create($scope.encounter);
                 spinner.forPromise(createPromise);
@@ -109,6 +188,12 @@ angular.module('bahmni.registration')
                     });
                 });
             };
+
+             var getMatchingConceptObservation = function (conceptName, obs) {
+                return _.find(obs, function (observation) {
+                   return observation.concept && observation.concept.name === conceptName;
+                });
+             };
 
             var isUserPrivilegedToCloseVisit = function () {
                 var applicablePrivs = [Bahmni.Common.Constants.closeVisitPrivilege, Bahmni.Common.Constants.deleteVisitsPrivilege];
@@ -132,8 +217,12 @@ angular.module('bahmni.registration')
                         });
                     }
 
+                    vm.visitUuid = "";
                     var hasActiveVisit = activeVisitForCurrentLoginLocation.length > 0;
-                    vm.visitUuid = hasActiveVisit ? activeVisitForCurrentLoginLocation[0].uuid : "";
+                    if (hasActiveVisit) {
+                        $rootScope.startedVisit = true;
+                        vm.visitUuid = activeVisitForCurrentLoginLocation[0].uuid;
+                    }
                     $scope.canCloseVisit = isUserPrivilegedToCloseVisit() && hasActiveVisit;
                 });
             };

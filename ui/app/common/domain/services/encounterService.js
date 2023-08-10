@@ -100,7 +100,7 @@ angular.module('bahmni.common.domain')
             this.create = function (encounter) {
                 encounter = this.buildEncounter(encounter);
 
-                return $http.post(Bahmni.Common.Constants.bahmniEncounterUrl, encounter, {
+                return $http.post(Bahmni.Common.Constants.bahmniDistroEncounterUrl, encounter, {
                     withCredentials: true
                 });
             };
@@ -161,6 +161,18 @@ angular.module('bahmni.common.domain')
                     withCredentials: true
                 });
             };
+
+            this.findWith = function (params, getPreviousVisitData, conceptsToGetFromPrevVisit) {
+                if (getPreviousVisitData && conceptsToGetFromPrevVisit && conceptsToGetFromPrevVisit.length > 0) {
+                    return $http.post(Bahmni.Common.Constants.bahmniDistroEncounterUrl +
+                        '/findWith?getPreviousVisitData=' + getPreviousVisitData + '&getPreviousObs=' + conceptsToGetFromPrevVisit, params, {
+                            withCredentials: true
+                        });
+                } else {
+                    return this.find(params);
+                }
+            };
+
             this.findByEncounterUuid = function (encounterUuid, params) {
                 params = params || {includeAll: true};
                 return $http.get(Bahmni.Common.Constants.bahmniEncounterUrl + '/' + encounterUuid, {
