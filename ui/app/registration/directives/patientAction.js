@@ -85,7 +85,6 @@ angular.module('bahmni.registration')
                 );
 
                 $scope.visitControl.onStartVisit = function () {
-                    $rootScope.startedVisit = true;
                     $scope.setSubmitSource('startVisit');
                 };
 

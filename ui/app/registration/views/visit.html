@@ -46,31 +46,6 @@
                             </div>
                         </div>
                     </section>
-                    <section class="observation-section" ng-if="attrTypes">
-                        <div class="registraion_legend">
-                            <span class="mylegend">Visit Information</span>
-                        </div>
-                        <div ng-repeat="attrType in attrTypes" class="vitals form-horizontal">
-                            <div ng-if="attrType.preferredHandlerClassname=='SpecifiedTextOptionsDropdownHandler'" class="obs-section-form">
-                                <fieldset class="leaf-observation-node">
-                                    <div class="form-group">
-                                        <label class="control-label concept-name"><span>{{attrType.attrDescription | translate}}</span></label>
-                                        <select id="{{'attrType'+$index}}" class="concept-name"
-                                                blur-on-select="true" ng-model="attrType.attrValue" ng-options="h for h in attrType.handlerConfig" ng-selected="attrType.attrValue==h">
-                                        </select>
-                                    </div>
-                                </fieldset>
-                            </div>
-                            <div ng-if="attrType.preferredHandlerClassname=='textHandler'" class="obs-section-form">
-                                <fieldset class="leaf-observation-node">
-                                    <div class="form-group">
-                                        <label class="control-label concept-name"><span>{{attrType.attrDescription | translate}}</span></label>
-                                        <input id="{{'attrType'+$index}}" class="concept-name" blur-on-select="true" ng-model="attrType.attrValue" />
-                                    </div>
-                                </fieldset>
-                            </div>
-                        </div>
-                    </section>
                 </div>
                 <div class="submit-btn-container">
                     <button type="button" class="cancel" tabindex="-1" ng-show="::canCloseVisit" ng-click="closeVisitIfDischarged()">{{ ::'REGISTRATION_LABEL_CLOSE_VISIT' | translate}}</button>
