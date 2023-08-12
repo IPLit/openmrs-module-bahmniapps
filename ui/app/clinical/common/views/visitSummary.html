@@ -130,6 +130,13 @@
                     </div>
                 </section>
             </div>
+            <div data-ng-switch-when="visitAttributes" class="section"
+                style="margin:0px !important;padding:0px 0px !important;">
+                <section class="block order dashboard-section">
+                    <h2 class="section-title"> {{::section.title | titleTranslate}}</h2>
+                    <visit-attributes visit-uuid="::visitUuid" patient-uuid="patient.uuid" visit-summary="visitSummary"></visit-attributes>
+                </section>
+            </div>
             <div data-ng-switch-when="custom" class="section"
                 style="margin:0px !important;padding:0px 0px !important;">
                 <section class="block dashboard-section">
