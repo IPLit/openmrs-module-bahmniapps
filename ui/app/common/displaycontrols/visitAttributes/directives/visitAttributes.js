@@ -1,8 +1,7 @@
 "use strict";
 
 angular.module('bahmni.common.displaycontrol.visitAttributes')
-    .directive('visitAttributes', ['encounterService', 'appService', '$rootScope', 'sessionService', 'spinner', '$q', 'configurations',
-     function (encounterService, appService, $rootScope, sessionService, spinner, $q, configurations) {
+    .directive('visitAttributes', ['encounterService', 'appService', '$rootScope', 'sessionService', 'spinner', '$q', 'configurations', function (encounterService, appService, $rootScope, sessionService, spinner, $q, configurations) {
         var controller = function ($scope) {
             var init = function () {
                 var getPreviousVisitData = appService.getAppDescriptor().getConfigValue("getPreviousVisitData");

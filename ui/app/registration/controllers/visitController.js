@@ -185,11 +185,11 @@ angular.module('bahmni.registration')
                 });
             };
 
-             var getMatchingConceptObservation = function (conceptName, obs) {
+            var getMatchingConceptObservation = function (conceptName, obs) {
                 return _.find(obs, function (observation) {
-                   return observation.concept && observation.concept.name === conceptName;
+                    return observation.concept && observation.concept.name === conceptName;
                 });
-             };
+            };
 
             var isUserPrivilegedToCloseVisit = function () {
                 var applicablePrivs = [Bahmni.Common.Constants.closeVisitPrivilege, Bahmni.Common.Constants.deleteVisitsPrivilege];
