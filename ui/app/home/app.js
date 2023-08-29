@@ -41,6 +41,16 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
                         }
                     }
                 })
+            .state('loginLocation', {
+                url: '/loginLocation',
+                controller: 'LoginLocationController',
+                templateUrl: 'views/loginLocation.html',
+                resolve: {
+                    initialData: function (loginInitialization) {
+                        return loginInitialization();
+                    }
+                }
+            })
             .state('errorLog', {
                 url: '/errorLog',
                 controller: 'ErrorLogController',
@@ -53,10 +63,6 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
                 resolve: {
                 }
             });
-
-            // MT IPLit
-            $httpProvider.defaults.headers.common[Bahmni.Common.Constants.tenantHeaderName] = Bahmni.Common.Constants.tenantContext;
-
             $httpProvider.defaults.headers.common['Disable-WWW-Authenticate'] = true;
             $bahmniTranslateProvider.init({app: 'home', shouldMerge: true});
         }]).run(['$rootScope', '$templateCache', '$window', function ($rootScope, $templateCache, $window) {

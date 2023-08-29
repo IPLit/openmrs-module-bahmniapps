@@ -61,9 +61,6 @@ angular
                 return location.hash.substr(val).split("&")[0].split("=")[1] || 'reports';
             };
 
-            // MT IPLit
-            $httpProvider.defaults.headers.common[Bahmni.Common.Constants.tenantHeaderName] = Bahmni.Common.Constants.tenantContext;
-
             $bahmniTranslateProvider.init({app: getAppName(), shouldMerge: true});
         }]).run(['$rootScope', '$templateCache', '$window', function ($rootScope, $templateCache, $window) {
             moment.locale($window.localStorage["NG_TRANSLATE_LANG_KEY"] || "en");

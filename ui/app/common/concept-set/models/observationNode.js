@@ -1,5 +1,3 @@
-'use strict';
-
 (function () {
     var findObservationByClassName = function (groupMembers, conceptClassName) {
         return _.find(groupMembers, function (member) {
@@ -96,17 +94,19 @@
             var observations = getGroupMembersWithoutClass(this.groupMembers, [Bahmni.Common.Constants.abnormalConceptClassName,
                 Bahmni.Common.Constants.unknownConceptClassName,
                 Bahmni.Common.Constants.durationConceptClassName]);
-
             if (_.isEmpty(observations)) {
                 return this.groupMembers[0];
             }
+
             var primaryObs = observations[1] && observations[1].uuid && !observations[1].voided ? observations[1] : observations[0];
             if (observations[0].isMultiSelect) {
                 return observations[0];
             }
+
             if (primaryObs.uuid && !primaryObs.voided) {
                 return primaryObs;
             }
+
             return observations[1] && (observations[1].value || observations[1].value === "") && !observations[1].voided ? observations[1] : observations[0];
         };
         Object.defineProperty(this, 'primaryObs', {

@@ -128,8 +128,5 @@ angular.module('ipd').config(['$stateProvider', '$httpProvider', '$urlRouterProv
                 }
             });
 
-        // MT IPLit
-        $httpProvider.defaults.headers.common[Bahmni.Common.Constants.tenantHeaderName] = Bahmni.Common.Constants.tenantContext;
-
         $bahmniTranslateProvider.init({app: 'ipd', shouldMerge: true});
     }]);

@@ -111,8 +111,5 @@ angular.module('ot').config(['$stateProvider', '$httpProvider', '$urlRouterProvi
                 }
             });
 
-        // MT IPLit
-        $httpProvider.defaults.headers.common[Bahmni.Common.Constants.tenantHeaderName] = Bahmni.Common.Constants.tenantContext;
-
         $bahmniTranslateProvider.init({app: 'ot', shouldMerge: true});
     }]);

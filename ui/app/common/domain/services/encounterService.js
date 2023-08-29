@@ -5,7 +5,7 @@ angular.module('bahmni.common.domain')
         function ($http, $q, $rootScope, configurations, $bahmniCookieStore) {
             this.buildEncounter = function (encounter) {
                 encounter.observations = encounter.observations || [];
-                _.each(encounter.observations, function (obs) {
+                encounter.observations.forEach(function (obs) {
                     stripExtraConceptInfo(obs);
                 });
                 var bacterilogyMembers = getBacteriologyGroupMembers(encounter);

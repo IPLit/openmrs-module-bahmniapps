@@ -1,15 +1,8 @@
 'use strict';
 
 angular.module('bahmni.home')
-    .factory('loginInitialization', ['$rootScope', '$q', 'locationService', 'spinner', 'messagingService', 'appService',
-        function ($rootScope, $q, locationService, spinner, messagingService, appService) {
-            var initApp = function () {
-                return appService.initApp('home', {
-                    'app': true,
-                    'extension': true
-                });
-            };
-
+    .factory('loginInitialization', ['$rootScope', '$q', 'locationService', 'spinner', 'messagingService',
+        function ($rootScope, $q, locationService, spinner, messagingService) {
             var init = function () {
                 var deferrable = $q.defer();
                 locationService.getAllByTag("Login Location").then(
@@ -28,7 +21,6 @@ angular.module('bahmni.home')
             };
 
             return function () {
-                spinner.forPromise(initApp());
                 return spinner.forPromise(init());
             };
         }

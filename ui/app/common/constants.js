@@ -15,20 +15,7 @@ Bahmni.Common = Bahmni.Common || {};
     var BASE_URL = hostUrl + "/bahmni_config/openmrs/apps/";
     var CUSTOM_URL = hostUrl + "/implementation_config/openmrs/apps/";
     var IE_APPS_API = RESTWS_V1 + "/bahmniie";
-
-    // MT IPLit
-    var getMTTenantContext = function () {
-        var tenantContext = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
-        if (tenantContext && tenantContext !== '') {
-            tenantContext = tenantContext.replaceAll('/', '');
-            if (tenantContext === 'bahmni') {
-                tenantContext = '';
-            }
-        } else {
-            tenantContext = '';
-        }
-        return tenantContext;
-    };
+    var FHIR_BASE_URL = hostUrl + "/openmrs/ws/fhir2/R4";
 
     var serverErrorMessages = [
         {
@@ -89,11 +76,14 @@ Bahmni.Common = Bahmni.Common || {};
         diseaseTemplateUrl: BAHMNI_CORE + "/diseaseTemplates",
         AllDiseaseTemplateUrl: BAHMNI_CORE + "/diseaseTemplate",
         emrapiConceptUrl: EMRAPI + "/concept",
+        bahmniapiConceptUrl: BAHMNI_COMMONS + "/terminologies/concepts",
         encounterConfigurationUrl: BAHMNI_CORE + "/config/bahmniencounter",
         patientConfigurationUrl: BAHMNI_CORE + "/config/patient",
         drugOrderConfigurationUrl: BAHMNI_CORE + "/config/drugOrders",
         emrEncounterUrl: EMRAPI + "/encounter",
         encounterUrl: RESTWS_V1 + "/encounter",
+        cdssUrl: RESTWS_V1 + "/cdss",
+        fhirMedicationsUrl: FHIR_BASE_URL + "/Medication",
         locationUrl: RESTWS_V1 + "/location",
         bahmniVisitLocationUrl: BAHMNI_CORE + "/visitLocation",
         bahmniFacilityLocationUrl: BAHMNI_CORE + "/facilityLocation",
@@ -304,8 +294,6 @@ Bahmni.Common = Bahmni.Common || {};
         bahmniDistroDiagnosisUrl: BAHMNI_CORE + "/distro/filters/diagnosis/search",
         bahmniDistroObservationsUrl: BAHMNI_CORE + "/distro/filters/observations",
         bahmniDistroUserLocationValidUrl: BAHMNI_CORE + "/distro/filters/userLocationValid",
-        tenantContext: getMTTenantContext(),
-        tenantHeaderName: "X-Tenant-Id",
         bahmniDistroDispositionByPatientUrl: BAHMNI_CORE + "/distro/filters/disposition/patientWithLocale"
     };
 })();

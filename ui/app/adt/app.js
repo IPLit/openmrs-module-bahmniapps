@@ -92,9 +92,6 @@ angular.module('adt').config(['$stateProvider', '$httpProvider', '$urlRouterProv
             controller: 'BedManagementController'
         });
 
-        // MT IPLit
-        $httpProvider.defaults.headers.common[Bahmni.Common.Constants.tenantHeaderName] = Bahmni.Common.Constants.tenantContext;
-
         $bahmniTranslateProvider.init({app: 'adt', shouldMerge: true});
     }]).run(['$window', function ($window) {
         moment.locale($window.localStorage["NG_TRANSLATE_LANG_KEY"] || "en");

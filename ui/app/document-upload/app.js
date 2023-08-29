@@ -64,9 +64,6 @@ angular.module('documentupload').config(['$stateProvider', '$httpProvider', '$ur
                 }
             });
 
-        // MT IPLit
-        $httpProvider.defaults.headers.common[Bahmni.Common.Constants.tenantHeaderName] = Bahmni.Common.Constants.tenantContext;
-
         $httpProvider.defaults.headers.common['Disable-WWW-Authenticate'] = true;
         $bahmniTranslateProvider.init({app: 'document-upload', shouldMerge: true});
     }]).run(['backlinkService', '$window', function (backlinkService, $window) {
