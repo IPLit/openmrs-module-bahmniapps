@@ -30,6 +30,14 @@
                     </section>
                 </div>
             </div>
+			<div ng-switch-when="vitalsTable" class="section"
+                style="margin:0px !important;padding:0px 0px !important;">
+                <div ng-if="::section.config">
+                    <section pivot-table display-name="::section | titleTranslate" patient-uuid="::patient.uuid"
+                        patient="::patient" visit-uuid="::visitUuid" config="::section.config">
+                    </section>
+                </div>
+            </div>
             <div ng-switch-when="vitals" class="section"
                 style="margin:0px !important;padding:0px 0px !important;">
                 <div ng-if="::(section.config && !isBeingPrinted)" id="vital-section">
