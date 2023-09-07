@@ -195,6 +195,18 @@ angular.module('bahmni.common.domain')
             });
         };
 
+        configurationFunctions.maxStorageSpace = function () {
+            return $http.get(Bahmni.Common.Constants.globalPropertyUrl, {
+                params: {
+                    property: 'admin.maxStorageSpace'
+                },
+                withCredentials: true,
+                transformResponse: [function (data) {
+                    return data;
+                }]
+            });
+        };
+
         configurationFunctions.prescriptionEmailToggle = function () {
             return $http.get(Bahmni.Common.Constants.globalPropertyUrl, {
                 params: {

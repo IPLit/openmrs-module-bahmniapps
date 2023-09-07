@@ -87,6 +87,10 @@ angular.module('bahmni.common.config')
             return this.configs.helpDeskNumber;
         };
 
+        this.maxStorageSpace = function () {
+            return this.configs.maxStorageSpace;
+        };
+
         this.prescriptionEmailToggle = function () {
             return this.configs.prescriptionEmailToggle;
         };
