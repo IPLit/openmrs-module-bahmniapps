@@ -48,6 +48,13 @@ angular.module('admin')
                 data: {
                     backLinks: [{label: "Home", state: "admin.orderSetDashboard", icon: "fa-users"}]
                 }
+            }).state('admin.storage', {
+                url: '/storageCount',
+                templateUrl: 'views/storage.html',
+                controller: 'StorageController',
+                data: {
+                    backLinks: [{label: "Home", state: "admin.dashboard", icon: "fa-users"}]
+                }
             }).state('admin.auditLog', {
                 url: '/auditLog',
                 templateUrl: 'views/auditLog.html',
