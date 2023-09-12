@@ -277,6 +277,7 @@ Bahmni.Common = Bahmni.Common || {};
         diagnosis: "DIAGNOSIS",
         ot: "OT",
         containerName: "bahmni-std-cloud-package-patient-documents-1",
+        maxStorageLimit: 100,
         patientAttribute: "PATIENT_ATTRIBUTE",
         program: "PROGRAM",
         visitType: "VISIT_TYPE",

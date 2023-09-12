@@ -2,7 +2,7 @@
 
 angular.module('bahmni.admin').service('storageService', ['$rootScope', '$http', '$q', function ($rootScope, $http, $q) {
     this.getUsedSpace = function () {
-        var totalSpace = $rootScope.maxStorageSpace || 1000;
+        var totalSpace = $rootScope.maxStorageSpace || Bahmni.Common.Constants.maxStorageLimit;
         var url = Bahmni.Common.Constants.storageUrl + Bahmni.Common.Constants.containerName;
 
         $http.get(url)
