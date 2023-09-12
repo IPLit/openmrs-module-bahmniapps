@@ -6,6 +6,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
 </head>
 <body>
-    <canvas id="storageChart" width="400" height="200"></canvas>
+    <progress id="storageProgress" max="100" value="{{consumedPercentage}}"></progress>
+    <p>Consumed Space: {{ consumedSpaceText }}</p>
+    <p>Total Space: {{ totalSpaceText }}</p>
 </body>
 </html>
