@@ -89,7 +89,8 @@
                         </ul>
                     </div>
 
-                    <ul ng-if="::(config.type !== 'vitals' && !isOnDashboard)" class="print-observations visible-print" style="margin:0px !important;padding:0px 0px !important;">
+                    <ul ng-if="::(config.type !== 'vitals' && config.type !== 'handNotes' && !isOnDashboard)" class="print-observations visible-print" 
+                        style="margin:0px !important;padding:0px 0px !important;">
                         <!-- <li ng-repeat="observation in ::obsGroup.value"> -->
                             <!-- <ul> -->
                                 <show-observation show-details-button="::config.showDetailsButton" patient="::patient"
@@ -99,19 +100,28 @@
                             <!-- </ul> -->
                         <!-- </li> -->
                     </ul>
+
+                    <span style="background-color:white;max-width:100%;overflow-x:hidden;vertical-align:top;"
+                        ng-if="config.type === 'handNotes' && config.isObservationForImages"
+                        class="print-observations">
+                        <show-observation patient="::patient" class="left"
+                                          observation="::observation" ng-repeat="observation in obsGroup.value"
+                                          level="2" config-is-observation-for-images="config.isObservationForImages"></show-observation>
+                    </span>
+
                     <ul style="background-color:white;max-width:100%;overflow-x:hidden;"
-                        ng-if="obsGroup.isOpen && config.isObservationForImages && isOnDashboard"
+                        ng-if="obsGroup.isOpen && config.isObservationForImages && isOnDashboard && config.type !== 'handNotes'"
                         class="print-observations hidden-print obs-groups-container">
                         <show-observation show-details-button="::config.showDetailsButton" patient="::patient"
                                           observation="::observation" ng-repeat="observation in obsGroup.value"
                                           level="2" config-is-observation-for-images="::config.isObservationForImages"></show-observation>
                     </ul>
-                    <ul style="background-color:white;max-width:100%;overflow-x:hidden;" ng-if="::(obsGroup.isOpen && config.isObservationForImages && !isOnDashboard)" class="print-observations hidden-print"> 
+                    <ul style="background-color:white;max-width:100%;overflow-x:hidden;" ng-if="::(obsGroup.isOpen && config.isObservationForImages && !isOnDashboard && config.type !== 'handNotes')" class="print-observations hidden-print"> 
                         <show-observation show-details-button="::config.showDetailsButton" patient="::patient"
                                           observation="::observation" ng-repeat="observation in obsGroup.value"
                                           level="2" config-is-observation-for-images="::config.isObservationForImages"></show-observation>
                     </ul>
-                    <ul ng-if="obsGroup.isOpen && !config.isObservationForImages" class="print-observations hidden-print">
+                    <ul ng-if="obsGroup.isOpen && !config.isObservationForImages && config.type !== 'handNotes'" class="print-observations hidden-print">
                         <show-observation show-details-button="::config.showDetailsButton" patient="::patient"
                                           observation="::observation" ng-repeat="observation in obsGroup.value"
                                           level="2" config-is-observation-for-images="::config.isObservationForImages"></show-observation>
