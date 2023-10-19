@@ -67,8 +67,8 @@
             </span>
         </div>
     </div>
-    <div>
-        <ul ng-if="::(!observation.isFormElement() && !print && !observation.isConceptClassConceptDetails())" class="hidden-print">
+    <div ng-if="::(!observation.isFormElement() && !print && !observation.isConceptClassConceptDetails())">
+        <ul class="hidden-print">
             <show-observation  show-details-button="::showDetailsButton" ng-if="::!observation.isFormElement()" ng-repeat="member in observation.groupMembers"
                           observation="::member" patient="::patient" show-date="::showDate" show-time="::showTime"
                           config-is-observation-for-images="::configIsObservationForImages"

@@ -53,8 +53,8 @@
             </div>
             <div ng-switch-when="consultationNotes" class="section"
                 style="margin:0px !important;padding:0px 0px !important;">
-                <div ng-if="::section.config" id="consultationNotes-section">
-                    <section class="block observation dashboard-section" id="consultationNotesSection">
+                <div ng-if="::section.config">
+                    <section class="block observation dashboard-section">
                         <ul bm-gallery access-impression="true">
                             <bahmni-observation patient="::patient" visit-uuid="{{::visitUuid}}"
                                                 config="::section.config"
@@ -64,10 +64,8 @@
                     </section>
                 </div>
             </div>
-            <div ng-switch-when="handNotes" class="section"
-                style="margin:0px !important;padding:0px 0px !important;">
-                <span ng-if="::section.config" id="handNotes-section">
-                    <p class="block observation dashboard-section" id="handNotesSection">
+            <div ng-switch-when="handNotes" class="section" style="margin:0px !important;padding:0px 0px !important;">
+                <p ng-if="::section.config">
                         <span bm-gallery access-impression="true">
                             <bahmni-observation patient="::patient" visit-uuid="{{::visitUuid}}"
                                                 config="::section.config" 
@@ -75,10 +73,9 @@
                                                 section-title="::section | titleTranslate"
                                                 class="section-title"></bahmni-observation>
                         </span>
-                    </p>
-                </span>
+                </p>
             </div>
-            <span ng-switch-when="diagnosis" class="section"
+            <div ng-switch-when="diagnosis" class="section"
                 style="margin:0px !important;padding:0px 0px !important;">
                 <section ng-if="::section.config" class="block dashboard-section section-title has-link">
                     <h2 ng-hide="::hideTitle" class="section-title" ng-class="::{'hidden-print': (allDiagnoses && allDiagnoses.length == 0)}">
@@ -87,13 +84,11 @@
                     <bahmni-diagnosis patient-uuid="::patient.uuid" config="::section.config"
                                       visit-uuid="::visitUuid" show-latest-diagnosis="true"></bahmni-diagnosis>
                 </section>
-            </span>
+            </div>
             <div ng-switch-when="pivotTable" class="section"
                 style="margin:0px !important;padding:0px 0px !important;">
-                <div ng-if="::section.config">
-                    <section pivot-table visit-uuid="::visitUuid" config="::section.config"
+                    <section pivot-table visit-uuid="::visitUuid" config="::section.config" ng-if="::section.config"
                              patient-uuid="::patient.uuid" display-name="::section | titleTranslate"></section>
-                </div>
             </div>
             <div data-ng-switch-when="labOrders" class="section"
                 style="margin:0px !important;padding:0px 0px !important;">
@@ -175,7 +170,7 @@
             </div>
             <div data-ng-switch-when="followUp" class="section"
                 style="margin:0px !important;padding:0px 0px !important;">
-                <section class="block observation dashboard-section" id="follow-up">
+                <section class="block dashboard-section">
                     <ul bm-gallery access-impression="true">
                         <bahmni-observation patient="::patient" visit-uuid="{{::visitUuid}}"
                                             config="::section.config"

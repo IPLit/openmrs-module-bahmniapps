@@ -101,13 +101,13 @@
                         <!-- </li> -->
                     </ul>
 
-                    <span style="background-color:white;max-width:100%;overflow-x:hidden;vertical-align:top;"
+                    <ul style="background-color:white;max-width:100%;overflow-x:hidden;"
                         ng-if="config.type === 'handNotes' && config.isObservationForImages"
                         class="print-observations">
                         <show-observation patient="::patient" class="left"
                                           observation="::observation" ng-repeat="observation in obsGroup.value"
                                           level="2" config-is-observation-for-images="config.isObservationForImages"></show-observation>
-                    </span>
+                    </ul>
 
                     <ul style="background-color:white;max-width:100%;overflow-x:hidden;"
                         ng-if="obsGroup.isOpen && config.isObservationForImages && isOnDashboard && config.type !== 'handNotes'"
