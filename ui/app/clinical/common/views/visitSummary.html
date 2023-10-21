@@ -78,11 +78,8 @@
             <div ng-switch-when="diagnosis" class="section"
                 style="margin:0px !important;padding:0px 0px !important;">
                 <section ng-if="::section.config" class="block dashboard-section section-title has-link">
-                    <h2 ng-hide="::hideTitle" class="section-title" ng-class="::{'hidden-print': (allDiagnoses && allDiagnoses.length == 0)}">
-                        <span> {{::section | titleTranslate}} </span>
-                    </h2>
-                    <bahmni-diagnosis patient-uuid="::patient.uuid" config="::section.config"
-                                      visit-uuid="::visitUuid" show-latest-diagnosis="true"></bahmni-diagnosis>
+                    <bahmni-diagnosis patient-uuid="::patient.uuid" config="::section.config" printing="true" 
+                             visit-uuid="::visitUuid" show-latest-diagnosis="true"></bahmni-diagnosis>
                 </section>
             </div>
             <div ng-switch-when="pivotTable" class="section"
@@ -93,11 +90,11 @@
             <div data-ng-switch-when="labOrders" class="section"
                 style="margin:0px !important;padding:0px 0px !important;">
                 <div ng-if="::(section.config && section.config.showChart && !isBeingPrinted)">
-                    <investigation-results
+                    <investigation-results printing="::isBeingPrinted"
                             params="::section.config"></investigation-results>
                 </div>
                 <div ng-if="::(section.config && section.config.showTable && isBeingPrinted)">
-                    <investigation-results printing="::isBeingPrinted" 
+                    <investigation-results printing="::isBeingPrinted"
                             params="::section.config"></investigation-results>
                     <!-- <orders-control visit-uuid="::visitUuid" patient="patient" section="::section.config"
                             order-type="section.config.orderType" config="section.config" is-on-dashboard="::!isBeingPrinted"

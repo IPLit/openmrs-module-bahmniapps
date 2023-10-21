@@ -1,4 +1,8 @@
-<section id="diagnosisSection" class="block diagnosis"
+<h2 ng-if="::(allDiagnoses && allDiagnoses.length > 0 && printing)" class="section-title" ng-class="::{'hidden-print': (allDiagnoses && allDiagnoses.length == 0)}">
+    <span> {{config.translationKey | translate}} </span>
+</h2>
+
+<section id="diagnosisSection" class="block diagnosis" ng-if="::(allDiagnoses && allDiagnoses.length > 0)"
          ng-class="::{'more': (allDiagnoses.show == true)}">
     <div>
         <table class="dashboard-table history-diagnosis">
@@ -86,7 +90,8 @@
             </tr>
             </tbody>
         </table>
-        <div ng-show="!isDataPresent()" ng-class="::{'hidden-print': !isDataPresent()}">
+        <!-- <div ng-show="!isDataPresent()" ng-class="::{'hidden-print': !isDataPresent()}"> -->
+        <div ng-if="::(allDiagnoses && allDiagnoses.length == 0 && !printing)" ng-class="::{'hidden-print': !isDataPresent()}">
             <div class="placeholder-text">{{::'NO_DIAGNOSIS_MESSAGE' | translate}}</div>
         </div>
     </div>
