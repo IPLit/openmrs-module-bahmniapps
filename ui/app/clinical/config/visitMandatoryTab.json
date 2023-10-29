@@ -22,7 +22,8 @@
                 "translationKey": "VISIT_TITLE_DIAGNOSIS_KEY",
                 "showCertainty": true,
                 "showOrder": true,
-                "showDetailsButton": true
+                "showDetailsButton": true,
+                "notOnDashboard": true
             }
         },
         "Observations": {
