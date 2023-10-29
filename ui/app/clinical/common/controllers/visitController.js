@@ -103,8 +103,8 @@ angular.module('bahmni.clinical')
                 if ($stateParams.print) {
                     $scope.isBeingPrinted = true;
                     printer.printFromScope("common/views/visitTabPrint.html", $scope, function () {
-                        $scope.isBeingPrinted = false;
                         window.close();
+                        $scope.isBeingPrinted = false;
                     });
                 }
             };

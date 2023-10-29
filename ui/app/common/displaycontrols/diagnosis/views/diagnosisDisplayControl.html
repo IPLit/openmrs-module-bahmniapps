@@ -1,8 +1,7 @@
-<h2 ng-if="::(allDiagnoses && allDiagnoses.length > 0 && printing)" class="section-title" ng-class="::{'hidden-print': (allDiagnoses && allDiagnoses.length == 0)}">
-    <span> {{config.translationKey | translate}} </span>
+<h2 ng-if="isDataPresent() || !printing" class="section-title">
+    <span> {{::'VISIT_TITLE_DIAGNOSIS_KEY' | translate}} </span>
 </h2>
-
-<section id="diagnosisSection" class="block diagnosis" ng-if="::(allDiagnoses && allDiagnoses.length > 0)"
+<section id="diagnosisSection" class="block diagnosis" ng-if="::allDiagnoses && allDiagnoses.length > 0"
          ng-class="::{'more': (allDiagnoses.show == true)}">
     <div>
         <table class="dashboard-table history-diagnosis">
@@ -57,8 +56,18 @@
                 </span>
                 </span>
                 </td>
+
+                <td ng-if="::(diagnosis.comments && printing)"  class="notes test-notes" colspan="{{showLatestDiagnosis ==  'true' ? 3 : 2}}">
+                    <i class="fa fa-comments left"></i>
+                    <pre id="diagnosisComments" class="left">{{::diagnosis.comments}}</pre>
+                    <div class="footer-note right">
+                        <span class="provider">
+                            <provider-directive creator-name="{{::diagnosis.creatorName}}" provider-name="{{::diagnosis.providers[0].name}}" provider-date="::diagnosis.diagnosisDateTime"></provider-directive>
+                        </span>
+                    </div>
+                </td>
             </tr>
-            <tr ng-show=":: diagnosis.comments" ng-class="::{'has-test-notes': diagnosis.comments}">
+            <tr ng-show="::(diagnosis.comments && !printing)" ng-class="::{'has-test-notes': diagnosis.comments}">
                 <td class="notes test-notes" colspan="{{showLatestDiagnosis ==  'true' ? 3 : 2}}">
                     <i class="fa fa-comments left"></i>
                     <pre id="diagnosisComments" class="left">{{::diagnosis.comments}}</pre>
@@ -91,8 +100,8 @@
             </tbody>
         </table>
         <!-- <div ng-show="!isDataPresent()" ng-class="::{'hidden-print': !isDataPresent()}"> -->
-        <div ng-if="::(allDiagnoses && allDiagnoses.length == 0 && !printing)" ng-class="::{'hidden-print': !isDataPresent()}">
-            <div class="placeholder-text">{{::'NO_DIAGNOSIS_MESSAGE' | translate}}</div>
-        </div>
     </div>
 </section>
+<div ng-if="!isDataPresent() && !printing">
+    <p class="placeholder-text">{{::'NO_DIAGNOSIS_MESSAGE' | translate}}</p>
+</div>

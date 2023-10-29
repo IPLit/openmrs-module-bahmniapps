@@ -14,11 +14,11 @@
 		<div ng-if="::!isOnDashboard">
 			<span ng-repeat="bahmniOrder in ::bahmniOrders">
 				<span ng-if="bahmniOrder.commentToFulfiller" class="header">
-					<strong>{{::translatedLabel(bahmniOrder.concept)}}</strong>
+					<span>{{::translatedLabel(bahmniOrder.concept)}}</span>
 					<span> ({{bahmniOrder.commentToFulfiller}})</span>
 				</span>
 				<span ng-if="!bahmniOrder.commentToFulfiller" class="header">
-					<strong>{{::translatedLabel(bahmniOrder.concept)}}</strong>
+					<span>{{::translatedLabel(bahmniOrder.concept)}}</span>
 				</span>
 				<!-- <ul ng-if="::bahmniOrder.bahmniObservations.length > 0">
 			    <show-observation patient="::patient"

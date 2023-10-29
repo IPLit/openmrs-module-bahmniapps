@@ -24,6 +24,17 @@
             <i class="fa fa-angle-up"></i>
         </button>
     </td>
+
+    <td ng-if="::(drugOrder.additionalInstructions && printing)" class="notes test-notes">
+        <i class="fa fa-comments left"></i>
+        <pre class="left">({{::drugOrder.additionalInstructions}})</pre>
+        <!-- <div class="footer-note right">
+            <span class="provider" ng-if="::params.showProvider">
+                <provider-directive creator-name="{{::drugOrder.creatorName}}" provider-name="{{::drugOrder.provider.name}}" provider-date="::drugOrder.effectiveStartDate"></provider-directive>
+            </span>
+        </div> -->
+    </td>
+
 </tr>
 <tr ng-if="::(drugOrder.additionalInstructions && !printing)" ng-class="::{'has-test-notes': drugOrder.additionalInstructions}">
     <td colspan="5" class="notes test-notes">

@@ -30,7 +30,8 @@ angular.module('bahmni.common.displaycontrol.conditionsList')
             templateUrl: "../common/displaycontrols/conditionsList/views/conditionsList.html",
             scope: {
                 params: "=",
-                patient: "="
+                patient: "=",
+                printing: "=?"
             }
         };
     }]);
