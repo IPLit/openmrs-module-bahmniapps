@@ -13,7 +13,7 @@ angular.module('bahmni.clinical')
 
             $scope.showOrderSetDetails = true;
             $scope.addTreatment = true;
-            $scope.canOrderSetBeAdded = true;
+            $scope.canOrderSetBeAdded = false;
             $scope.isSearchDisabled = false;
             $scope.cdssEnabled = false;
             $scope.clearButtonClicked = false;
