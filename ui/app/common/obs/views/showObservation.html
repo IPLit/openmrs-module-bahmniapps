@@ -30,7 +30,7 @@
             <pre class="left" ng-if="!configIsObservationForImages">{{::observation.getDisplayValue() | titleTranslate}}</pre>
             &nbsp;<span class="label-add-on">{{::observation.concept.units}}</span>
         </span>
-        <a class="img-concept" ng-if="::(observation.isImageConcept())">
+        <a class="img-concept" ng-if="::(observation.isImageConcept() && !observation.hasPDFAsValue())">
             <img align="middle" bm-observation-gallery-item observation="::observation" ng-src="/document_images/{{::observation.value}}"
             alt="{{::observation.concept.name}}" />
         </a>
