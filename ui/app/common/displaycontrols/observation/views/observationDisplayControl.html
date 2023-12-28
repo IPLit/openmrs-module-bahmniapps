@@ -30,7 +30,7 @@
                         ng-repeat="observation in obsGroup.value">
                         <ul ng-repeat="obs in (observation.groupMembers | filter:'!'+'blood pressure':false) track by $index">
                             <show-observation show-details-button="::config.showDetailsButton" patient="::patient"
-                                style="margin:0px !important;padding:0px 0px !important;"
+                                style="margin:0px !important;padding:0px 0px !important;" display-name-type="::config.displayNameType" 
                                  observation="::obs"
                                  ></show-observation>
                         </ul>
@@ -95,8 +95,8 @@
                             <!-- <ul> -->
                                 <show-observation show-details-button="::config.showDetailsButton" patient="::patient"
                                          style="margin:0px !important;padding:0px 0px !important;"
-                                                  observation="::observation" ng-repeat="observation in ::obsGroup.value"
-                                                  level="2"></show-observation>
+                                                  observation="::observation" ng-repeat="observation in ::obsGroup.value" display-name-type="::config.displayNameType" 
+                                                 level="2"></show-observation>
                             <!-- </ul> -->
                         <!-- </li> -->
                     </ul>
@@ -106,7 +106,7 @@
                         class="print-observations">
                         <show-observation patient="::patient" class="left"
                                           observation="::observation" ng-repeat="observation in obsGroup.value"
-                                          level="2" config-is-observation-for-images="config.isObservationForImages"></show-observation>
+                                          level="2" config-is-observation-for-images="config.isObservationForImages" display-name-type="::config.displayNameType"></show-observation>
                     </ul>
 
                     <ul style="background-color:white;max-width:100%;overflow-x:hidden;"
@@ -114,17 +114,17 @@
                         class="print-observations hidden-print obs-groups-container">
                         <show-observation show-details-button="::config.showDetailsButton" patient="::patient"
                                           observation="::observation" ng-repeat="observation in obsGroup.value"
-                                          level="2" config-is-observation-for-images="::config.isObservationForImages"></show-observation>
+                                          level="2" config-is-observation-for-images="::config.isObservationForImages" display-name-type="::config.displayNameType"></show-observation>
                     </ul>
                     <ul style="background-color:white;max-width:100%;overflow-x:hidden;" ng-if="::(obsGroup.isOpen && config.isObservationForImages && !isOnDashboard && config.type !== 'handNotes')" class="print-observations hidden-print"> 
                         <show-observation show-details-button="::config.showDetailsButton" patient="::patient"
                                           observation="::observation" ng-repeat="observation in obsGroup.value"
-                                          level="2" config-is-observation-for-images="::config.isObservationForImages"></show-observation>
+                                          level="2" config-is-observation-for-images="::config.isObservationForImages" display-name-type="::config.displayNameType"></show-observation>
                     </ul>
                     <ul ng-if="obsGroup.isOpen && !config.isObservationForImages && config.type !== 'handNotes'" class="print-observations hidden-print">
                         <show-observation show-details-button="::config.showDetailsButton" patient="::patient"
                                           observation="::observation" ng-repeat="observation in obsGroup.value"
-                                          level="2" config-is-observation-for-images="::config.isObservationForImages"></show-observation>
+                                          level="2" config-is-observation-for-images="::config.isObservationForImages" display-name-type="::config.displayNameType"></show-observation>
                     </ul>
                 </li>
             </ul>
