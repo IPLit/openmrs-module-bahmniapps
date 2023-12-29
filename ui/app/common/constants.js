@@ -217,6 +217,8 @@ Bahmni.Common = Bahmni.Common || {};
         orderSetMemberAttributeTypeUrl: RESTWS_V1 + "/ordersetmemberattributetype",
         orderSetUrl: RESTWS_V1 + "/bahmniorderset",
         storageUrl: hostUrl + "/storage/container/",
+        contactURL: "support@iplit.in",
+        salesURL: "sales@iplit.in",
         primaryOrderSetMemberAttributeTypeName: "Primary",
         bahmniBacteriologyResultsUrl: BACTERIOLOGY + "/specimen",
         bedFromVisit: RESTWS_V1 + "/beds",
@@ -297,6 +299,7 @@ Bahmni.Common = Bahmni.Common || {};
         bahmniDistroDiagnosisUrl: BAHMNI_CORE + "/distro/filters/diagnosis/search",
         bahmniDistroObservationsUrl: BAHMNI_CORE + "/distro/filters/observations",
         bahmniDistroUserLocationValidUrl: BAHMNI_CORE + "/distro/filters/userLocationValid",
+        bahmniDistroVisitPrintUrl: BAHMNI_CORE + "/distro/report/visit",
         bahmniDistroDispositionByPatientUrl: BAHMNI_CORE + "/distro/filters/disposition/patientWithLocale"
     };
 })();

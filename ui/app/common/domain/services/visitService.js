@@ -13,6 +13,14 @@ angular.module('bahmni.common.domain')
             );
         };
 
+        this.print = function (visitDetails) {
+            return $http.post(Bahmni.Common.Constants.bahmniDistroVisitPrintUrl, visitDetails, {
+                withCredentials: true,
+                responseType: 'arraybuffer',
+                headers: {"Accept": "application/json", "Content-Type": "application/json"}
+            });
+        };
+
         this.endVisit = function (visitUuid) {
             return $http.post(Bahmni.Common.Constants.endVisitUrl + '?visitUuid=' + visitUuid, {
                 withCredentials: true

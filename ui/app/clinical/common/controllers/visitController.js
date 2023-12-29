@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('bahmni.clinical')
-    .controller('VisitController', ['$scope', '$state', 'encounterService', 'clinicalAppConfigService', 'configurations', 'visitSummary', '$timeout', 'printer', 'visitConfig', 'visitHistory', '$stateParams', 'locationService', 'visitService',
-        function ($scope, $state, encounterService, clinicalAppConfigService, configurations, visitSummary, $timeout, printer, visitConfig, visitHistory, $stateParams, locationService, visitService) {
+    .controller('VisitController', ['$scope', '$state', 'encounterService', 'clinicalAppConfigService', 'configurations', 'visitSummary', '$timeout', 'printer', 'visitConfig', 'visitHistory', '$stateParams', 'locationService', 'visitService', 'orderTypeService',
+        function ($scope, $state, encounterService, clinicalAppConfigService, configurations, visitSummary, $timeout, printer, visitConfig, visitHistory, $stateParams, locationService, visitService, orderTypeService) {
             var encounterTypeUuid = configurations.encounterConfig().getPatientDocumentEncounterTypeUuid();
             $scope.documentsPromise = encounterService.getEncountersForEncounterType($scope.patient.uuid, encounterTypeUuid).then(function (response) {
                 return new Bahmni.Clinical.PatientFileObservationsMapper().map(response.data.results);
@@ -68,7 +68,26 @@ angular.module('bahmni.clinical')
 
             $scope.$on("event:printVisitTab", function () {
                 $scope.isBeingPrinted = true;
-                printer.printFromScope("common/views/visitTabPrint.html", $scope);
+                var mediaType = 'application/pdf';
+                var a = document.createElement("a");
+                document.body.appendChild(a);
+                a.style = "display: none";
+                var orderTypeUuid = orderTypeService.getOrderTypeUuid("Radiology Order");
+                visitService.print({
+                    "visitUuid": $scope.visitUuid,
+                    "patientUuid": $scope.patientUuid,
+                    "obsConcepts": ["Diastolic blood pressure", "Height (cm)", "Weight (kg)", "Systolic blood pressure"],
+                    "obsIgnoreList": ["Radiology", "Document", "Follow-up Condition", "Return visit date", "Reason for visit (text)"],
+                    "orderTypeUuid": orderTypeUuid,
+                    "formName": ["History and Examination", "consultation note"],
+                    "headerUri": $scope.visitTabConfig.currentTab.printing.headerUri
+                }).then(function (response) {
+                    var blob = new Blob([response.data], { type: mediaType });
+                    var fileURL = window.URL.createObjectURL(blob);
+                    a.href = fileURL;
+                    a.download = "visitReport.pdf";
+                    a.click();
+                });
             });
 
             $scope.$on("event:clearVisitBoard", function () {
