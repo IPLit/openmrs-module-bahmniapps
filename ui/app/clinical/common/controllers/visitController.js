@@ -80,7 +80,7 @@ angular.module('bahmni.clinical')
                     "obsIgnoreList": ["Radiology", "Document", "Follow-up Condition", "Return visit date", "Reason for visit (text)"],
                     "orderTypeUuid": orderTypeUuid,
                     "formName": ["History and Examination", "consultation note"],
-                    "headerUri": $scope.visitTabConfig.currentTab.printing.headerUri
+                    "headerUri": Bahmni.Common.Constants.hostURL + $scope.visitTabConfig.currentTab.printing.headerUri
                 }).then(function (response) {
                     var blob = new Blob([response.data], { type: mediaType });
                     var fileURL = window.URL.createObjectURL(blob);
