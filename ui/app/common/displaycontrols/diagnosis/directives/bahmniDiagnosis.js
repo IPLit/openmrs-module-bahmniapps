@@ -71,7 +71,8 @@ angular.module('bahmni.common.displaycontrol.diagnosis')
                     visitUuid: "=?",
                     showRuledOutDiagnoses: "=?",
                     hideTitle: "=?",
-                    showLatestDiagnosis: "@showLatestDiagnosis"
+                    showLatestDiagnosis: "@showLatestDiagnosis",
+                    printing: "=?"
                 }
             };
         }]);

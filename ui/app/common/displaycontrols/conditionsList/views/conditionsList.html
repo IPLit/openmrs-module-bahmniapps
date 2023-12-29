@@ -1,13 +1,13 @@
 <div ng-class="{'template-container':hideTitle}">
     <div class="conditions-display-contorl-overflow">
         <div class="block hierarchy dashboard-section">
-            <h2 ng-click="openSummaryDialog()"
+            <h2 ng-click="openSummaryDialog()" ng-if="!(printing && conditions.length == 0)"
                 class="section-title"
                 ng-class="{'has-link':!hideTitle}">
                 <span class="title-link"> {{'CONDITION_LIST_DISPLAY_CONTROL_TITLE' | translate}} </span>
                 <i class="fa fa-external-link" ng-if="!hideTitle"></i>
             </h2>
-            <div ng-if="conditions.length == 0">
+            <div ng-if="conditions.length == 0 && !printing">
                 <p class="placeholder-text">{{'CONDITION_LIST_NO_CONDITIONS' | translate}}</p>
             </div>
             <div ng-if="conditions.length > 0">

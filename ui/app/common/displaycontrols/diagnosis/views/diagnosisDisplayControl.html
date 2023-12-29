@@ -1,8 +1,11 @@
-<section id="diagnosisSection" class="block diagnosis"
+<h2 ng-if="((!isDataPresent() && config.notOnDashboard && !printing) || (isDataPresent() && config.notOnDashboard))" class="section-title">
+    <span> {{::'VISIT_TITLE_DIAGNOSIS_KEY' | translate}} </span>
+</h2>
+<section id="diagnosisSection" class="block" ng-if="::allDiagnoses && allDiagnoses.length > 0"
          ng-class="::{'more': (allDiagnoses.show == true)}">
-    <div>
+    <!-- <div> -->
         <table class="dashboard-table history-diagnosis">
-            <tr ng-if="::(showLatestDiagnosis == 'true' && !config.hideVisitDate)" class="table-header">
+            <tr ng-if="::(showLatestDiagnosis == 'true' && !config.hideVisitDate && !printing)" class="table-header">
                 <th>&nbsp;</th>
                 <th><span>{{'CLINICAL_INITIAL'|translate}}</span></th>
                 <th><span>{{'CLINICAL_CURRENT'|translate}}</span></th>
@@ -53,8 +56,11 @@
                 </span>
                 </span>
                 </td>
+                <td ng-if="::(diagnosis.comments && printing)" class="notes test-notes" colspan="{{showLatestDiagnosis ==  'true' ? 3 : 2}}">
+                    <pre id="diagnosisComments" class="left">{{::diagnosis.comments}}</pre>
+                </td>
             </tr>
-            <tr ng-show=":: diagnosis.comments" ng-class="::{'has-test-notes': diagnosis.comments}">
+            <tr ng-show="::(diagnosis.comments && !printing)" ng-class="::{'has-test-notes': diagnosis.comments}">
                 <td class="notes test-notes" colspan="{{showLatestDiagnosis ==  'true' ? 3 : 2}}">
                     <i class="fa fa-comments left"></i>
                     <pre id="diagnosisComments" class="left">{{::diagnosis.comments}}</pre>
@@ -66,7 +72,7 @@
                 </td>
             </tr>
 
-            <tr ng-show="diagnosis.showDetails">
+            <tr ng-show="diagnosis.showDetails" ng-if="::!printing" >
                 <td colspan="{{showLatestDiagnosis ==  'true' ? 3 : 2}}" class="notes inline-notes">
                     <div class="footer-note right">
                         <span class="provider">
@@ -86,8 +92,9 @@
             </tr>
             </tbody>
         </table>
-        <div ng-show="!isDataPresent()" ng-class="::{'hidden-print': !isDataPresent()}">
-            <div class="placeholder-text">{{::'NO_DIAGNOSIS_MESSAGE' | translate}}</div>
-        </div>
-    </div>
+        <!-- <div ng-show="!isDataPresent()" ng-class="::{'hidden-print': !isDataPresent()}"> -->
+    <!-- </div> -->
 </section>
+<div ng-if="!isDataPresent() && !printing">
+    <p class="placeholder-text">{{::'NO_DIAGNOSIS_MESSAGE' | translate}}</p>
+</div>

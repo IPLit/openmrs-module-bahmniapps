@@ -10,8 +10,11 @@
         <span ng-if="::!(params.showRoute == true)" ng-class="::{'strike-text':drugOrder.isDiscontinuedOrStopped()}">{{::drugOrder.getDescriptionWithoutRouteAndDuration()}}</span>
         <span>{{::drugOrder.getSpanDetails()}}</span>
         <span ng-if="::drugOrder.isDiscontinuedOrStopped()" ng-class="::{'discontinued-text':drugOrder.isDiscontinuedOrStopped()}">{{'MEDICATION_STOPPED_ON'|translate}} {{::drugOrder.effectiveStopDate | bahmniDate}}</span>
+        <span class="test-notes" ng-if="::(drugOrder.instructions && printing)" ng-class="::{'has-test-notes': drugOrder.instructions}">
+	        (<i class="fa fa-comments left"></i>{{::drugOrder.instructions}})
+        </span>
         <span class="test-notes" ng-if="::(drugOrder.additionalInstructions && printing)" ng-class="::{'has-test-notes': drugOrder.additionalInstructions}">
-	        (<i class="fa fa-comments left"></i>{{::drugOrder.additionalInstructions}})
+            (<i class="fa fa-comments left"></i>{{::drugOrder.additionalInstructions}})
         </span>
     </td>
     <td class="days" ng-if="::(!params.hideVisitDate)">
@@ -24,6 +27,7 @@
             <i class="fa fa-angle-up"></i>
         </button>
     </td>
+
 </tr>
 <tr ng-if="::(drugOrder.additionalInstructions && !printing)" ng-class="::{'has-test-notes': drugOrder.additionalInstructions}">
     <td colspan="5" class="notes test-notes">

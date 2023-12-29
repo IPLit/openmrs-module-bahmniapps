@@ -13,7 +13,7 @@
             <label>{{::(observation.getDisplayValue())}}</label>
         </span>
         <span ng-if="observation.groupMembers.length==0 && !configIsObservationForImages && observation.concept.conceptClass != 'Image'" class="testUnderPanel left">
-            <label>{{::((observation.concept.shortName.charAt(0).toUpperCase() + observation.concept.shortName.slice(1)) || observation.concept.name)}}</label>
+            <label>{{::displayLabel(observation)}}</label>
             <hint concept-details="::{
             lowNormal:observation.lowNormal||observation.concept.lowNormal,
             hiNormal:observation.hiNormal||observation.concept.hiNormal,
@@ -30,8 +30,8 @@
             <pre class="left" ng-if="!configIsObservationForImages">{{::observation.getDisplayValue() | titleTranslate}}</pre>
             &nbsp;<span class="label-add-on">{{::observation.concept.units}}</span>
         </span>
-        <a class="img-concept" ng-if="::(observation.isImageConcept())">
-            <img align="middle" bm-observation-gallery-item observation="::observation" ng-src="/document_images/{{::observation.value}}"
+        <a class="img-concept" ng-if="::(observation.isImageConcept() && !observation.hasPDFAsValue())">
+            <img align="middle" bm-observation-gallery-item observation="::observation" ng-src="/document_images/{{::observation.getDisplayValue()}}"
             alt="{{::observation.concept.name}}" />
         </a>
         <a ng-if="::(observation.isImageConcept() && observation.hasPDFAsValue() && !print)" class="img-concept" ng-href="/document_images/{{observation.value}}" target="_blank" class="pdf-link">
@@ -67,17 +67,17 @@
             </span>
         </div>
     </div>
-    <div>
-        <ul ng-if="::(!observation.isFormElement() && !print && !observation.isConceptClassConceptDetails())" class="hidden-print">
+    <div ng-if="::(!observation.isFormElement() && !print && !observation.isConceptClassConceptDetails())">
+        <ul class="hidden-print">
             <show-observation  show-details-button="::showDetailsButton" ng-if="::!observation.isFormElement()" ng-repeat="member in observation.groupMembers"
                           observation="::member" patient="::patient" show-date="::showDate" show-time="::showTime"
                           config-is-observation-for-images="::configIsObservationForImages"
-                          ng-class="{'video-concept-show': member.isVideoConcept()}"></show-observation>
+                          ng-class="{'video-concept-show': member.isVideoConcept()}" display-name-type="::displayNameType"></show-observation>
         </ul>
     </div>
     <ul ng-if="::(!observation.isFormElement() && print && !observation.isConceptClassConceptDetails())" class="visible-print">
         <show-observation show-details-button="showDetailsButton" ng-if="::!observation.isFormElement()" ng-repeat="member in observation.groupMembers"
                           observation="::member" patient="::patient" show-date="::showDate" show-time="::showTime"
-                          config-is-observation-for-images="::configIsObservationForImages"></show-observation>
+                          config-is-observation-for-images="::configIsObservationForImages" display-name-type="::displayNameType"></show-observation>
     </ul>
  </li>
