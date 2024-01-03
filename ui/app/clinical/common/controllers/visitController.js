@@ -76,7 +76,7 @@ angular.module('bahmni.clinical')
                 visitService.print({
                     "visitUuid": $scope.visitUuid,
                     "patientUuid": $scope.patientUuid,
-                    "obsConcepts": ["Diastolic blood pressure", "Height (cm)", "Weight (kg)", "Systolic blood pressure"],
+                    "obsConcepts": ["Systolic blood pressure", "Diastolic blood pressure", "Height (cm)", "Weight (kg)"],
                     "obsIgnoreList": ["Radiology", "Document", "Follow-up Condition", "Return visit date", "Reason for visit (text)"],
                     "orderTypeUuid": orderTypeUuid,
                     "formName": ["History and Examination", "consultation note"],
