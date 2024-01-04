@@ -73,12 +73,14 @@ angular.module('bahmni.clinical')
                 document.body.appendChild(a);
                 a.style = "display: none";
                 var orderTypeUuid = orderTypeService.getOrderTypeUuid("Radiology Order");
+                var labOrderTypeUuid = orderTypeService.getOrderTypeUuid("Lab Order");
                 visitService.print({
                     "visitUuid": $scope.visitUuid,
                     "patientUuid": $scope.patientUuid,
                     "obsConcepts": ["Systolic blood pressure", "Diastolic blood pressure", "Height (cm)", "Weight (kg)"],
                     "obsIgnoreList": ["Radiology", "Document", "Follow-up Condition", "Return visit date", "Reason for visit (text)"],
                     "orderTypeUuid": orderTypeUuid,
+                    "labOrderTypeUuid": labOrderTypeUuid,
                     "formName": ["History and Examination", "consultation note"],
                     "headerUri": Bahmni.Common.Constants.hostURL + $scope.visitTabConfig.currentTab.printing.headerUri
                 }).then(function (response) {
