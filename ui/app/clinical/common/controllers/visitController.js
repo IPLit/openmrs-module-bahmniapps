@@ -81,7 +81,7 @@ angular.module('bahmni.clinical')
                     "obsIgnoreList": ["Radiology", "Document", "Follow-up Condition", "Return visit date", "Reason for visit (text)"],
                     "orderTypeUuid": orderTypeUuid,
                     "labOrderTypeUuid": labOrderTypeUuid,
-                    "formName": ["History and Examination", "consultation note"],
+                    "formName": ["History and Examination", "Consultation Note"],
                     "headerUri": $location.protocol() + "://" + $location.host() + $scope.visitTabConfig.currentTab.printing.headerUri
                 }).then(function (response) {
                     var blob = new Blob([response.data], { type: mediaType });
