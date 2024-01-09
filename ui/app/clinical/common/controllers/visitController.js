@@ -77,11 +77,11 @@ angular.module('bahmni.clinical')
                 visitService.print({
                     "visitUuid": $scope.visitUuid,
                     "patientUuid": $scope.patientUuid,
-                    "obsConcepts": ["Systolic blood pressure", "Diastolic blood pressure", "Height (cm)", "Weight (kg)"],
-                    "obsIgnoreList": ["Radiology", "Document", "Follow-up Condition", "Return visit date", "Reason for visit (text)"],
+                    "obsConcepts": $scope.visitTabConfig.currentTab.printing.vitals,
+                    "obsIgnoreList": $scope.visitTabConfig.currentTab.printing.obsIgnoreList,
                     "orderTypeUuid": orderTypeUuid,
                     "labOrderTypeUuid": labOrderTypeUuid,
-                    "formName": ["History and Examination", "Consultation Note"],
+                    "formName": $scope.visitTabConfig.currentTab.printing.forms,
                     "headerUri": $location.protocol() + "://" + $location.host() + $scope.visitTabConfig.currentTab.printing.headerUri
                 }).then(function (response) {
                     var blob = new Blob([response.data], { type: mediaType });
