@@ -13,7 +13,7 @@
         <tr class="storage-value"><td>{{ consumedSpaceText }}</td> <td>{{ totalSpaceText }}</td></tr>
     </table>
     <div class="progress">
-        <div class="progress-bar progress-bar-info" style='width:50%;'> 50%</div>
+        <div class="progress-bar progress-bar-info" style='width:{{consumedPercentage}}%;'> {{consumedPercentage}}</div>
     </div>
     <div>Contact <a href="{{contactURL}}"> {{contactURL}}</a> for further details</div>
     <div>Contact <a href="{{salesURL}}"> {{salesURL}}</a> for increasing the limit</div>
