@@ -185,6 +185,7 @@ angular.module('bahmni.common.domain')
                 return $http.get(Bahmni.Common.Constants.encounterUrl, {
                     params: {
                         patient: patientUuid,
+                        order: "desc",
                         encounterType: encounterTypeUuid,
                         v: "custom:(uuid,provider,visit:(uuid,startDatetime,stopDatetime),obs:(uuid,concept:(uuid,name),groupMembers:(id,uuid,obsDatetime,value,comment)))"
                     },

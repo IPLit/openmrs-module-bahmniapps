@@ -54,6 +54,7 @@ angular.module('bahmni.clinical')
                 if (order) {
                     if (order.uuid) {
                         order.isDiscontinued = true;
+                        $state.orderRemoved = true;
                     } else {
                         _.remove($scope.consultation.orders, order);
                     }
@@ -69,6 +70,7 @@ angular.module('bahmni.clinical')
                 } else {
                     var createdOrder = Bahmni.Clinical.Order.create(test);
                     $scope.consultation.orders.push(createdOrder);
+                    $state.orderCreated = true;
                 }
             };
 
@@ -133,7 +135,7 @@ angular.module('bahmni.clinical')
             };
 
             $scope.$on('$stateChangeStart', function () {
-                if ($scope.consultation.orders.length !== $scope.consultation.investigations.length) {
+                if ($state.orderRemoved || $state.orderCreated) {
                     $state.dirtyConsultationForm = true;
                 }
             });

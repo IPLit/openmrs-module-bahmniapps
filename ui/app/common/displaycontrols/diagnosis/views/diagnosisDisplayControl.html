@@ -1,7 +1,7 @@
 <h2 ng-if="((!isDataPresent() && config.notOnDashboard && !printing) || (isDataPresent() && config.notOnDashboard))" class="section-title">
     <span> {{::'VISIT_TITLE_DIAGNOSIS_KEY' | translate}} </span>
 </h2>
-<section id="diagnosisSection" class="block" ng-if="::allDiagnoses && allDiagnoses.length > 0"
+<section id="diagnosisSection" class="block diagnosis" ng-if="::allDiagnoses && allDiagnoses.length > 0"
          ng-class="::{'more': (allDiagnoses.show == true)}">
     <!-- <div> -->
         <table class="dashboard-table history-diagnosis">
