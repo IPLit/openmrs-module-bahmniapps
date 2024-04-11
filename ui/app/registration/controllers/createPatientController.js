@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('bahmni.registration')
-    .controller('CreatePatientController', ['$scope', '$rootScope', '$state', 'patientService', 'patient', 'spinner', 'appService', 'messagingService', 'ngDialog', '$q', '$translate',
-        function ($scope, $rootScope, $state, patientService, patient, spinner, appService, messagingService, ngDialog, $q, $translate) {
+    .controller('CreatePatientController', ['$scope', '$rootScope', '$state', 'patientService', 'patient', 'spinner', 'appService', 'messagingService', 'ngDialog', '$q', '$translate', 'sessionService', '$http',
+        function ($scope, $rootScope, $state, patientService, patient, spinner, appService, messagingService, ngDialog, $q, $translate, sessionService, $http) {
             var dateUtil = Bahmni.Common.Util.DateUtil;
             $scope.actions = {};
             var errorMessage;
@@ -13,6 +13,12 @@ angular.module('bahmni.registration')
             $scope.today = Bahmni.Common.Util.DateTimeFormatter.getDateWithoutTime(dateUtil.now());
             $scope.moduleName = appService.getAppDescriptor().getConfigValue('registrationModuleName');
             var patientId;
+
+            var uniquePersonAttribute = appService.getAppDescriptor().getConfigValue("uniquePersonAttribute");
+            var loginLocationUuid = sessionService.getLoginLocationUuid();
+            const patientSearchByPersonAttributeUrl = Bahmni.Common.Constants.bahmniCommonsSearchUrl + "/patient?patientAttributes=" + uniquePersonAttribute + "&s=byIdOrNameOrVillage&startIndex=0&patientSearchResultsConfig=" + uniquePersonAttribute + "&customAttribute=";
+            const uniquePersonAttributeErrorText = appService.getAppDescriptor().getConfigValue("uniquePersonAttributeErrorText") || "";
+
             var getPersonAttributeTypes = function () {
                 return $rootScope.patientConfiguration.attributeTypes;
             };
@@ -98,6 +104,21 @@ angular.module('bahmni.registration')
                 expandSectionsWithDefaultValue();
                 $scope.patientLoaded = true;
                 $scope.createPatient = true;
+
+                // IPLit: initially selecting patient id source === logged in location IdentifierSourceName, location id prefix
+                if ($rootScope.loggedInLocation && $rootScope.loggedInLocation.attributes) {
+                    var foundSourceAttr = $rootScope.loggedInLocation.attributes.find(attr => attr.display.includes('IdentifierSourceName'));
+                    if (foundSourceAttr) {
+                        var sourceIds = foundSourceAttr.display.split(':');
+                        var locationSourceIdentifier = sourceIds && sourceIds.length > 1 ? sourceIds[1].trim() : '';
+                        if (locationSourceIdentifier && locationSourceIdentifier.length > 0) {
+                            var selectedIdentifierSource = $scope.patient.primaryIdentifier.identifierType.identifierSources.find(src => src.prefix === locationSourceIdentifier);
+                            if (selectedIdentifierSource) {
+                                $scope.patient.primaryIdentifier.selectedIdentifierSource = selectedIdentifierSource;
+                            }
+                        }
+                    }
+                }
             };
 
             init();
@@ -190,20 +211,68 @@ angular.module('bahmni.registration')
                 return deferred.promise;
             };
 
+            var searchDuplicatePersonAttributePatients = function (pa) {
+                var loginLocation = '&loginLocationUuid=' + loginLocationUuid;
+                var finalPatientSearchUrl = patientSearchByPersonAttributeUrl + pa + loginLocation;
+                return $http.get(finalPatientSearchUrl, {
+                    method: "GET",
+                    withCredentials: true
+                });
+            };
+
+            var validateUniquePersonAttribute = function () {
+                var errorText = null;
+                var deferred = $q.defer();
+                if (uniquePersonAttribute) {
+                    var uniquePersonAttributeVal = $scope.patient[uniquePersonAttribute];
+                    if (uniquePersonAttributeVal) {
+                        return searchDuplicatePersonAttributePatients(uniquePersonAttributeVal).then(function (result) {
+                            deferred.resolve(result);
+                            if (result.data && result.data.pageOfResults && result.data.pageOfResults.length === 0) {
+                                errorText = '';
+                            } else {
+                                var pt = _.find(result.data.pageOfResults, function (p) {
+                                    if (p && p.uuid && p.uuid !== $scope.patient.uuid) {
+                                        return p;
+                                    }
+                                });
+                                if (pt) {
+                                    errorText = uniquePersonAttributeErrorText;
+                                }
+                            }
+                            return errorText;
+                        }).then(function (errorText) {
+                            return errorText;
+                        });
+                    } else {
+                        deferred.resolve(errorText);
+                    }
+                } else {
+                    deferred.resolve(errorText);
+                }
+                return deferred.promise;
+            };
+
             $scope.create = function () {
                 addNewRelationships();
                 var errorMessages = Bahmni.Common.Util.ValidationUtil.validate($scope.patient, $scope.patientConfiguration.attributeTypes);
-                if (errorMessages.length > 0) {
-                    errorMessages.forEach(function (errorMessage) {
-                        messagingService.showMessage('error', errorMessage);
-                    });
-                    return $q.when({});
-                }
-                return spinner.forPromise(createPromise()).then(function (response) {
-                    if (errorMessage) {
-                        messagingService.showMessage("error", errorMessage);
-                        errorMessage = undefined;
+                return spinner.forPromise(validateUniquePersonAttribute().then(function (errorText) {
+                    if (errorText && errorText.length > 0) {
+                        errorMessages.push(errorText);
                     }
+                })).then(function () {
+                    if (errorMessages.length > 0) {
+                        errorMessages.forEach(function (errorMessage) {
+                            messagingService.showMessage('error', errorMessage);
+                        });
+                        return $q.when({});
+                    }
+                    return spinner.forPromise(createPromise()).then(function (response) {
+                        if (errorMessage) {
+                            messagingService.showMessage("error", errorMessage);
+                            errorMessage = undefined;
+                        }
+                    });
                 });
             };
 
