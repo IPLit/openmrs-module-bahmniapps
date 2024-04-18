@@ -22,7 +22,7 @@
                                         response-map="cleanOutDiagnosisList"
                                         on-select="getAddNewDiagnosisMethod(diagnosis)" ng-class="{
                                                 illegalValue: (diagnosis.codedAnswer.name && !diagnosis.codedAnswer.uuid &&
-                                                    !diagnosis.isNonCodedAnswer && allowOnlyCodedDiagnosis) || diagnosis.invalid,
+                                                    !diagnosis.isNonCodedAnswer && allowOnlyCodedDiagnosis) || diagnosis.duplicate,
                                                 active: diagnosis.isNonCodedAnswer
                                         }"
                                         ng-change="restEmptyRowsToOne($index); diagnosis.clearCodedAnswerUuid(); checkInvalidDiagnoses()">
@@ -120,6 +120,11 @@
                         </div>
                         <div class="col col2"><span>{{ ::'CLINICAL_INITIAL' | translate }}</span></div>
                         <div class="col col3"><span>{{ ::'CLINICAL_CURRENT' | translate }}</span></div>
+                        <div class="col col4" ng-if="pastDiagnosesAlerts">
+                            <div class="cdss-alert-icon header-alert-icon">
+                                <i class="fa fa-exclamation-circle"></i>
+                            </div>
+                        </div>
                     </div>
                     <div ng-show="toggles.expandPastDiagnoses" ng-repeat="diagnosis in consultation.pastDiagnoses | primaryDiagnosisFirst" class="table-body">
                         <div class="row diagnosis-row" ng-if="!diagnosis.voided">

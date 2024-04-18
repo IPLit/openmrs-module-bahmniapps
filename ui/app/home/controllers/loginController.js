@@ -115,7 +115,7 @@ angular.module('bahmni.home')
                     expires: 1
                 });
                 $rootScope.$broadcast('event:auth-loggedin');
-                $scope.loginInfo.currentLocation = getLastLoggedinLocation();
+                // $scope.loginInfo.currentLocation = getLastLoggedinLocation();
             };
 
             var checkIfUserHasProviderAttributes = function () {
@@ -125,17 +125,40 @@ angular.module('bahmni.home')
             var saveUserAssignedLocationsToLocalStorage = function () {
                 var userAssignedLocations = $rootScope.currentUser.provider.attributes
                   .filter(function (attribute) {
-                      return attribute.attributeType.display === "Login Locations";
+                      return attribute.attributeType.display === "Login Locations" && attribute.voided === false;
                   })
                   .map(function (attribute) {
                       return { display: attribute.value.name, uuid: attribute.value.uuid };
                   });
-
                 if (userAssignedLocations.length > 0) {
-                    localStorage.setItem("loginLocations", JSON.stringify(userAssignedLocations));
+                    var loginUserAssignedLocations = userAssignedLocations.filter(function (uLoc) {
+                        return _.find(initialData.locations, function (loc) {
+                            if (uLoc.uuid === loc.uuid) {
+                                return uLoc;
+                            }
+                        });
+                    });
+                    loginUserAssignedLocations = _.uniqBy(loginUserAssignedLocations, 'uuid');
+                    localStorage.removeItem("loginLocations");
+                    if (loginUserAssignedLocations.length > 0) {
+                        localStorage.setItem("loginLocations", JSON.stringify(loginUserAssignedLocations));
+                    }
                 } else {
                     localStorage.removeItem("loginLocations");
                 }
+            };
+
+            var userLoginLocations = function () {
+                var loginLocations = localStorage.getItem("loginLocations");
+                return loginLocations ? JSON.parse(loginLocations) : [];
+            };
+
+            var identifyLoginLocations = function (allLocations) {
+                var loginLocations = userLoginLocations();
+                if (loginLocations.length === 0) {
+                    return allLocations;
+                }
+                return loginLocations;
             };
 
             $scope.login = function () {
@@ -152,22 +175,40 @@ angular.module('bahmni.home')
                     });
                 };
 
+                ensureNoSessionIdInRoot();
                 sessionService.loginUser($scope.loginInfo.username, $scope.loginInfo.password, $scope.loginInfo.currentLocation, $scope.loginInfo.otp).then(
                     function (data) {
-                        ensureNoSessionIdInRoot();
+                        // ensureNoSessionIdInRoot(); // IPLit
                         if (data && data.firstFactAuthorization) {
                             $scope.showOTP = true;
                             deferrable.resolve(data);
                             return;
                         }
                         sessionService.loadCredentials().then(function () {
-                            onSuccessfulAuthentication();
+                            // onSuccessfulAuthentication(); // IPLit
                             $rootScope.currentUser.addDefaultLocale($scope.selectedLocale);
                             userService.savePreferences().then(
                                     function () { deferrable.resolve(); },
                                     function (error) { deferrable.reject(error); }
                                 );
                             logAuditForLoginAttempts("USER_LOGIN_SUCCESS");
+                            if (checkIfUserHasProviderAttributes()) {
+                                saveUserAssignedLocationsToLocalStorage();
+                            } else {
+                                localStorage.removeItem("loginLocations");
+                            }
+                            $scope.locations = identifyLoginLocations(initialData.locations);
+                            if ($scope.locations && $scope.locations.length === 1) {
+                                $scope.loginInfo.currentLocation = $scope.locations[0];
+                                sessionService.updateSession($scope.loginInfo.currentLocation, null).then(function () {
+                                    onSuccessfulAuthentication();
+                                    $location.path(landingPagePath);
+                                });
+                            } else {
+                                $scope.loginInfo.currentLocation = getLastLoggedinLocation();
+                                onSuccessfulAuthentication();
+                                $state.go('loginLocation', {});
+                            }
                         }, function (error) {
                             $scope.errorMessageTranslateKey = error;
                             deferrable.reject(error);
@@ -234,7 +275,9 @@ angular.module('bahmni.home')
                             } else {
                                 localStorage.removeItem("loginLocations");
                             }
-                            $state.go('loginLocation', {});
+                            if ($scope.locations && $scope.locations.length > 1) {
+                                $state.go('loginLocation', {});
+                            }
                         }
                     }
                 );
