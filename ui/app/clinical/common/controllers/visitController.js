@@ -83,7 +83,8 @@ angular.module('bahmni.clinical')
                     "labOrderTypeUuid": labOrderTypeUuid,
                     "formName": $scope.visitTabConfig.currentTab.printing.forms,
                     "headerUri": $location.protocol() + "://" + $location.host() + $scope.visitTabConfig.currentTab.printing.headerUri,
-                    "showResults": true
+                    "showResults": true,
+                    "handNotesConceptName": $scope.visitTabConfig.currentTab.printing.imageNoteName
                 }).then(function (response) {
                     var blob = new Blob([response.data], { type: mediaType });
                     var fileURL = window.URL.createObjectURL(blob);
