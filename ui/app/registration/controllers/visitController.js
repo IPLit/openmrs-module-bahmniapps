@@ -213,12 +213,8 @@ angular.module('bahmni.registration')
                         });
                     }
 
-                    vm.visitUuid = "";
                     var hasActiveVisit = activeVisitForCurrentLoginLocation.length > 0;
-                    if (hasActiveVisit) {
-                        $rootScope.startedVisit = true;
-                        vm.visitUuid = activeVisitForCurrentLoginLocation[0].uuid;
-                    }
+                    vm.visitUuid = hasActiveVisit ? activeVisitForCurrentLoginLocation[0].uuid : "";
                     $scope.canCloseVisit = isUserPrivilegedToCloseVisit() && hasActiveVisit;
                 });
             };

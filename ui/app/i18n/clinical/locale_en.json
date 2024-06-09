@@ -7,7 +7,7 @@
   "NO_DOCUMENTS_MESSAGE": "No documents for this patient.",
   "NO_DISPOSTIONS_AVAILABLE_MESSAGE_KEY": "No dispositions available.",
   "NO_LAB_ORDERS_FOR_PATIENT_MESSAGE_KEY": "No Lab Orders for this patient.",
-  "DISPLAY_CONTROL_ERROR_MESSAGE_KEY": "No {{ displayControl }} for this patient",
+  "DISPLAY_CONTROL_ERROR_MESSAGE_KEY": "No {{ displayControl }} recorded for this patient",
   "NO_DIAGNOSIS_MESSAGE": "No diagnosis for this patient",
   "NO_SPECIMEN_RESULT_FOUND_MESSAGE": "No Result found for this specimen",
   "NO_SPECIMEN_FOUND_MESSAGE": "No specimen for this patient",
@@ -53,14 +53,12 @@
   "PROGRAM_DISPLAY_CONTROL_TREATMENT_START_DATE_KEY": "Treatment Start Date",
   "PROGRAM_DISPLAY_CONTROL_TREATMENT_STOP_DATE_KEY": "Treatment Stop Date",
   "PROGRAM_DISPLAY_CONTROL_FACILITY_OF_ENROLLMENT_KEY": "Facility of Enrollment",
-
   "TREATMENTS_SUMMARY_PRESCRIPTION_KEY": "Prescriptions",
   "INVESTIGATION_CHART_KEY": "Investigation Chart",
   "LAB_ORDERS_KEY": "Lab Orders",
   "ALL_VISITS_KEY": "All Visits",
   "ALL_DIAGNOSES_KEY": "All Diagnoses",
   "ALL_KEY": "All",
-
   "SEARCH_NAME_PLACEHOLDER_KEY": "Search Name/{{ primaryIdentifier }}  ...",
   "SEARCH_KEY": "Search",
   "CLINICAL_YEARS_TRANSLATION_KEY": "years",
@@ -75,7 +73,6 @@
   "EMPTY_TEMPLATE_MESSAGE": "Click on 'Add New Obs Form' button to add new forms here",
   "SCROLL_LEFT": "Scroll to Left",
   "SCROLL_RIGHT": "Scroll to Right",
-
   "VISIT_TITLE_PATIENT_INFORMATION": "PatientInformation",
   "VISIT_TITLE_DIAGNOSIS_KEY": "Diagnoses",
   "VISIT_TITLE_DISPOSITIONS_KEY": "Dispositions",
@@ -131,6 +128,8 @@
   "MEDICATION_ADD_DRUG_FORM_TITLE": "Order Drug",
   "MEDICATION_ADD_ORDERSET_FORM_TITLE": "Order an Order Set",
   "MEDICATION_LABEL_DOSE": "Dose",
+  "MEDICATION_LABEL_RULE": "Rule",
+  "MEDICATION_CHOOSE_RULE": "Choose Rule",
   "MEDICATION_LABEL_UNITS": "Units",
   "MEDICATION_LABEL_FREQUENCY": "Frequency",
   "MEDICATION_LABEL_ROUTE": "Route",
@@ -165,19 +164,20 @@
   "REMOVE_CONFIRMATION_KEY": "Are you sure you want to remove?",
   "CLEAR_CONFIRMATION_KEY": "Are you sure you want to clear?",
   "REMOVE_DRUG_ORDER_KEY": "Are you sure you want to remove drug : {{ drugName }} ?",
-
+  "ENTER_PATIENT_WEIGHT_ERROR": "Patient weight has not been captured recently. Prescription cannot be created.",
+  "ENTER_DIAGNOSIS_ERROR": "Primary diagnosis has not been captured. Prescription cannot be created",
+  "PATIENT_WEIGHT_AND_DIAGNOSIS_ERROR": "Patient weight has not been captured recently & no primary diagnosis is found. Prescription cannot be created",
   "DRUG_DETAILS_DRUG_NAME": "Drug",
   "DRUG_DETAILS_DOSE_INFO": "Dose",
   "DRUG_DETAILS_ROUTE": "Route",
   "DRUG_DETAILS_FREQUENCY": "Schedule",
-  "DRUG_DETAILS_START_DATE": "Start date ",
+  "DRUG_DETAILS_START_DATE": "Start date",
   "DRUG_DETAILS_STOP_DATE": "Stop date",
   "DRUG_DETAILS_ORDER_REASON_CODED": "Stop Reason",
   "DRUG_DETAILS_INSTRUCTIONS_TEXT": "Instructions",
   "DRUG_DETAILS_QUANTITY_TEXT": "Quantity",
   "DRUG_DETAILS_DURATION": "Duration",
   "DRUG_DETAILS_ADDITIONAL_INSTRUCTIONS": "Additional instructions",
-
   "MONTHS": "January, February, March, April, May, June, July, August, September, October, November, December",
   "CHOOSE_MONTH_KEY": "Choose month",
   "CHOOSE_YEAR_KEY": "Choose year",
@@ -210,7 +210,6 @@
   "CLINICAL_DIAGNOSIS_SECONDARY": "SECONDARY",
   "CLINICAL_DIAGNOSIS_CONFIRMED": "CONFIRMED",
   "CLINICAL_DIAGNOSIS_PRESUMED": "PRESUMED",
-
   "CLINICAL_DIAGNOSIS_ORDER_PRIMARY": "PRIMARY",
   "CLINICAL_DIAGNOSIS_ORDER_SECONDARY": "SECONDARY",
   "CLINICAL_DIAGNOSIS_CERTAINTY_CONFIRMED": "CONFIRMED",
@@ -367,6 +366,7 @@
   "TELECON_ERROR_KEY": "Error while fetching teleconsultation link",
   "CHIEF_COMPLAINT_DATA_CONCEPT_NAME_KEY": "Chief Complaint Record",
   "CHIEF_COMPLAINT_MESSAGE_KEY": "{{ChiefComplaintCoded}} {{Chiefcomplainttext}} since {{Signsymptomduration}} {{ChiefComplaintDuration}}",
+  "SHARE_PRESCRIPTION_MAIL_CONTENT": "Hi #recipientName,\nThanks for visiting #locationName on #visitDate. Your prescription is attached with this email. Wish you a speedy recovery.\nThanks.\n#locationName\n#locationAddress",
   "CHIEF_COMPLAINT_DATA_OTHER_CONCEPT_KEY": "Other generic",
   "CHIEF_COMPLAINT_DATA_OTHER_CONCEPT_TEMPLATE_KEY": "{{chiefComplaint}} ({{chiefComplaintText}}) since {{duration}} {{unit}}",
   "CHIEF_COMPLAINT_DATA_WITHOUT_OTHER_CONCEPT_TEMPLATE_KEY": "{{chiefComplaint}} since {{duration}} {{unit}}",
@@ -390,5 +390,6 @@
   "DASHBOARD_TITLE_PRESCRIPTIONS_KEY": "Prescriptions",
   "DISMISSED_KEY": "Dismissed",
   "CDSS_ALERT_SAVE_ERROR": "A CDSS Critical Alert needs to be addressed in Medications Tab before continuing with Save operation",
-  "CDSS_ACTION": "Please go to Medications Tab to take further action"
+  "CDSS_ACTION": "Please go to Medications Tab to take further action",
+  "MEDICATION_PRINT": "Print"
 }

@@ -1,20 +1,46 @@
 'use strict';
 
 angular.module('bahmni.clinical')
-    .controller('VisitController', ['$scope', '$state', 'encounterService', 'clinicalAppConfigService', 'configurations', 'visitSummary', '$timeout', 'printer', 'visitConfig', 'visitHistory', '$stateParams', 'locationService', 'visitService', 'orderTypeService', '$location',
-        function ($scope, $state, encounterService, clinicalAppConfigService, configurations, visitSummary, $timeout, printer, visitConfig, visitHistory, $stateParams, locationService, visitService, orderTypeService, $location) {
+    .controller('VisitController', ['$scope', '$state', '$rootScope', '$q', 'encounterService', '$window', 'clinicalAppConfigService', 'configurations', 'visitSummary', '$timeout', 'printer', 'visitConfig', 'visitHistory', '$stateParams', 'locationService', 'visitService', 'appService', 'diagnosisService', 'observationsService', 'allergyService', '$location',
+        function ($scope, $state, $rootScope, $q, encounterService, $window, clinicalAppConfigService, configurations, visitSummary, $timeout, printer, visitConfig, visitHistory, $stateParams, locationService, visitService, appService, diagnosisService, observationsService, allergyService, $location) {
             var encounterTypeUuid = configurations.encounterConfig().getPatientDocumentEncounterTypeUuid();
             $scope.documentsPromise = encounterService.getEncountersForEncounterType($scope.patient.uuid, encounterTypeUuid).then(function (response) {
                 return new Bahmni.Clinical.PatientFileObservationsMapper().map(response.data.results);
             });
             $scope.currentVisitUrl = $state.current.views['dashboard-content'].templateUrl ||
                 $state.current.views['print-content'].templateUrl;
+            var showProviderInfo = appService.getAppDescriptor().getConfigValue('showProviderInfoinVisits');
+            $scope.showProviderInfo = showProviderInfo !== false ? true : showProviderInfo;
             $scope.visitHistory = visitHistory; // required as this visit needs to be overridden when viewing past visits
             $scope.visitSummary = visitSummary;
             $scope.visitTabConfig = visitConfig;
             $scope.showTrends = true;
             $scope.patientUuid = $stateParams.patientUuid;
             $scope.visitUuid = $stateParams.visitUuid;
+            $scope.isActiveIpdVisit = $scope.visitSummary.visitType === "IPD";
+            $scope.isIpdReadMode = true;
+            if ($scope.visitSummary.visitType === "IPD" && $scope.visitSummary.stopDateTime === null) {
+                $scope.isIpdReadMode = false;
+            }
+            $scope.ipdDashboard = {
+                hostData: {
+                    patient: {uuid: $scope.patientUuid},
+                    visitSummary: $scope.visitSummary,
+                    forDate: new Date().toUTCString(),
+                    provider: $rootScope.currentProvider,
+                    visitUuid: $scope.visitUuid,
+                    isReadMode: $scope.isIpdReadMode,
+                    source: $location.search().source
+                },
+                hostApi: {
+                    navigation: {
+                        visitSummary: function () {
+                            const visitSummaryUrl = $state.href('patient.dashboard.visit', {visitUuid: $scope.visitUuid});
+                            $window.open(visitSummaryUrl, '_blank');
+                        }
+                    }
+                }
+            };
             var tab = $stateParams.tab;
             var encounterTypes = visitConfig.currentTab.encounterContext ? visitConfig.currentTab.encounterContext.filterEncounterTypes : null;
             visitService.getVisit($scope.visitUuid, 'custom:(uuid,visitType,startDatetime,stopDatetime,encounters:(uuid,encounterDatetime,provider:(display),encounterType:(display)))').then(function (response) {
@@ -148,7 +174,7 @@ angular.module('bahmni.clinical')
                 var tabToOpen = getTab();
                 $scope.visitTabConfig.switchTab(tabToOpen);
                 printOnPrint();
-                getCertificateHeader();
+                $scope.showProviderInfo ? getCertificateHeader() : null;
             };
             init();
         }]);

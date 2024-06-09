@@ -106,9 +106,6 @@ angular.module('authentication')
             destroySessionFromServer().then(function () {
                 sessionCleanup();
                 deferrable.resolve();
-            }, function () {
-                sessionCleanup();
-                deferrable.reject();
             });
             return deferrable.promise;
         };

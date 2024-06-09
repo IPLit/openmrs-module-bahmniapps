@@ -115,7 +115,7 @@ angular.module('bahmni.home')
                     expires: 1
                 });
                 $rootScope.$broadcast('event:auth-loggedin');
-                // $scope.loginInfo.currentLocation = getLastLoggedinLocation();
+                $scope.loginInfo.currentLocation = getLastLoggedinLocation();
             };
 
             var checkIfUserHasProviderAttributes = function () {
