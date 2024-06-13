@@ -1,10 +1,11 @@
 'use strict';
 
-angular.module('bahmni.admin').service('storageService', ['$rootScope', '$http', '$q', function ($rootScope, $http, $q) {
+angular.module('bahmni.admin').service('storageService', ['$rootScope', '$http', '$q', 'appService', function ($rootScope, $http, $q, appService) {
     this.getUsedSpace = function () {
         $rootScope.totalSpace = $rootScope.maxStorageSpace || Bahmni.Common.Constants.maxStorageLimit;
-        $rootScope.containerNameOrId = Bahmni.Common.Constants.containerName;
-        var url = Bahmni.Common.Constants.storageUrl + $rootScope.containerNameOrId;
+//        $rootScope.containerNameOrId = Bahmni.Common.Constants.containerName;
+        var containerNameOrId = appService.getAppDescriptor().getConfigValue("patientDocumentContainerName");
+        var url = Bahmni.Common.Constants.storageUrl + containerNameOrId;
         $rootScope.contactURL = Bahmni.Common.Constants.contactURL;
         $rootScope.salesURL = Bahmni.Common.Constants.salesURL;
 
