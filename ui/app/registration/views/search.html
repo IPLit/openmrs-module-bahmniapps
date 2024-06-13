@@ -10,6 +10,12 @@
                         <div class="reg-srch-btn fl">
                             <button tabindex="3" type="submit" ng-disabled="!searchParameters.registrationNumber" >{{ ::'REGISTRATION_LABEL_SEARCH' | translate}}</button>
                         </div>
+                        <span>
+                             <button ng-click="toggleScanning()" ng-hide="isScanning">{{ isScanning ? 'Stop Scanning' : 'Start Scanning' }}</button>
+                              <div id="video-container">
+                                  <video id="video" autoplay></video>
+                              </div>
+                        </span>
                     </div>
 
             </form>

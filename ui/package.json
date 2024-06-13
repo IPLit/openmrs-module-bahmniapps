@@ -97,7 +97,8 @@
     "karma-ng-html2js-preprocessor": "^1.0.0",
     "matchdep": "^2.0.0",
     "react": "16.14.0",
-    "react-dom": "16.14.0"
+    "react-dom": "16.14.0",
+    "jsqr": "^1.4.0"
   },
   "resolutions": { 
     "**/**/xmlhttprequest-ssl": "^1.6.1",

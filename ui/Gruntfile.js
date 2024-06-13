@@ -66,10 +66,10 @@ module.exports = function (grunt) {
         'components/crypto-js/crypto-js.js',
         'components/jquery-ui/ui/minified/jquery-ui.custom.min.js',
         'components/angular-ivh-treeview/dist/ivh-treeview.min.js',
-
         'micro-frontends-dist/shared.min.js',
         'micro-frontends-dist/ipd.min.js',
-        'micro-frontends-dist/next-ui.min.js'
+        'micro-frontends-dist/next-ui.min.js',
+        'components/jsqr/jsQR.js'
     ];
 
     try {
@@ -345,6 +345,15 @@ module.exports = function (grunt) {
                         dot: true,
                         cwd: '<%= yeoman.nodeModules %>/react-dom/umd/',
                         dest: '<%= yeoman.app %>/components/react-dom/',
+                        src: [
+                            '*.*'
+                        ]
+                    },
+                    {
+                        expand: true,
+                        dot: true,
+                        cwd: '<%= yeoman.nodeModules %>/jsqr/dist',
+                        dest: '<%= yeoman.app %>/components/jsqr/',
                         src: [
                             '*.*'
                         ]

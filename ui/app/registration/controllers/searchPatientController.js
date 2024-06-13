@@ -232,6 +232,95 @@ angular.module('bahmni.registration')
 
             initialize();
 
+            $scope.qrData = '';
+            $scope.patientId = '';
+            $scope.isScanning = false;
+            var stream = null;
+            $scope.toggleScanning = function () {
+                if ($scope.isScanning) {
+                    stopScanning();
+                } else {
+                    startScanning();
+                }
+            };
+
+            function startScanning () {
+                $scope.video = document.getElementById('video');
+                navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+                    .then(function (mediaStream) {
+                        stream = mediaStream;
+                        $scope.video.srcObject = stream;
+                        $scope.video.setAttribute('playsinline', true); // Required for iOS Safari
+                        $scope.video.play();
+                        $scope.isScanning = true;
+                        scan();
+                    }).catch(function (err) {
+                        console.error('Error accessing the camera: ', err);
+                    // Handle error: display message to the user, prompt for retry, etc.
+                    });
+            }
+
+            function stopScanning () {
+                if (stream) {
+                    var tracks = stream.getTracks();
+                    for (var i = 0; i < tracks.length; i++) {
+                        tracks[i].stop();
+                    }
+                    stream = null;
+                }
+                $scope.video.srcObject = null;
+                $scope.isScanning = false;
+            }
+
+            function scan () {
+                if ($scope.video.readyState === $scope.video.HAVE_ENOUGH_DATA) {
+                    var canvasElement = document.createElement('canvas');
+                    var canvas = canvasElement.getContext('2d');
+
+                    canvasElement.width = $scope.video.videoWidth;
+                    canvasElement.height = $scope.video.videoHeight;
+                    canvas.drawImage($scope.video, 0, 0, canvasElement.width, canvasElement.height);
+
+                    var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                    var code = jsQR(imageData.data, imageData.width, imageData.height, {
+                        inversionAttempts: 'dontInvert'
+                    });
+
+                    if (code) {
+                        $scope.$apply(function () {
+                            $scope.qrData = code.data;
+                            try {
+//                                var parsedData = JSON.parse(code.data);
+//                                var patientId = parsedData.patient_id;
+                                var patientId = code.data;
+                                var searchPromise = patientService.search(undefined, patientId, $scope.addressSearchConfig.field,
+                                    undefined, undefined, undefined, $scope.customAttributesSearchConfig.fields,
+                                    $scope.programAttributesSearchConfig.field, $scope.searchParameters.programAttributeFieldValue,
+                                    $scope.addressSearchResultsConfig.fields, $scope.personSearchResultsConfig.fields,
+                                    $scope.isExtraIdentifierConfigured())
+                                    .then(function (data) {
+                                        if (data.pageOfResults.length > 0) {
+                                            var patient = data.pageOfResults[0];
+                                            var forwardUrl = appService.getAppDescriptor().getConfigValue("searchByIdForwardUrl") || "/patient/{{patientUuid}}";
+                                            $location.url(appService.getAppDescriptor().formatUrl(forwardUrl, {'patientUuid': patient.uuid}));
+                                        } else {
+                                            var errorMessage = $translate.instant("PATIENT_NOT_EXISTS", {patientId: patientId});
+                                            messagingService.showMessage('error', errorMessage);
+                                        }
+                                    });
+                            } catch (e) {
+                                console.error('Error parsing QR code data: ', e);
+                            }
+                            stopScanning();
+                        });
+                        return;
+                    }
+                }
+                if ($scope.isScanning) {
+                    requestAnimationFrame(scan);
+                }
+            }
+
             $scope.disableSearchButton = function () {
                 return !$scope.searchParameters.name && !$scope.searchParameters.addressFieldValue && !$scope.searchParameters.customAttribute && !$scope.searchParameters.programAttributeFieldValue;
             };
