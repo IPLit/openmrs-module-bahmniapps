@@ -11,7 +11,7 @@
                             <button tabindex="3" type="submit" ng-disabled="!searchParameters.registrationNumber" >{{ ::'REGISTRATION_LABEL_SEARCH' | translate}}</button>
                         </div>
                         <span>
-                             <button ng-click="toggleScanning()" ng-hide="isScanning">{{ isScanning ? 'Stop Scanning' : 'Start Scanning' }}</button>
+                             <button ng-click="toggleScanning()" ng-hide="isScanning">{{ isScanning ? 'Stop' : 'Scan' }}</button>
                               <div id="video-container">
                                   <video id="video" autoplay></video>
                               </div>

@@ -14,7 +14,7 @@ angular.module('bahmni.admin').service('storageService', ['$rootScope', '$http',
                 var dockerData = response.data;
                 var containerName = dockerData.Name;
                 var consumedSpaceStr = dockerData.StorageStats.Size;
-                var consumedSpace = consumedSpaceStr.match(/(\d+)/)[0];
+                var consumedSpace = parseFloat(consumedSpaceStr);
                 $rootScope.consumedSpaceText = consumedSpaceStr;
                 $rootScope.totalSpaceText = $rootScope.totalSpace + ' GB';
                 $rootScope.consumedPercentage = parseFloat((consumedSpace / $rootScope.totalSpace) * 100);
