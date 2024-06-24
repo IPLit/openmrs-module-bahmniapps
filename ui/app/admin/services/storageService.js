@@ -17,7 +17,7 @@ angular.module('bahmni.admin').service('storageService', ['$rootScope', '$http',
                 var consumedSpace = parseFloat(consumedSpaceStr);
                 $rootScope.consumedSpaceText = consumedSpaceStr;
                 $rootScope.totalSpaceText = $rootScope.totalSpace + ' GB';
-                $rootScope.consumedPercentage = parseFloat((consumedSpace / $rootScope.totalSpace) * 100);
+                $rootScope.consumedPercentage = parseFloat((consumedSpace / $rootScope.totalSpace) * 100).toFixed(2);
             })
             .catch(function (error) {
                 console.error('Error fetching data from Docker API:', error);
