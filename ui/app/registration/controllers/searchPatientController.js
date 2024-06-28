@@ -246,6 +246,9 @@ angular.module('bahmni.registration')
 
             function startScanning () {
                 $scope.video = document.getElementById('video');
+                $scope.video.style.height = "100%";
+                $scope.video.style.width = "100%";
+
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
                     .then(function (mediaStream) {
                         stream = mediaStream;
@@ -268,6 +271,9 @@ angular.module('bahmni.registration')
                     }
                     stream = null;
                 }
+                $scope.video.style.height = "0%";
+                $scope.video.style.width = "0%";
+
                 $scope.video.srcObject = null;
                 $scope.isScanning = false;
             }
