@@ -296,9 +296,20 @@ angular.module('bahmni.registration')
                         $scope.$apply(function () {
                             $scope.qrData = code.data;
                             try {
-//                                var parsedData = JSON.parse(code.data);
-//                                var patientId = parsedData.patient_id;
-                                var patientId = code.data;
+                                var parsedData;
+                                try {
+                                    parsedData = JSON.parse(code.data);
+                                }
+                                catch (exception) {
+                                    console.error("Error while psrsing: ", exception);
+                                    parsedData = JSON.parse('"'+code.data+ '"');
+                                }
+                                var patientId;
+                                if (parsedData.hidn !== undefined) {
+                                    patientId = parsedData.hidn;
+                                } else {
+                                    patientId = code.data;
+                                }
                                 var searchPromise = patientService.search(undefined, patientId, $scope.addressSearchConfig.field,
                                     undefined, undefined, undefined, $scope.customAttributesSearchConfig.fields,
                                     $scope.programAttributesSearchConfig.field, $scope.searchParameters.programAttributeFieldValue,
