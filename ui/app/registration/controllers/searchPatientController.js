@@ -302,7 +302,7 @@ angular.module('bahmni.registration')
                                 }
                                 catch (exception) {
                                     console.error("Error while psrsing: ", exception);
-                                    parsedData = JSON.parse('"'+code.data+ '"');
+                                    parsedData = JSON.parse('"' + code.data + '"');
                                 }
                                 var patientId;
                                 if (parsedData.hidn !== undefined) {
