@@ -1,6 +1,6 @@
 <div>
     <treatment-table ng-if="::params.showListView"
-                     drug-order-sections="::treatmentSections" params="::params" printing="::printing"></treatment-table>
+                     drug-order-sections="::treatmentSections" params="::params"></treatment-table>
     <treatment-chart ng-if="::params.showFlowSheet" ipd-drug-orders="::ipdDrugOrders" params="::params"
-                     visit-summary="::visitSummary" printing="::printing"></treatment-chart>
+                     visit-summary="::visitSummary"></treatment-chart>
 </div>

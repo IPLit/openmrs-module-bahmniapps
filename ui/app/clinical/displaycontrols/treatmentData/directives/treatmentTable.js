@@ -26,8 +26,7 @@ angular.module('bahmni.clinical')
             templateUrl: "displaycontrols/treatmentData/views/treatmentTable.html",
             scope: {
                 drugOrderSections: "=",
-                params: "=",
-                printing: "=?"
+                params: "="
             },
             controller: controller
         };

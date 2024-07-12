@@ -36,8 +36,7 @@ angular.module('bahmni.clinical')
             link: link,
             templateUrl: "displaycontrols/investigationresults/views/investigationResults.html",
             scope: {
-                params: "=",
-                printing: "=?"
+                params: "="
             }
         };
     }]);

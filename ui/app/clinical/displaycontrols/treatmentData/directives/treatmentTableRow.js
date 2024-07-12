@@ -11,13 +11,13 @@ angular.module('bahmni.clinical')
                 $scope.showDetails = !$scope.showDetails;
             };
         };
+
         return {
             restrict: 'A',
             controller: controller,
             scope: {
                 drugOrder: "=",
-                params: "=",
-                printing: "=?"
+                params: "="
             },
             templateUrl: "displaycontrols/treatmentData/views/treatmentTableRow.html"
         };

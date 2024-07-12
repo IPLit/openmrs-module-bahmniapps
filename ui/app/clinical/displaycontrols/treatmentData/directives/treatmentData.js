@@ -76,8 +76,7 @@ angular.module('bahmni.clinical')
             link: link,
             scope: {
                 params: "=",
-                visitSummary: "=?",
-                printing: "=?"
+                visitSummary: "=?"
             },
             templateUrl: "displaycontrols/treatmentData/views/treatmentData.html"
         };

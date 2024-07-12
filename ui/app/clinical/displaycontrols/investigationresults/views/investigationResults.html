@@ -1,6 +1,6 @@
 <div>
-    <investigation-chart ng-if="params.showChart && !printing" accessions="investigationResults.tabular"
+    <investigation-chart ng-if="params.showChart" accessions="investigationResults.tabular"
                      params="params"></investigation-chart>
-    <investigation-table ng-if="params.showTable && printing" accessions="investigationResults.labAccessions" printing="::printing"
+    <investigation-table ng-if="params.showTable" accessions="investigationResults.labAccessions"
                      params="params"></investigation-table>
 </div>

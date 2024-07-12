@@ -51,6 +51,7 @@ angular.module('bahmni.home')
                 $scope.headerText = response.data.loginPage.showHeaderText;
                 $scope.titleText = response.data.loginPage.showTitleText;
                 $scope.helpLink = response.data.helpLink.url;
+                $rootScope.cookieExpirationTime = response.data.loggedInUrlCookieExpirationTimeInMinutes;
             });
 
             localeService.getLocalesLangs().then(function (response) {
@@ -185,7 +186,7 @@ angular.module('bahmni.home')
                             return;
                         }
                         sessionService.loadCredentials().then(function () {
-                            // onSuccessfulAuthentication(); // IPLit
+                            onSuccessfulAuthentication(); // IPLit
                             $rootScope.currentUser.addDefaultLocale($scope.selectedLocale);
                             userService.savePreferences().then(
                                     function () { deferrable.resolve(); },

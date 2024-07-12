@@ -1,14 +1,14 @@
 <section class="block section-grid expand-investigation-chart">
-    <h2 class="section-title row-click" ng-if="accessions.tabularResult.orders.length > 0 || !printing">
+    <h2 class="section-title row-click">
         <span>{{'LAB_ORDERS_KEY' | translate }}</span>
     </h2>
     <div>
         <div>
-            <div ng-if="accessions.tabularResult.orders.length == 0 && !printing">
+            <div ng-if="accessions.tabularResult.orders.length == 0">
                 <p class="placeholder-text">{{'NO_LAB_ORDERS_FOR_PATIENT_MESSAGE_KEY' | translate}}</p>
             </div>
             <table class="investigation-chart" bindonce="accessions">
-                <thead ng-if="::!params.hideVisitDate">
+                <thead ng-if="::!params.hideResultsColumn">
                     <tr>
                         <th nowrap>&nbsp;</th>
                         <td nowrap ng-repeat="dateLabel in accessions.getDateLabels()">{{::dateLabel.date | bahmniDate}}</td>
@@ -26,7 +26,7 @@
                         </td>
                         <td ng-repeat="dateLabel in accessions.getDateLabels()"
                             ng-class="::{'has-uploaded-file': accessions.hasUploadedFiles(dateLabel, testOrderLabel)}"
-                            ng-if="::!params.hideVisitDate">
+                            ng-if="::!params.hideResultsColumn">
                             <span ng-init="results = accessions.getResult(dateLabel, testOrderLabel)">
                                 <span bm-pop-over autoclose="true" class="test-result" ng-repeat="res in results">
                                     <span ng-class="::{'referred-out': res.referredOut}">

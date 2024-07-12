@@ -1,7 +1,7 @@
 <section class="block section-grid">
-    <h2 ng-if="params.title && (hasLabOrders() || !printing)" class="section-title">{{::params | titleTranslate}} </h2>
+    <h2 ng-if="params.title" class="section-title">{{::params | titleTranslate}} </h2>
     <div>
-        <p class="placeholder-text" ng-if="!hasLabOrders() && !printing">{{ ::params.noLabOrdersMessage  | translate }}</p>
+        <p class="placeholder-text" ng-if="!hasLabOrders()">{{ ::params.noLabOrdersMessage  | translate }}</p>
         <ul ng-if="hasLabOrders()">
             <li ng-repeat="labOrderResults in accessions" bindonce="accessions" >
                 <div class="laborder-sub-heading toggle-container" toggle="labOrderResults.isOpen">
@@ -26,27 +26,7 @@
                         </div>
                     </div>
                 </div>
-
-                <div ng-if="::printing">
-                    <span ng-repeat="test in labOrderResults">
-                        <span ng-if="test.isPanel" class="header">
-						    <strong ng-if="test.preferredPanelName">{{::test.preferredPanelName}}</strong>
-						    <strong ng-if="!test.preferredPanelName && !test.panelName && test.orderName">{{::test.orderName}}</strong>
-						    <strong ng-if="!test.preferredPanelName && !test.orderName && test.panelName">{{::test.panelName}}</strong>
-						</span>
-                        <span ng-if="!test.isPanel">
-							<span ng-if="test.preferredTestName">{{::test.preferredTestName}}</span>
-							<span ng-if="!test.preferredTestName">{{::test.testName}}</span>
-							<span ng-if="test.notes"> ({{::test.notes}})</span>
-					        <span ng-if="test.result">
-					            : {{::test.result}}
-					        </span>
-                        </span>
-                        <span ng-if="!$last">, </span>
-                    </span>
-                </div>
-
-                <table bm-show="labOrderResults.isOpen">
+                <table bm-show="labOrderResults.isOpen" >
                     <tbody investigation-table-row test="::labOrderResult" params="::params" ng-repeat="labOrderResult in labOrderResults" ng-show="::shouldShowResults(labOrderResult)"></tbody>
                 </table>
             </li>

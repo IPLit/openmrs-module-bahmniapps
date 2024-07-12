@@ -24,81 +24,14 @@
                         </span>
                     </span>
 
-                    <div ng-if="::(config.type === 'vitals' && print)"
-                        class="print-observations visible-print"
-                        style="margin:0px !important;padding:0px 0px !important;"
-                        ng-repeat="observation in obsGroup.value">
-                        <ul ng-repeat="obs in (observation.groupMembers | filter:'!'+'blood pressure':false) track by $index">
-                            <show-observation show-details-button="::config.showDetailsButton" patient="::patient"
-                                style="margin:0px !important;padding:0px 0px !important;" display-name-type="::config.displayNameType" 
-                                 observation="::obs"
-                                 ></show-observation>
-                        </ul>
-                    </div>
-
-                    <div ng-if="::(config.type === 'vitals' && print)"
-                        class="print-observations visible-print"
-                        ng-repeat="observation in obsGroup.value">
-                        <ul ng-repeat="obs in (observation.groupMembers | filter:'blood pressure':false) track by $index"
-                           ng-class="::{'is-abnormal': (observation.abnormal ==  true || observation.interpretation === 'ABNORMAL')}" >
-                           <li ng-if="$index===0 && obs.groupMembers.length >= 3" class="tree-list-item left">
-                               <span class="testUnderPanel left" style="overflow:auto;">
-                                  <label class="obs-label left" style="font-size:13px;font-family:OpenSans;padding-left:0.3em;">
-                                    {{(obs.groupMembers[$index].concept.shortName || obs.groupMembers[$index].concept.name)}}
-                                    /
-                                    {{(obs.groupMembers[$index+1].concept.shortName || obs.groupMembers[$index+1].concept.name)}}
-                                    /
-                                    {{(obs.groupMembers[$index+2].concept.name || obs.groupMembers[$index+2].concept.shortName)}}
-                                  </label>
-                                </span>
-                                <span class="testUnderPanel left" ng-class="::{
-                                           'text-only': (obs.concept.dataType ==='Text' && print),
-                                           'value-text-only': !(obs.concept.dataType ==='Text' && print)
-                                           }">
-                                    <span>{{::obs.groupMembers[$index].getDisplayValue() | titleTranslate}}
-                                    <span class="label-add-on">{{::obs.groupMembers[$index].concept.units}}</span>
-                                    /&nbsp;
-                                    {{::obs.groupMembers[$index+1].getDisplayValue() | titleTranslate}}
-                                    <span class="label-add-on">{{::obs.groupMembers[$index+1].concept.units}}</span>
-                                    /&nbsp;
-                                          {{::obs.groupMembers[$index+2].getDisplayValue() | titleTranslate}}
-                                          <span class="label-add-on">{{::obs.groupMembers[$index+2].concept.units}}</span>
-                                   </span>
-                                </span>
-                           </li>
-                           <li ng-if="$index===0 && obs.groupMembers.length === 2" class="tree-list-item left">
-                               <span class="testUnderPanel left" style="overflow:auto;">
-                                  <label class="obs-label left" style="font-size:13px;font-family:OpenSans;padding-left:0.3em;">
-                                    {{(obs.groupMembers[$index].concept.shortName || obs.groupMembers[$index].concept.name)}}
-                                    /
-                                    {{(obs.groupMembers[$index+1].concept.shortName || obs.groupMembers[$index+1].concept.name)}}
-                                  </label>
-                                </span>
-                                <span class="testUnderPanel left" ng-class="::{
-                                           'text-only': (obs.concept.dataType ==='Text' && print),
-                                           'value-text-only': !(obs.concept.dataType ==='Text' && print)
-                                           }">
-                                    <span>{{::obs.groupMembers[$index].getDisplayValue() | titleTranslate}}
-                                    <span class="label-add-on">{{::obs.groupMembers[$index].concept.units}}</span>
-                                    /&nbsp;
-                                    {{::obs.groupMembers[$index+1].getDisplayValue() | titleTranslate}}
-                                    <span class="label-add-on">{{::obs.groupMembers[$index+1].concept.units}}</span>
-                                   </span>
-                                </span>
-                           </li>
-                        </ul>
-                    </div>
-
-                    <ul ng-if="::(config.type !== 'vitals' && config.type !== 'handNotes' && !isOnDashboard)" class="print-observations visible-print" 
-                        style="margin:0px !important;padding:0px 0px !important;">
-                        <!-- <li ng-repeat="observation in ::obsGroup.value"> -->
-                            <!-- <ul> -->
+                    <ul ng-if="::print" class="print-observations visible-print">
+                        <li ng-repeat="observation in ::obsGroup.value">
+                            <ul>
                                 <show-observation show-details-button="::config.showDetailsButton" patient="::patient"
-                                         style="margin:0px !important;padding:0px 0px !important;"
-                                                  observation="::observation" ng-repeat="observation in ::obsGroup.value" display-name-type="::config.displayNameType" 
-                                                 level="2"></show-observation>
-                            <!-- </ul> -->
-                        <!-- </li> -->
+                                                  observation="::observation"
+                                                  level="2" display-name-type="::config.displayNameType"></show-observation>
+                            </ul>
+                        </li>
                     </ul>
 
                     <ul style="background-color:white;max-width:100%;overflow-x:hidden;"

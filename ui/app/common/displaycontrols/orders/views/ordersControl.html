@@ -1,5 +1,5 @@
 <section class="dashboard-section ng-scope">
-    <h2 ng-if="hasTitleToBeShown() && (bahmniOrders.length > 0 || isOnDashboard)" class="section-title">{{::section | titleTranslate}}</h2>
+    <h2 ng-if="::hasTitleToBeShown()" class="section-title">{{::section | titleTranslate}}</h2>
 
     <h2 ng-if="::isClickable()" ng-dialog="../common/displaycontrols/orders/views/allOrdersDetails.html"
         ng-dialog-controller="AllOrdersDetailsController"
@@ -10,25 +10,7 @@
         <i class="fa fa-external-link"></i>
     </h2>
     <div>
-        <!-- ng-repeat="observation in ::bahmniOrder.bahmniObservations[0]" -->
-		<div ng-if="::!isOnDashboard">
-			<span ng-repeat="bahmniOrder in ::bahmniOrders">
-				<span ng-if="bahmniOrder.commentToFulfiller" class="header">
-					<span>{{::translatedLabel(bahmniOrder.concept)}}</span>
-					<span> ({{bahmniOrder.commentToFulfiller}})</span>
-				</span>
-				<span ng-if="!bahmniOrder.commentToFulfiller" class="header">
-					<span>{{::translatedLabel(bahmniOrder.concept)}}</span>
-				</span>
-				<!-- <ul ng-if="::bahmniOrder.bahmniObservations.length > 0">
-			    <show-observation patient="::patient"
-			         style="margin:0px !important;padding:0px 0px !important" 
-			         observation="bahmniOrder.bahmniObservations[0]" level="2"></show-observation></ul> -->
-				<span ng-if="!$last">, </span>
-			</span>
-		</div>
-
-        <section class="block hierarchy"  ng-if="::(config.showHeader && isOnDashboard)" ng-hide="::noOrdersMessage">
+        <section class="block hierarchy"  ng-if="::config.showHeader" ng-hide="::noOrdersMessage">
             <ul class="form-field">
                 <li ng-repeat="bahmniOrder in ::bahmniOrders">
                     <span class="tree-list-item row-click toggle-container" toggle="bahmniOrder.isOpen">
@@ -51,7 +33,7 @@
                 </li>
             </ul>
         </section>
-        <section class="block hierarchy"  ng-if="::(!config.showHeader && isOnDashboard)" ng-hide="noOrdersMessage">
+        <section class="block hierarchy"  ng-if="::!config.showHeader" ng-hide="noOrdersMessage">
             <ul class="form-field">
                 <li ng-repeat="bahmniOrder in ::bahmniOrders">
                     <ul ng-if="!bahmniOrder.hideIfEmpty">
@@ -62,7 +44,7 @@
                 </li>
             </ul>
         </section>
-        <div ng-show="::noOrdersMessage" ng-if="isOnDashboard">
+        <div ng-show="::noOrdersMessage">
             <div class="placeholder-text" ><p translate="DISPLAY_CONTROL_ERROR_MESSAGE_KEY" translate-values="{displayControl : '{{::noOrdersMessage}}'}"></p></div>
         </div>
     </div>

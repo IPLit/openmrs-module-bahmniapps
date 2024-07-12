@@ -4,9 +4,11 @@ angular.module('bahmni.admin')
 .factory('initialization', ['$rootScope', '$q', 'appService', 'spinner', 'configurations',
     function ($rootScope, $q, appService, spinner, configurations) {
         var getConfigs = function () {
-            var configNames = ['maxStorageSpace'];
+            var configNames = ['maxStorageSpace', 'quickLogoutComboKey', 'contextCookieExpirationTimeInMinutes'];
             return configurations.load(configNames).then(function () {
                 $rootScope.maxStorageSpace = configurations.maxStorageSpace();
+                $rootScope.quickLogoutComboKey = configurations.quickLogoutComboKey() || 'Escape';
+                $rootScope.cookieExpiryTime = configurations.contextCookieExpirationTimeInMinutes() || 30;
             });
         };
 

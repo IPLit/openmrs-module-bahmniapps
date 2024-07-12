@@ -2,7 +2,7 @@ export const defaultDateFormat = "DD MMM YYYY";
 export const defaultDateTimeFormat = "DD MMM YYYY hh:mm a";
 
 export const LS_LANG_KEY = "NG_TRANSLATE_LANG_KEY";
-export const SQL_PROPERTY = "emrapi.sqlSearch.emergencyMedicationToAcknowledge";
+export const MEDICATION_ACKNOWLEDGE_SQL_PROPERTY = "emrapi.sqlSearch.emergencyMedicationToAcknowledge";
 export const BASE_URL =
   typeof __webpack_public_path__ !== "undefined"
     ? __webpack_public_path__
@@ -13,7 +13,7 @@ const hostUrl = localStorage.getItem("host")
   : "";
 
 export const verifierFunction = "Verifier";
-
+export const document_images_path = "../../document_images/";
 const RESTWS_V1 = hostUrl + "/openmrs/ws/rest/v1";
 
 export const FORM_BASE_URL = RESTWS_V1 + "/bahmnicore/patient/{patientUuid}/forms";

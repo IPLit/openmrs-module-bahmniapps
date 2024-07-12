@@ -67,8 +67,7 @@ angular.module('bahmni.clinical')
             controller: controller,
             scope: {
                 accessions: "=",
-                params: "=",
-                printing: "=?"
+                params: "="
             },
             templateUrl: "displaycontrols/investigationresults/views/investigationTable.html"
         };
