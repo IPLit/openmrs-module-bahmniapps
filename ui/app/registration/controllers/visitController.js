@@ -412,6 +412,21 @@ angular.module('bahmni.registration')
                 return validate().then(save).then(afterSave);
             };
 
+            $scope.onOrderSubmit = function () {
+                var forwardUrl = appService.getAppDescriptor().getConfigValue("afterVisitOrdersForwardUrl");
+                if (forwardUrl != null) {
+                    $window.open(appService.getAppDescriptor().formatUrl(forwardUrl, {'patientUuid': $scope.patient.uuid}));
+                } else {
+                    $state.transitionTo($state.current, $state.params, {
+                        reload: true,
+                        inherit: false,
+                        notify: true
+                    });
+                }
+                messagingService.showMessage('info', 'REGISTRATION_LABEL_SAVED');
+                location.reload(true);
+            };
+
             spinner.forPromise($q.all([getPatient(), getActiveEncounter(), searchActiveVisitsPromise()])
                 .then(function () {
                     getAllForms().then(function () {
