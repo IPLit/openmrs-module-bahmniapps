@@ -202,6 +202,7 @@ module.exports = function (grunt) {
                 '<%= yeoman.app %>/common/**/*.html',
                 '<%= yeoman.app %>/orders/**/*.html',
                 '<%= yeoman.app %>/bedmanagement/**/*.html',
+                '<%= yeoman.app %>/handnotes/**/*.html',
                 '<%= yeoman.app %>/home/**/*.html',
                 '<%= yeoman.app %>/admin/**/*.html',
                 '<%= yeoman.app %>/registration/**/*.html',
@@ -275,6 +276,7 @@ module.exports = function (grunt) {
                             'common/**/*.html',
                             'orders/**/*.html',
                             'bedmanagement/**/*.html',
+                            'handnotes/**/*.html',
                             'home/**/*.html',
                             'ot/**/*.html',
                             'admin/**/*.html',
@@ -407,6 +409,12 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         cwd: '<%= yeoman.dist %>',
+                        src: ['handnotes.*.js'],
+                        dest: '<%= yeoman.dist %>/handnotes/'
+                    },
+                    {
+                        expand: true,
+                        cwd: '<%= yeoman.dist %>',
                         src: ['document-upload.*.js'],
                         dest: '<%= yeoman.dist %>/document-upload/'
                     },
@@ -452,6 +460,12 @@ module.exports = function (grunt) {
                         cwd: '<%= yeoman.dist %>',
                         src: ['ot.*.js'],
                         dest: '<%= yeoman.dist %>/ot/'
+                    },
+                    {
+                        expand: true,
+                        cwd: '<%= yeoman.dist %>',
+                        src: ['handnotes.*.css'],
+                        dest: '<%= yeoman.dist %>/handnotes/'
                     },
                     {
                         expand: true,
@@ -520,6 +534,7 @@ module.exports = function (grunt) {
                     '<%= yeoman.dist %>/document-upload.min.js': '<%= yeoman.dist %>/document-upload.min.js',
                     '<%= yeoman.dist %>/home.min.js': '<%= yeoman.dist %>/home.min.js',
                     '<%= yeoman.dist %>/orders.min.js': '<%= yeoman.dist %>/orders.min.js',
+                    '<%= yeoman.dist %>/handnotes.min.js': '<%= yeoman.dist %>/handnotes.min.js',
                     '<%= yeoman.dist %>/reports.min.js': '<%= yeoman.dist %>/reports.min.js',
                     '<%= yeoman.dist %>/clinical.min.js': '<%= yeoman.dist %>/clinical.min.js',
                     '<%= yeoman.dist %>/ot.min.js': '<%= yeoman.dist %>/ot.min.js'

@@ -93,3 +93,11 @@ type                   = KEYVALUEJSON
 replace_edited_strings = false
 keep_translations      = false
 
+[o:openmrs:p:bahmni:r:handnotes-app]
+file_filter            = ui/app/i18n/handnotes/locale_<lang>.json
+source_file            = ui/app/i18n/handnotes/locale_en.json
+source_lang            = en
+type                   = KEYVALUEJSON
+replace_edited_strings = false
+keep_translations      = false
+
