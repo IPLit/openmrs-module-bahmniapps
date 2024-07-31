@@ -51,6 +51,12 @@ angular.module('bahmni.common.displaycontrol.navigationlinks')
                     "translationKey": "LAB_ENTRY_KEY",
                     "url": "/lab/patient/{{patientUuid}}",
                     "title": "Lab Entry"
+                },
+                {
+                    "name": "ndhmHIU",
+                    "translationKey": "MODULE_LABEL_NDHMHIU_KEY",
+                    "url": "/hiuser",
+                    "title": "HIU"
                 }
             ];
 
