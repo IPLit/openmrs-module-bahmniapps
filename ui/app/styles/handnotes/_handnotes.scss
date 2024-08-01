@@ -108,3 +108,9 @@
   color: #525252;
   margin-top: .375rem;
 }
+
+.ngdialog.ngdialog-theme-default {
+  .ngdialog-content {
+    width: 80% !important;
+  }
+}

@@ -47,9 +47,6 @@ angular.module('handnotes').config(['$stateProvider', '$httpProvider', '$urlRout
                     'content': {
                         templateUrl: 'views/handNotes.html',
                         controller: 'HandNotesController'
-                    },
-                    'additional-header': {
-                        template: '<patient-summary patient="patient"/>'
                     }
                 },
                 resolve: {

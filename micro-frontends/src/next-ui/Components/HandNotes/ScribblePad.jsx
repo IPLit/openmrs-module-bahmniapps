@@ -19,7 +19,8 @@ export function ScribblePad(props) {
   const [canvasHeight, setCanvasHeight] = useState(0);
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
-
+  const {hostData} = props;
+  const {patient} = hostData;
   useEffect(() => {
     const handleResize = () => {
       setCanvasWidth(window.innerWidth - 40); // Adjusted for some padding
@@ -275,8 +276,8 @@ export function ScribblePad(props) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
-      <button style={{ position: 'absolute', top: '10px', right: '10px', padding: '8px 16px', backgroundColor: '#008CBA', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }} onClick={toggleFullScreen}>Enter Full Screen</button>
       <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Scribble Pad</h1>
+      <div>Patient Name: {patient.name}</div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', flexGrow: 1 }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginRight: '20px', maxHeight: '400px', overflowY: 'auto' }}>
           <input type="file" id="imageUpload" onChange={handleImageUpload} accept="image/*,application/pdf" multiple style={{ display: 'none' }} />
@@ -316,7 +317,7 @@ export function ScribblePad(props) {
         <canvas
           ref={canvasRef}
           width={800}
-          height={300}
+          height={500}
           onMouseDown={startDrawing}
           onMouseMove={draw}
           onMouseUp={stopDrawing}
@@ -326,14 +327,13 @@ export function ScribblePad(props) {
           style={{ border: '1px solid #000', backgroundColor: 'white', cursor: 'crosshair' }}
         />
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px', width: '100%', position: 'absolute', bottom: 0 }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px', width: '100%', bottom: 0 }}>
         <label htmlFor="lineWidth" style={{ marginRight: '10px' }}>Line Width: </label>
         <input id="lineWidth" type="range" min="1" max="10" value={lineWidth} onChange={handleLineWidthChange} style={{ marginRight: '20px' }} />
         <label htmlFor="lineColor" style={{ marginRight: '10px' }}>Line Color: </label>
         <input id="lineColor" type="color" value={lineColor} onChange={handleColorChange} style={{ marginRight: '20px' }} />
-        <button onClick={clearDrawing} style={{ marginRight: '10px', padding: '8px 16px', backgroundColor: '#f44336', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Clear</button>
-        <button onClick={saveCanvas} style={{ marginRight: '10px', padding: '8px 16px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Save</button>
-        <button onClick={printCanvas} style={{ padding: '8px 16px', backgroundColor: '#008CBA', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Print</button>
+        <button onClick={clearDrawing} style={{ marginRight: '10px', padding: '8px 16px', color: 'black', border: '#DDD 1px solid', borderRadius: '4px', cursor: 'pointer' }}>Clear</button>
+        <button onClick={saveCanvas} style={{ marginRight: '10px', padding: '8px 16px', color: 'black', border: '#DDD 1px solid', borderRadius: '4px', cursor: 'pointer' }}>Save</button>
       </div>
     </div>
   );
