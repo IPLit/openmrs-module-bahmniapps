@@ -15,6 +15,8 @@
         <link rel="stylesheet" href="../components/ngDialog/css/ngDialog.min.css"/>
         <link rel="stylesheet" href="../components/ngDialog/css/ngDialog-theme-default.min.css"/>
         <link rel="stylesheet" href="../components/ngDialog/css/ngDialog-theme-plain.min.css"/>
+        <link rel="stylesheet" href="../micro-frontends-dist/next-ui.min.css"/>
+
         <!-- endbuild -->
 
     </head>
@@ -53,6 +55,13 @@
         <script src="../components/angular-translate-storage-local/angular-translate-storage-local.min.js"></script>
         <script src="../components/angular-translate-handler-log/angular-translate-handler-log.min.js"></script>
         <script src="../lib/angular-workers/dist/angular-workers.js"></script>
+
+        <!-- Adding react since an micro-frontend will be used -->
+        <script src="../components/react/react.production.min.js"></script>
+        <script src="../components/react-dom/react-dom.production.min.js"></script>
+
+        <!-- polyfill to add angular feature which will allow easy loading of mfe into angular component -->
+        <script src="../micro-frontends-dist/shared.min.js"></script>
 
         <!-- build:js handnotes.min.js -->
         <script src="../common/route-errorhandler/init.js"></script>
@@ -132,9 +141,30 @@
         <script src="../common/domain/mappers/providerMapper.js"></script>
         <script src="../common/domain/mappers/conceptMapper.js"></script>
 
+        <script src="../micro-frontends-dist/next-ui.min.js"></script>
 
         <script src="../common/gallery/init.js"></script>
         <script src="../common/gallery/directives/galleryPane.js"></script>
+        <script src="../common/displaycontrols/init.js"></script>
+
+        <script src="../common/displaycontrols/observation/init.js"></script>
+        <script src="../common/services/formService.js"></script>
+        <script src="../common/displaycontrols/observation/helpers/groupingFunctions.js"></script>
+        <script src="../common/displaycontrols/observation/services/formHierarchyBuildService.js"></script>
+        <script src="../common/displaycontrols/observation/services/formRecordTreeBuildService.js"></script>
+        <script src="../common/displaycontrols/observation/directives/bahmniObservation.js"></script>
+        <script src="../common/displaycontrols/pivottable/init.js"></script>
+        <script src="../common/displaycontrols/pivottable/directives/pivotTable.js"></script>
+        <script src="../common/displaycontrols/pivottable/services/pivotTableService.js"></script>
+
+
+        <script src="../common/displaycontrols/custom/init.js"></script>
+        <script src="../common/displaycontrols/custom/directives/customDisplayControl.js"></script>
+
+        <script src="../common/displaycontrols/hint/init.js"></script>
+        <script src="../common/displaycontrols/hint/directives/hint.js"></script>
+
+        <script src="../common/ui-helper/directives/gallery.js"></script>
 
         <script src="../common/util/init.js"></script>
         <script src="../common/util/arrayUtil.js"></script>

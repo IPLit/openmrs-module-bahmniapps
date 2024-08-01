@@ -1,3 +1,66 @@
 <div>
-    Hand Notes for {{patient.uuid}}
+    <div class="container">
+        <div class="patient-header-slot">
+            <div class="patient-banner">
+<!--                <div class="patient-avatar">-->
+<!--                    <div class="patient-photo-slot">-->
+<!--                        <div class="avatar">-->
+<!--                            <div class="avatar-text">-->
+<!--                                <div class="avatar-text-tb">-->
+<!--                                    <span>-->
+<!--                                        <span></span>-->
+<!--                                    </span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <div class="patient-info">
+                    <div class="patient-name">
+                        {{patient.name}}
+                    </div>
+                    <div class="patient-demographics">
+                        <span> {{patient.gender}}</span> .
+                        <span> {{patient.age}} {{'CLINICAL_YEARS_TRANSLATION_KEY' | translate }} </span> .
+                        <span class="value">{{patient.birthdate | bahmniDate}}
+                            <span ng-if="::patient.birthdateEstimated" class="patient-estimated-text"> (est.)</span>
+                        </span>
+                    </div>
+                    <div class="identifier"> {{patient.identifier}}</div>
+                </div>
+            </div>
+            <div>
+                <section class="block">
+                    <h2>{{HAND_NOTES_TITLE |  translate}}</h2>
+                    <div class="concept-set-container-view">
+                        <section class="block hierarchy">
+                            <ul class="form-field" ng-if="bahmniObservations.length > 0">
+                                <li ng-repeat="obsGroup in ::bahmniObservations">
+                                 <span class="tree-list-item row-click toggle-container">
+                                    <span class="obs-date">
+                                        {{::obsGroup.date | bahmniDateTime}}
+                                    </span>
+                                 </span>
+                                    <ul style="background-color:white;max-width:100%;overflow-x:hidden;" class="print-observations">
+                                        <div ng-repeat="observation in obsGroup.value">
+                                            <li class="ng-scope image-preview">
+                                                <div class="tree-list-item" bm-gallery patient="patient">
+                                                    <a class="img-concept">
+                                                    <img align="middle"
+                                                         observation="::observation" bm-observation-gallery-item
+                                                         ng-src="/document_images/{{::observation.value}}"
+                                                         alt="{{::observation.concept.name}}"/>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        </div>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
 </div>

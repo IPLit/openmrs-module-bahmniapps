@@ -1,0 +1,110 @@
+.patient-banner {
+  display: flex;
+}
+
+.patient-name {
+  margin-right: 0.25rem;
+}
+
+.patient-avatar {
+  width: 5rem;
+  height: 5rem;
+  margin: 1rem;
+  border-radius: 1px;
+}
+
+.patient-avatar-button {
+  cursor: pointer;
+  border: none;
+  padding: 0px;
+  background: none;
+}
+
+.patient-info {
+  width: 100%;
+}
+
+.photo-frame {
+  height: 5rem;
+  width: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ccc;
+}
+
+.avatar-text {
+  width: 80px;
+  height: 80px;
+  line-height: initial;
+  text-align: center;
+  color: white;
+  background: transparent;
+}
+
+.avatar {
+  display: inline-block;
+  vertical-align: middle;
+  width: 80px;
+  height: 80px;
+  font-family: Helvetica, Arial, sans-serif;
+  background-repeat: round;
+}
+
+.avatar-text-tb {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  height: 100%;
+  font-size: 26.6667px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.patient-name-row {
+  margin-top: 0.875rem;
+}
+
+.flexRow {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+.identifier {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.375;
+  letter-spacing: 0;
+  color: #8d8d8d;
+}
+
+.tooltipPadding {
+  padding: 0.25rem;
+}
+
+.tooltipSmallText {
+  font-size: 80%;
+}
+
+.patient-name {
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0;
+  margin-right: .25rem;
+}
+
+.patient-demographics {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.375;
+  letter-spacing: 0;
+  color: #525252;
+  margin-top: .375rem;
+}

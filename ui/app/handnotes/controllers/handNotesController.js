@@ -5,7 +5,7 @@ angular.module('bahmni.handnotes')
         'spinner', 'visitDocumentService', '$rootScope', '$http', '$q', '$timeout', 'sessionService', '$anchorScroll',
         '$translate', 'messagingService', 'observationsService',
         function ($scope, $stateParams, visitService, patientService, encounterService, spinner, visitDocumentService,
-                  $rootScope, $http, $q, $timeout, sessionService, $anchorScroll, $translate, messagingService, observationsService, conceptSetUiConfigService) {
+                  $rootScope, $http, $q, $timeout, sessionService, $anchorScroll, $translate, messagingService, observationsService) {
             var encounterTypeUuid;
             var topLevelConceptUuid;
             var customVisitParams = Bahmni.HandNotes.Constants.visitRepresentation;
@@ -47,11 +47,10 @@ angular.module('bahmni.handnotes')
             };
 
             var getHandNotes = function () {
-
                 return observationsService.fetch($rootScope.patient.uuid, "Hand Note").then(function (response) {
                     console.log(response);
-                    $scope.openmrsOpdSummaryObs = new Bahmni.Common.Obs.ObservationMapper().map(response.data, []);
-                    console.log($scope.openmrsOpdSummaryObs);
+                    var handNotesObs = new Bahmni.Common.Obs.ObservationMapper().map(response.data, []);
+                    $scope.bahmniObservations = new Bahmni.Common.DisplayControl.Observation.GroupingFunctions().groupByEncounterDate(handNotesObs);
                 });
             };
 
@@ -69,6 +68,8 @@ angular.module('bahmni.handnotes')
                     "stopDatetime": DateUtil.getDate(visit.stopDatetime)
                 };
             };
+
+            $scope.hostData = { patient: $scope.patient};
 
 //            var isVisitInSameRange = function (newVisitWithoutTime, existingVisit) {
 //                return existingVisit.startDatetime <= newVisitWithoutTime.stopDatetime && (newVisitWithoutTime.startDatetime <= existingVisit.stopDatetime || DateUtil.isInvalid(existingVisit.stopDatetime));
@@ -159,7 +160,7 @@ angular.module('bahmni.handnotes')
 //                return encounterService.find({
 //                    patientUuid: $stateParams.patientUuid,
 //                    encounterTypeUuids: [encounterTypeUuid],
-//                    providerUuids: !_.isEmpty(currentProviderUuid) ? [currentProviderUuid] : null,
+//                    providerUulaids: !_.isEmpty(currentProviderUuid) ? [currentProviderUuid] : null,
 //                    includeAll: Bahmni.Common.Constants.includeAllObservations,
 //                    locationUuid: locationUuid
 //                }).then(function (encounterTransactionResponse) {
