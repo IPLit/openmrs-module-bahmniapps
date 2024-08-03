@@ -177,6 +177,7 @@ export function ScribblePad(props) {
     };
   };
 
+
   const saveCanvas = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -334,6 +335,7 @@ export function ScribblePad(props) {
         <input id="lineColor" type="color" value={lineColor} onChange={handleColorChange} style={{ marginRight: '20px' }} />
         <button onClick={clearDrawing} style={{ marginRight: '10px', padding: '8px 16px', color: 'black', border: '#DDD 1px solid', borderRadius: '4px', cursor: 'pointer' }}>Clear</button>
         <button onClick={saveCanvas} style={{ marginRight: '10px', padding: '8px 16px', color: 'black', border: '#DDD 1px solid', borderRadius: '4px', cursor: 'pointer' }}>Save</button>
+        <button onClick={cancel} style={{ marginRight: '10px', padding: '8px 16px', color: 'black', border: '#DDD 1px solid', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
       </div>
     </div>
   );

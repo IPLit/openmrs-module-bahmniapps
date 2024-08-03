@@ -68,6 +68,9 @@ angular.module('bahmni.handnotes')
                     "stopDatetime": DateUtil.getDate(visit.stopDatetime)
                 };
             };
+            $scope.closeDialog = function () {
+                ngDialog.close();
+            };
 
             $scope.createNew = function () {
                 ngDialog.open({
