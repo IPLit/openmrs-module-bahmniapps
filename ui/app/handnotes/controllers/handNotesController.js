@@ -40,12 +40,6 @@ angular.module('bahmni.handnotes')
                 return angular.extend(new Bahmni.HandNotes.Visit(), visit);
             };
 
-            var getVisitTypes = function () {
-                return visitService.getVisitType().then(function (response) {
-                    $scope.visitTypes = response.data.results;
-                });
-            };
-
             var getHandNotes = function () {
                 return observationsService.fetch($rootScope.patient.uuid, "Hand Note").then(function (response) {
                     console.log(response);
@@ -62,12 +56,6 @@ angular.module('bahmni.handnotes')
                 });
             };
 
-            var getVisitStartStopDateTime = function (visit) {
-                return {
-                    "startDatetime": DateUtil.getDate(visit.startDatetime),
-                    "stopDatetime": DateUtil.getDate(visit.stopDatetime)
-                };
-            };
             $scope.closeDialog = function () {
                 ngDialog.close();
             };
@@ -93,8 +81,6 @@ angular.module('bahmni.handnotes')
             };
 
             var init = function () {
-//                encounterTypeUuid = $scope.encounterConfig.getEncounterTypeUuid($rootScope.appConfig.encounterType);
-//                initNewVisit();
                 var deferrables = $q.defer();
                 var promises = [];
                 promises.push(getPatient().then(getHandNotes));
