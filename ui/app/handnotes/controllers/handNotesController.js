@@ -48,6 +48,17 @@ angular.module('bahmni.handnotes')
                 });
             };
 
+            var getActiveVisit = function () {
+                if ($scope.patient) {
+                     visitService.search({patient: $scope.patient.uuid, v: customVisitParams, includeInactive: false}).then(function (response) {
+                        if (response.data.results.length > 0) {
+                            $scope.activeVisit = true;
+                        } else {
+                            $scope.activeVisit = false;
+                        }
+                     });
+                }
+            }
             var getPatient = function () {
                 return patientService.getPatient($stateParams.patientUuid).success(function (openMRSPatient) {
                     $rootScope.patient = patientMapper.map(openMRSPatient);
@@ -83,7 +94,7 @@ angular.module('bahmni.handnotes')
             var init = function () {
                 var deferrables = $q.defer();
                 var promises = [];
-                promises.push(getPatient().then(getHandNotes));
+                promises.push(getPatient().then(getActiveVisit).then(getHandNotes));
                 $q.all(promises).then(function () {
                     deferrables.resolve();
                 });

@@ -29,7 +29,10 @@
                     <div class="identifier"> {{patient.identifier}}</div>
                 </div>
             </div>
-            <button ng-click="createNew()">Create New</button>
+
+            <div ng-if="activeVisit">
+                <button ng-click="createNew()">Create New</button>
+            </div>
 
             <div>
                 <section class="block">
