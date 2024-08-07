@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('handnotes', ['ui.router', 'bahmni.common.config', 'bahmni.handnotes', 'bahmni.common.patient',
+angular.module('handnotes', ['ui.router', 'bahmni.common.config', 'bahmni.common.patient',
     'authentication', 'bahmni.common.appFramework', 'ngDialog', 'httpErrorInterceptor', 'bahmni.common.domain', 'bahmni.common.i18n',
-    'bahmni.common.uiHelper', 'ngSanitize', 'bahmni.common.patientSearch', 'bahmni.common.util',
-    'bahmni.common.routeErrorHandler', 'pascalprecht.translate', 'ngCookies']);
+    'ngClipboard', 'ngSanitize', 'bahmni.common.uiHelper', 'bahmni.common.patientSearch', 'bahmni.common.util', 'bahmni.common.gallery',
+    'bahmni.common.routeErrorHandler', 'pascalprecht.translate', 'ngCookies', 'bahmni.handnotes']);
 angular.module('handnotes').config(['$stateProvider', '$httpProvider', '$urlRouterProvider', '$bahmniTranslateProvider', '$compileProvider',
     function ($stateProvider, $httpProvider, $urlRouterProvider, $bahmniTranslateProvider, $compileProvider) {
         $urlRouterProvider.otherwise('/search');
