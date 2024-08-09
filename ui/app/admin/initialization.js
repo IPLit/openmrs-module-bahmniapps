@@ -8,7 +8,7 @@ angular.module('bahmni.admin')
             return configurations.load(configNames).then(function () {
                 $rootScope.maxStorageSpace = configurations.maxStorageSpace();
                 $rootScope.quickLogoutComboKey = configurations.quickLogoutComboKey() || 'Escape';
-                $rootScope.cookieExpiryTime = configurations.contextCookieExpirationTimeInMinutes() || 30;
+                $rootScope.cookieExpiryTime = configurations.contextCookieExpirationTimeInMinutes() || 0;
             });
         };
 
