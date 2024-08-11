@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { pdfjs } from 'react-pdf';
 import PropTypes from "prop-types";
+import { saveDocument } from "./HandNotesUtils";
 
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import './HandNotes.scss';
@@ -177,44 +178,36 @@ export function ScribblePad(props) {
     };
   };
 
+  const drawImageAndConvert = (image) => {
+    image.onload = () => {
+      mergedCtx.drawImage(image, 0, 0, canvas.width, canvas.height);
+      mergedCtx.drawImage(canvas, 0, 0);
+      return mergedCanvas.toDataURL('image/png');
+    };
+  };
 
-  const saveCanvas = () => {
+  const saveCanvas = async () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     const mergedCanvas = document.createElement('canvas');
     const mergedCtx = mergedCanvas.getContext('2d');
+    let dataURL;
     mergedCanvas.width = canvas.width;
     mergedCanvas.height = canvas.height;
+
     if (backgroundImages[currentImageIndex]) {
       const image = new Image();
       image.src = backgroundImages[currentImageIndex];
-      image.onload = () => {
-        mergedCtx.drawImage(image, 0, 0, canvas.width, canvas.height);
-        mergedCtx.drawImage(canvas, 0, 0);
-        mergedCanvas.toBlob((blob) => {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'scribble_with_image.png';
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-          document.body.removeChild(a);
-        });
-      };
+      dataURL = drawImageAndConvert(image);
     } else {
+      // No background image case
       mergedCtx.drawImage(canvas, 0, 0);
-      mergedCanvas.toBlob((blob) => {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'scribble.png';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-      });
+      dataURL = mergedCanvas.toDataURL('image/png');
     }
+    const searchStr = ";base64";
+    const format = dataURL.split(searchStr)[0].split("/")[1];
+    let file = dataURL.substring(dataURL.indexOf(searchStr) + searchStr.length, dataURL.length)
+    const response = await saveDocument({content: file, fileType: "image", format: "png", encounterTypeName: "Consultation", patientUuid: patient.uuid});
   };
 
   const printCanvas = () => {
