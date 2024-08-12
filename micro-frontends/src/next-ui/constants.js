@@ -35,3 +35,4 @@ export const SAVE_ALLERGIES_URL =  RESTWS_V1 + "/patient/{patientId}/allergy";
 export const OT_NOTES_BASE_URL = RESTWS_V1 + "/notes";
 export const SAVE_DOCUMENT_URL = RESTWS_V1 + "/bahmnicore/distro/visitDocument/mt/uploadDocument";
 export const BAHMNI_DISTRO_ENCOUNTER_URL = RESTWS_V1 + "/bahmnicore/distro/bahmniencounter";
+export const CONCEPT_SET_URL = RESTWS_V1 + "/concept?s=byFullySpecifiedName";

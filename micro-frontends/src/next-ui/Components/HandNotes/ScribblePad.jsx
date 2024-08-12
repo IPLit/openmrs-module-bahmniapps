@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { pdfjs } from 'react-pdf';
 import PropTypes from "prop-types";
-import { saveDocument } from "./HandNotesUtils";
+import { saveDocument, saveEncounter } from "./HandNotesUtils";
 
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import './HandNotes.scss';
@@ -21,7 +21,7 @@ export function ScribblePad(props) {
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
   const {hostData} = props;
-  const {patient} = hostData;
+  const {patient, imageNoteConceptName, handnoteConceptName} = hostData;
   useEffect(() => {
     const handleResize = () => {
       setCanvasWidth(window.innerWidth - 40); // Adjusted for some padding
@@ -208,6 +208,9 @@ export function ScribblePad(props) {
     const format = dataURL.split(searchStr)[0].split("/")[1];
     let file = dataURL.substring(dataURL.indexOf(searchStr) + searchStr.length, dataURL.length)
     const response = await saveDocument({content: file, fileType: "image", format: "png", encounterTypeName: "Consultation", patientUuid: patient.uuid});
+    const imageName = response.data.url;
+    const saveResponse = await saveEncounter(imageName, handnoteConceptName, imageNoteConceptName);
+    console.log(saveResponse);
   };
 
   const printCanvas = () => {
