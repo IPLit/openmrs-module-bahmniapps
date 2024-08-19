@@ -21,24 +21,6 @@ angular.module('bahmni.handnotes').factory('initialization',
                 });
             };
 
-            var validate = function () {
-                var deferrable = $q.defer();
-                var throwValidationError = function (errorMessage) {
-                    $rootScope.error = errorMessage;
-                    initializationPromise.reject();
-                    deferrable.reject();
-                };
-
-                if ($rootScope.appConfig.encounterType === null) {
-                    throwValidationError("encounterType should be configured in config");
-                } else if ($rootScope.encounterConfig.getEncounterTypeUuid($rootScope.appConfig.encounterType) === null) {
-                    throwValidationError("Configured encounterType does not exist");
-                }
-
-                deferrable.resolve();
-                return deferrable;
-            };
-
             var checkPrivilege = function () {
                 return appService.checkPrivilege("app:document-upload").catch(function () {
                     return initializationPromise.reject();
@@ -53,7 +35,7 @@ angular.module('bahmni.handnotes').factory('initialization',
                 $location.path("/error");
             });
 
-            authenticator.authenticateUser().then(initApp).then(checkPrivilege).then(getConsultationConfigs).then(validate).then(function () {
+            authenticator.authenticateUser().then(initApp).then(checkPrivilege).then(getConsultationConfigs).then(function () {
                 initializationPromise.resolve();
             });
 

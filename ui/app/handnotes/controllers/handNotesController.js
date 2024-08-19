@@ -11,7 +11,6 @@ angular.module('bahmni.handnotes')
             var customVisitParams = Bahmni.HandNotes.Constants.visitRepresentation;
             var DateUtil = Bahmni.Common.Util.DateUtil;
             var patientMapper = new Bahmni.PatientMapper($rootScope.patientConfig, $rootScope, $translate);
-            var activeEncounter = {};
             var locationUuid = sessionService.getLoginLocationUuid();
 
             $scope.visits = [];
@@ -64,7 +63,6 @@ angular.module('bahmni.handnotes')
                 return patientService.getPatient($stateParams.patientUuid).success(function (openMRSPatient) {
                     $rootScope.patient = patientMapper.map(openMRSPatient);
                     $scope.patient = $rootScope.patient;
-                    $scope.hostData = { patient: $scope.patient };
                 });
             };
 
@@ -73,6 +71,7 @@ angular.module('bahmni.handnotes')
             };
 
             $scope.createNew = function () {
+                $scope.hostData = { patient: $scope.patient, locationUuid: locationUuid, encounterTypeUuid: encounterTypeUuid, observationMapper: new Bahmni.ConceptSet.ObservationMapper(), handnoteConceptName: "Hand Note", imageNoteConceptName: "Image Note" };
                 ngDialog.open({
                     template: './views/scribblePad.html',
                     className: 'ngdialog-theme-default',
@@ -93,6 +92,7 @@ angular.module('bahmni.handnotes')
             };
 
             var init = function () {
+                encounterTypeUuid = $scope.encounterConfig.getConsultationEncounterTypeUuid();
                 var deferrables = $q.defer();
                 var promises = [];
                 promises.push(getPatient().then(getActiveVisit).then(getHandNotes));

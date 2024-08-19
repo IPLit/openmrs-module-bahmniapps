@@ -20,8 +20,8 @@ export function ScribblePad(props) {
   const [canvasHeight, setCanvasHeight] = useState(0);
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
-  const {hostData} = props;
-  const {patient, imageNoteConceptName, handnoteConceptName} = hostData;
+  const {hostData, closeScribblePad} = props;
+  const {patient, imageNoteConceptName, handnoteConceptName, locationUuid, encounterTypeUuid, observationMapper} = hostData;
   useEffect(() => {
     const handleResize = () => {
       setCanvasWidth(window.innerWidth - 40); // Adjusted for some padding
@@ -209,46 +209,12 @@ export function ScribblePad(props) {
     let file = dataURL.substring(dataURL.indexOf(searchStr) + searchStr.length, dataURL.length)
     const response = await saveDocument({content: file, fileType: "image", format: "png", encounterTypeName: "Consultation", patientUuid: patient.uuid});
     const imageName = response.data.url;
-    const saveResponse = await saveEncounter(imageName, handnoteConceptName, imageNoteConceptName);
+    const saveResponse = await saveEncounter(imageName,
+                            handnoteConceptName,
+                            imageNoteConceptName,
+                            observationMapper,
+                            {patientUuid: patient.uuid, locationUuid: locationUuid, encounterTypeUuid: encounterTypeUuid, visitType: "OPD"});
     console.log(saveResponse);
-  };
-
-  const printCanvas = () => {
-    const canvas = canvasRef.current;
-    const printWindow = window.open('', '_blank');
-    printWindow.document.open();
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Print Canvas</title>
-          <style>
-            canvas {
-              border: 1px solid #000;
-              background-color: white;
-            }
-          </style>
-        </head>
-        <body>
-          <h1>Scribble Pad</h1>
-          <canvas id="printCanvas" width="${canvas.width}" height="${canvas.height}"></canvas>
-          <script>
-            const canvas = document.getElementById('printCanvas');
-            const ctx = canvas.getContext('2d');
-            const backgroundImage = new Image();
-            backgroundImage.src = '${backgroundImages[currentImageIndex]}';
-            backgroundImage.onload = () => {
-              ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-              const originalCanvas = window.opener.document.querySelector('canvas');
-              const originalCtx = originalCanvas.getContext('2d');
-              ctx.drawImage(originalCanvas, 0, 0, canvas.width, canvas.height);
-              window.print();
-              window.close();
-            };
-          </script>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
   };
 
   const nextPage = () => {
@@ -272,6 +238,12 @@ export function ScribblePad(props) {
   }, [currentImageIndex, backgroundImages]);
 
   return (
+//     <Modal
+//         open
+//         passiveModal
+//         className="edit-observation-form-modal"
+//         onRequestClose={closeScribblePad}
+//     >
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
       <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Scribble Pad</h1>
       <div>Patient Name: {patient.name}</div>
@@ -333,10 +305,12 @@ export function ScribblePad(props) {
         <button onClick={saveCanvas} style={{ marginRight: '10px', padding: '8px 16px', color: 'black', border: '#DDD 1px solid', borderRadius: '4px', cursor: 'pointer' }}>Save</button>
       </div>
     </div>
+//     </Modal>
   );
 }
 
 ScribblePad.propTypes = {
     hostData: PropTypes.Object,
+    closeScribblePad: PropTypes.func.isRequired,
 }
 
