@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { pdfjs } from 'react-pdf';
 import PropTypes from "prop-types";
+import { Modal } from "carbon-components-react";
+
 import { saveDocument, saveEncounter } from "./HandNotesUtils";
 
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
@@ -20,8 +22,7 @@ export function ScribblePad(props) {
   const [canvasHeight, setCanvasHeight] = useState(0);
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
-  const {hostData, closeScribblePad} = props;
-  const {patient, imageNoteConceptName, handnoteConceptName, locationUuid, encounterTypeUuid, observationMapper} = hostData;
+  const {patient, imageNoteConceptName, handnoteConceptName, locationUuid, encounterTypeUuid, observationMapper, closeScribblePad} = props;
   useEffect(() => {
     const handleResize = () => {
       setCanvasWidth(window.innerWidth - 40); // Adjusted for some padding
@@ -214,7 +215,6 @@ export function ScribblePad(props) {
                             imageNoteConceptName,
                             observationMapper,
                             {patientUuid: patient.uuid, locationUuid: locationUuid, encounterTypeUuid: encounterTypeUuid, visitType: "OPD"});
-    console.log(saveResponse);
   };
 
   const nextPage = () => {
@@ -238,12 +238,12 @@ export function ScribblePad(props) {
   }, [currentImageIndex, backgroundImages]);
 
   return (
-//     <Modal
-//         open
-//         passiveModal
-//         className="edit-observation-form-modal"
-//         onRequestClose={closeScribblePad}
-//     >
+    <Modal
+        open
+        passiveModal
+        className="edit-observation-form-modal"
+        onRequestClose={closeScribblePad}
+    >
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
       <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Scribble Pad</h1>
       <div>Patient Name: {patient.name}</div>
@@ -305,12 +305,17 @@ export function ScribblePad(props) {
         <button onClick={saveCanvas} style={{ marginRight: '10px', padding: '8px 16px', color: 'black', border: '#DDD 1px solid', borderRadius: '4px', cursor: 'pointer' }}>Save</button>
       </div>
     </div>
-//     </Modal>
+    </Modal>
   );
 }
 
 ScribblePad.propTypes = {
-    hostData: PropTypes.Object,
     closeScribblePad: PropTypes.func.isRequired,
+    patient: PropTypes.object.isRequired,
+    handnoteConceptName: PropTypes.string.isRequired,
+    imageNoteConceptName: PropTypes.string.isRequired,
+    locationUuid: PropTypes.string.isRequired,
+    encounterTypeUuid: PropTypes.string.isRequired,
+    observationMapper: PropTypes.object.isRequired
 }
 

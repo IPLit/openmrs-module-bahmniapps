@@ -49,7 +49,7 @@ angular.module('bahmni.handnotes')
 
             var getActiveVisit = function () {
                 if ($scope.patient) {
-                    visitService.search({patient: $scope.patient.uuid, v: customVisitParams, includeInactive: false}).then(function (response) {
+                    return visitService.search({patient: $scope.patient.uuid, v: customVisitParams, includeInactive: false}).then(function (response) {
                         if (response.data.results.length > 0) {
                             $scope.activeVisit = true;
                         } else {
@@ -59,48 +59,24 @@ angular.module('bahmni.handnotes')
                 }
             };
 
-            var getPatient = function () {
-                return patientService.getPatient($stateParams.patientUuid).success(function (openMRSPatient) {
-                    $rootScope.patient = patientMapper.map(openMRSPatient);
-                    $scope.patient = $rootScope.patient;
-                });
-            };
-
             $scope.closeDialog = function () {
                 ngDialog.close();
-            };
-
-            $scope.createNew = function () {
-                $scope.hostData = { patient: $scope.patient, locationUuid: locationUuid, encounterTypeUuid: encounterTypeUuid, observationMapper: new Bahmni.ConceptSet.ObservationMapper(), handnoteConceptName: "Hand Note", imageNoteConceptName: "Image Note" };
-                ngDialog.open({
-                    template: './views/scribblePad.html',
-                    className: 'ngdialog-theme-default',
-                    height: "100%",
-                    width: "100%",
-                    scope: $scope,
-                    data: {
-                        hostData: $scope.hostData
-                    },
-                    preCloseCallback: function (value) {
-                        if (confirm('Are you sure you want to close?')) {
-                            return true;
-                        }
-                        return false;
-                    }
-
-                });
             };
 
             var init = function () {
                 encounterTypeUuid = $scope.encounterConfig.getConsultationEncounterTypeUuid();
                 var deferrables = $q.defer();
                 var promises = [];
-                promises.push(getPatient().then(getActiveVisit).then(getHandNotes));
+                promises.push(getActiveVisit().then(getHandNotes));
                 $q.all(promises).then(function () {
                     deferrables.resolve();
                 });
                 return deferrables.promise;
             };
+
+            if ($scope.patient !== undefined) {
+                $scope.hostData = { patient: $scope.patient, locationUuid: locationUuid, encounterTypeUuid: encounterTypeUuid, observationMapper: new Bahmni.ConceptSet.ObservationMapper(), handnoteConceptName: "Hand Note", imageNoteConceptName: "Image Note" };
+            }
             spinner.forPromise(init());
 
             $anchorScroll();

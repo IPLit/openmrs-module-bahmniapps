@@ -50,7 +50,9 @@ angular.module('handnotes').config(['$stateProvider', '$httpProvider', '$urlRout
                     }
                 },
                 resolve: {
-                    initialization: 'initialization'
+                    patientResolution: function ($stateParams, patientInitialization) {
+                        return patientInitialization($stateParams.patientUuid);
+                    }
                 }
             })
             .state('error', {
