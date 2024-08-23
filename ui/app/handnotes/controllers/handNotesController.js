@@ -86,6 +86,5 @@ angular.module('bahmni.handnotes')
                 };
             }
             spinner.forPromise(init());
-
         }
     ]);
