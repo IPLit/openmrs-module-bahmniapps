@@ -6,7 +6,7 @@ import {I18nProvider} from "../../Components/i18n/I18nProvider";
 export function HandNotes(props) {
   const [showScribblePad, setShowScribblePad] = useState(false);
   const {hostData} = props;
-  const {patient, imageNoteConceptName, handnoteConceptName, locationUuid, encounterTypeUuid, observationMapper} = hostData;
+  const {patient, imageNoteConceptName, handnoteConceptName, locationUuid, encounterTypeUuid, observationMapper, onSaveSuccess} = hostData;
   const openScribblePad = async () => {
     setShowScribblePad(true);
   }
@@ -28,6 +28,7 @@ export function HandNotes(props) {
                     locationUuid={locationUuid}
                     encounterTypeUuid={encounterTypeUuid}
                     observationMapper={observationMapper}
+                    onSaveSuccess={onSaveSuccess}
                 />
               ) : null}
 

@@ -2,10 +2,10 @@
 
 angular.module('bahmni.handnotes')
     .controller('HandNotesController', ['$scope', '$stateParams', 'visitService', 'patientService', 'encounterService',
-        'spinner', 'visitDocumentService', '$rootScope', '$http', '$q', '$timeout', 'sessionService', '$anchorScroll',
+        'spinner', 'visitDocumentService', '$rootScope', '$http', '$q', '$timeout', 'sessionService',
         '$translate', 'messagingService', 'observationsService', 'ngDialog',
         function ($scope, $stateParams, visitService, patientService, encounterService, spinner, visitDocumentService,
-                  $rootScope, $http, $q, $timeout, sessionService, $anchorScroll, $translate, messagingService, observationsService, ngDialog) {
+                  $rootScope, $http, $q, $timeout, sessionService, $translate, messagingService, observationsService, ngDialog) {
             var encounterTypeUuid;
             var topLevelConceptUuid;
             var customVisitParams = Bahmni.HandNotes.Constants.visitRepresentation;
@@ -75,10 +75,17 @@ angular.module('bahmni.handnotes')
             };
 
             if ($scope.patient !== undefined) {
-                $scope.hostData = { patient: $scope.patient, locationUuid: locationUuid, encounterTypeUuid: encounterTypeUuid, observationMapper: new Bahmni.ConceptSet.ObservationMapper(), handnoteConceptName: "Hand Note", imageNoteConceptName: "Image Note" };
+                $scope.hostData = {
+                    patient: $scope.patient,
+                    locationUuid: locationUuid,
+                    encounterTypeUuid: encounterTypeUuid,
+                    observationMapper: new Bahmni.ConceptSet.ObservationMapper(),
+                    handnoteConceptName: "Hand Note",
+                    imageNoteConceptName: "Image Note",
+                    onSaveSuccess: getHandNotes
+                };
             }
             spinner.forPromise(init());
 
-            $anchorScroll();
         }
     ]);

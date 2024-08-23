@@ -22,7 +22,7 @@ export function ScribblePad(props) {
   const [canvasHeight, setCanvasHeight] = useState(0);
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
-  const {patient, imageNoteConceptName, handnoteConceptName, locationUuid, encounterTypeUuid, observationMapper, closeScribblePad} = props;
+  const {patient, imageNoteConceptName, handnoteConceptName, locationUuid, encounterTypeUuid, observationMapper, closeScribblePad, onSaveSuccess} = props;
   useEffect(() => {
     const handleResize = () => {
       setCanvasWidth(window.innerWidth - 40); // Adjusted for some padding
@@ -215,6 +215,10 @@ export function ScribblePad(props) {
                             imageNoteConceptName,
                             observationMapper,
                             {patientUuid: patient.uuid, locationUuid: locationUuid, encounterTypeUuid: encounterTypeUuid, visitType: "OPD"});
+    if (saveResponse.status === 200) {
+         onSaveSuccess();
+         closeScribblePad();
+    }
   };
 
   const nextPage = () => {
@@ -311,6 +315,7 @@ export function ScribblePad(props) {
 
 ScribblePad.propTypes = {
     closeScribblePad: PropTypes.func.isRequired,
+    onSaveSuccess: PropTypes.object.isRequired,
     patient: PropTypes.object.isRequired,
     handnoteConceptName: PropTypes.string.isRequired,
     imageNoteConceptName: PropTypes.string.isRequired,
