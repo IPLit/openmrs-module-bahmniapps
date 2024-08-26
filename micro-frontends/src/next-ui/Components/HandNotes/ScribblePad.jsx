@@ -179,14 +179,6 @@ export function ScribblePad(props) {
     };
   };
 
-  const drawImageAndConvert = (image) => {
-    image.onload = () => {
-      mergedCtx.drawImage(image, 0, 0, canvas.width, canvas.height);
-      mergedCtx.drawImage(canvas, 0, 0);
-      return mergedCanvas.toDataURL('image/png');
-    };
-  };
-
   const saveCanvas = async () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -199,12 +191,21 @@ export function ScribblePad(props) {
     if (backgroundImages[currentImageIndex]) {
       const image = new Image();
       image.src = backgroundImages[currentImageIndex];
-      dataURL = drawImageAndConvert(image);
+      image.onload = () => {
+        mergedCtx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        mergedCtx.drawImage(canvas, 0, 0);
+        dataURL =  mergedCanvas.toDataURL('image/png');
+        save(dataURL);
+      };
     } else {
       // No background image case
       mergedCtx.drawImage(canvas, 0, 0);
       dataURL = mergedCanvas.toDataURL('image/png');
+      save(dataURL);
     }
+  };
+
+  const save = async (dataURL) => {
     const searchStr = ";base64";
     const format = dataURL.split(searchStr)[0].split("/")[1];
     let file = dataURL.substring(dataURL.indexOf(searchStr) + searchStr.length, dataURL.length)
@@ -216,10 +217,11 @@ export function ScribblePad(props) {
                             observationMapper,
                             {patientUuid: patient.uuid, locationUuid: locationUuid, encounterTypeUuid: encounterTypeUuid, visitType: "OPD"});
     if (saveResponse.status === 200) {
-         onSaveSuccess();
-         closeScribblePad();
+      onSaveSuccess();
+      closeScribblePad();
     }
   };
+
 
   const nextPage = () => {
     if (pdfPages[currentImageIndex] && currentPdfPage < pdfPages[currentImageIndex].length) {
