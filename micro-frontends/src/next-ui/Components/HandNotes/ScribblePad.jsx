@@ -83,7 +83,12 @@ export function ScribblePad(props) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Clear background images and reset state
+    setBackgroundImages([]);
+    setCurrentImageIndex(null);
   };
+
 
   const handleLineWidthChange = (event) => {
     setLineWidth(parseInt(event.target.value));
@@ -148,9 +153,10 @@ export function ScribblePad(props) {
 
   const switchImage = (index) => {
     setCurrentImageIndex(index);
-    clearDrawing();
+    // No need to clear the canvas here, just draw the new image on top
     drawImageOnCanvas(backgroundImages[index]);
   };
+
 
   const removeImage = (index) => {
     setBackgroundImages((prevImages) => {
@@ -174,8 +180,33 @@ export function ScribblePad(props) {
     const ctx = canvas.getContext('2d');
     const image = new Image();
     image.src = imageSrc;
+
     image.onload = () => {
-      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+      // Clear previous drawings
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Calculate scaling factors to maintain aspect ratio
+      const canvasAspectRatio = canvas.width / canvas.height;
+      const imageAspectRatio = image.width / image.height;
+
+      let drawWidth, drawHeight, offsetX, offsetY;
+
+      if (imageAspectRatio > canvasAspectRatio) {
+        // Image is wider than the canvas, scale by width
+        drawWidth = canvas.width;
+        drawHeight = canvas.width / imageAspectRatio;
+        offsetX = 0;
+        offsetY = (canvas.height - drawHeight) / 2; // Center vertically
+      } else {
+        // Image is taller than the canvas, scale by height
+        drawHeight = canvas.height;
+        drawWidth = canvas.height * imageAspectRatio;
+        offsetX = (canvas.width - drawWidth) / 2; // Center horizontally
+        offsetY = 0;
+      }
+
+      // Draw the image with calculated dimensions and position
+      ctx.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
     };
   };
 
@@ -222,7 +253,6 @@ export function ScribblePad(props) {
     }
   };
 
-
   const nextPage = () => {
     if (pdfPages[currentImageIndex] && currentPdfPage < pdfPages[currentImageIndex].length) {
       setCurrentPdfPage(currentPdfPage + 1);
@@ -251,6 +281,7 @@ export function ScribblePad(props) {
         onRequestClose={closeScribblePad}
     >
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
+      <button style={{ position: 'absolute', top: '10px', right: '10px', padding: '8px 16px', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }} onClick={toggleFullScreen}>Enter Full Screen</button>
       <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Scribble Pad</h1>
       <div>Patient Name: {patient.name}</div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', flexGrow: 1 }}>
@@ -260,7 +291,7 @@ export function ScribblePad(props) {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {backgroundImages.map((image, index) => (
               <div key={index} style={{ position: 'relative', marginBottom: '10px' }}>
-                <button onClick={() => switchImage(index)} style={{ position: 'relative', padding: '8px 16px', backgroundColor: '#008CBA', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }}>
+                <button onClick={() => switchImage(index)} style={{ position: 'relative', padding: '8px 16px', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }}>
                   Pg {index + 1}
                 </button>
                 <button onClick={() => removeImage(index)} style={{
@@ -268,7 +299,7 @@ export function ScribblePad(props) {
                   top: '-10px',
                   right: '-10px',
                   backgroundColor: 'red',
-                  color: 'white',
+                  color: 'black',
                   border: 'none',
                   borderRadius: '50%',
                   width: '20px',
