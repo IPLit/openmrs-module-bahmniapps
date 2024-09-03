@@ -47,18 +47,18 @@
                                     </span>
                                  </span>
                                     <ul style="background-color:white;max-width:100%;overflow-x:hidden;" class="print-observations">
-                                        <div ng-repeat="observation in obsGroup.value">
+                                        <span ng-repeat="observation in obsGroup.value">
                                             <li class="ng-scope image-preview">
-                                                <div class="tree-list-item" bm-gallery patient="patient">
+                                                <span class="tree-list-item" bm-gallery patient="patient">
                                                     <a class="img-concept">
                                                     <img align="middle"
                                                          observation="::observation" bm-observation-gallery-item
                                                          ng-src="/document_images/{{::observation.value}}"
                                                          alt="{{::observation.concept.name}}"/>
                                                     </a>
-                                                </div>
+                                                </span>
                                             </li>
-                                        </div>
+                                        </span>
                                     </ul>
                                 </li>
                             </ul>

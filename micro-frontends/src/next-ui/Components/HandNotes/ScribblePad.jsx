@@ -16,6 +16,7 @@ export function ScribblePad(props) {
   const [lineColor, setLineColor] = useState('#000000');
   const [backgroundImages, setBackgroundImages] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(null);
+  const [isFullScreen, setIsFullScreen] = useState(false);
   const [pdfPages, setPdfPages] = useState({});
   const [currentPdfPage, setCurrentPdfPage] = useState(1);
   const [canvasWidth, setCanvasWidth] = useState(0);
@@ -37,15 +38,12 @@ export function ScribblePad(props) {
   }, []);
 
   const toggleFullScreen = () => {
-    const element = document.documentElement;
-    if (!document.fullscreenElement) {
-      element.requestFullscreen().catch((err) => {
-        alert(`Error attempting to enable full-screen mode: ${err.message}`);
-      });
-      document.documentElement.style.overflow = 'hidden';
+    setIsFullScreen(!isFullScreen);
+    const canvas = canvasRef.current
+    if (!isFullScreen) {
+        canvas.width = 1000;
     } else {
-      document.exitFullscreen();
-      document.documentElement.style.overflow = '';
+        canvas.width = 800;
     }
   };
 
@@ -267,6 +265,12 @@ export function ScribblePad(props) {
     }
   };
 
+  const handleClose = (event) => {
+    if (event.which !== 27) {
+        closeScribblePad();
+    }
+  };
+
   useEffect(() => {
     if (currentImageIndex !== null && backgroundImages[currentImageIndex]) {
       drawImageOnCanvas(backgroundImages[currentImageIndex]);
@@ -277,11 +281,12 @@ export function ScribblePad(props) {
     <Modal
         open
         passiveModal
-        className="edit-observation-form-modal"
-        onRequestClose={closeScribblePad}
+        className={` scribble-modal ${isFullScreen ? "modal-fullscreen" : "modal-normal" }`}
+        onRequestClose={handleClose}
+        preventCloseOnClickOutside
     >
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
-      <button style={{ position: 'absolute', top: '10px', right: '10px', padding: '8px 16px', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }} onClick={toggleFullScreen}>Enter Full Screen</button>
+      <button style={{ position: 'absolute', top: '10px', right: '10px', padding: '8px 16px', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }} onClick={toggleFullScreen}>Toggle Full Screen</button>
       <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Scribble Pad</h1>
       <div>Patient Name: {patient.name}</div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', flexGrow: 1 }}>
