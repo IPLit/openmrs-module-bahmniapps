@@ -221,15 +221,15 @@ export function ScribblePad(props) {
       const image = new Image();
       image.src = backgroundImages[currentImageIndex];
       image.onload = () => {
-        mergedCtx.drawImage(image, 0, 0, canvas.width, canvas.height);
+//         mergedCtx.drawImage(image, 0, 0);
         mergedCtx.drawImage(canvas, 0, 0);
-        dataURL =  mergedCanvas.toDataURL('image/png');
+        dataURL =  mergedCanvas.toDataURL();
         save(dataURL);
       };
     } else {
       // No background image case
       mergedCtx.drawImage(canvas, 0, 0);
-      dataURL = mergedCanvas.toDataURL('image/png');
+      dataURL = mergedCanvas.toDataURL();
       save(dataURL);
     }
   };
@@ -237,8 +237,8 @@ export function ScribblePad(props) {
   const save = async (dataURL) => {
     const searchStr = ";base64";
     const format = dataURL.split(searchStr)[0].split("/")[1];
-    let file = dataURL.substring(dataURL.indexOf(searchStr) + searchStr.length, dataURL.length)
-    const response = await saveDocument({content: file, fileType: "image", format: "png", encounterTypeName: "Consultation", patientUuid: patient.uuid});
+    let file = dataURL.substring(dataURL.indexOf(searchStr) + searchStr.length, dataURL.length);
+    const response = await saveDocument({content: file, fileType: "image", format: format, encounterTypeName: "Consultation", patientUuid: patient.uuid});
     const imageName = response.data.url;
     const saveResponse = await saveEncounter(imageName,
                             handnoteConceptName,
