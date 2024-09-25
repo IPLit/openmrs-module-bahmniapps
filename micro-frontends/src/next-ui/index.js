@@ -3,6 +3,7 @@ import { PatientAlergiesControl } from "./Containers/patientAlergies/PatientAler
 import { FormDisplayControl } from "./Containers/formDisplayControl/FormDisplayControl";
 import { ProviderNotifications } from "./Containers/providerNotifications/ProviderNotifications";
 import { HandNotes } from "./Containers/handNotes/HandNotes";
+import { EditHandNotes } from "./Containers/handNotes/EditHandNotes";
 import { OtNotesSavePopup, OtNotesDeletePopup } from "./Containers/otNotes/OtNotes";
 
 const MODULE_NAME = "bahmni.mfe.nextUi";
@@ -32,6 +33,11 @@ builder.createComponentWithTranslationForwarding(
 builder.createComponentWithTranslationForwarding(
   "HandNotes",
   HandNotes
+);
+
+builder.createComponentWithTranslationForwarding(
+  "EditHandNotes",
+  EditHandNotes
 );
 
 builder.createComponentWithTranslationForwarding(

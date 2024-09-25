@@ -3,9 +3,9 @@
 angular.module('bahmni.handnotes')
     .controller('HandNotesController', ['$scope', '$stateParams', 'visitService', 'patientService', 'encounterService',
         'spinner', 'visitDocumentService', '$rootScope', '$http', '$q', '$timeout', 'sessionService',
-        '$translate', 'messagingService', 'observationsService', 'ngDialog',
+        '$translate', 'messagingService', 'observationsService', 'ngDialog', '$compile',
         function ($scope, $stateParams, visitService, patientService, encounterService, spinner, visitDocumentService,
-                  $rootScope, $http, $q, $timeout, sessionService, $translate, messagingService, observationsService, ngDialog) {
+                  $rootScope, $http, $q, $timeout, sessionService, $translate, messagingService, observationsService, ngDialog, $compile) {
             var encounterTypeUuid;
             var topLevelConceptUuid;
             var customVisitParams = Bahmni.HandNotes.Constants.visitRepresentation;
@@ -37,6 +37,37 @@ angular.module('bahmni.handnotes')
 
             var createVisit = function (visit) {
                 return angular.extend(new Bahmni.HandNotes.Visit(), visit);
+            };
+
+            $scope.openEditPopUp = function (observation) {
+                $scope.editHostData = {
+                    patient: $scope.patient,
+                    locationUuid: locationUuid,
+                    encounterTypeUuid: encounterTypeUuid,
+                    observationMapper: new Bahmni.ConceptSet.ObservationMapper(),
+                    handnoteConceptName: "Hand Note",
+                    imageNoteConceptName: "Image Note",
+                    onSaveSuccess: function () {
+                        ngDialog.close();
+                        getHandNotes();
+                        $scope.editOpen = false;
+                    },
+                    baseImage: "/document_images/" + observation.src
+                };
+
+                $scope.editOpen = true;
+                ngDialog.open({
+                    template: './views/scribblePad.html',
+                    className: 'ngdialog-theme-default',
+                    height: "100%",
+                    width: "100%",
+                    scope: $scope,
+                    data: {
+                        hostData: $scope.editHostData
+                    },
+                    closeByEscape: false,
+                    closeByDocument: false
+                });
             };
 
             var getHandNotes = function () {
