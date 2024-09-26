@@ -21,6 +21,7 @@ export function EditScribblePad(props) {
   const [canvasWidth, setCanvasWidth] = useState(0);
   const [canvasHeight, setCanvasHeight] = useState(0);
   const canvasRef = useRef(null);
+//   const baseCanvasRef = useRef(null);
   const ctxRef = useRef(null);
   const {patient, imageNoteConceptName, handnoteConceptName, locationUuid, encounterTypeUuid, observationMapper, onSaveSuccess, baseImage} = props;
   useEffect(() => {
@@ -95,30 +96,6 @@ export function EditScribblePad(props) {
     setLineColor(event.target.value);
   };
 
-  const handleImageUpload = (event) => {
-    const files = event.target.files;
-    const images = [];
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      if (file.type === 'application/pdf') {
-        renderPdf(file);
-      } else {
-        const reader = new FileReader();
-        reader.onload = () => {
-          images.push(reader.result);
-          if (images.length === files.length) {
-            setBackgroundImages((prevImages) => [...prevImages, ...images]);
-            if (currentImageIndex === null) {
-              setCurrentImageIndex(0);
-              drawImageOnCanvas(images[0]);
-            }
-          }
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-  };
-
   const renderPdf = (file) => {
     const reader = new FileReader();
     reader.onload = async () => {
@@ -152,24 +129,6 @@ export function EditScribblePad(props) {
     setCurrentImageIndex(index);
     // No need to clear the canvas here, just draw the new image on top
     drawImageOnCanvas(backgroundImages[index]);
-  };
-
-
-  const removeImage = (index) => {
-    setBackgroundImages((prevImages) => {
-      const updatedImages = prevImages.filter((_, i) => i !== index);
-      if (index === currentImageIndex) {
-        setCurrentImageIndex(updatedImages.length > 0 ? 0 : null);
-        if (updatedImages.length > 0) {
-          drawImageOnCanvas(updatedImages[0]);
-        } else {
-          clearDrawing();
-        }
-      } else if (index < currentImageIndex) {
-        setCurrentImageIndex((prevIndex) => prevIndex - 1);
-      }
-      return updatedImages;
-    });
   };
 
   const drawImageOnCanvas = (imageSrc) => {
@@ -215,22 +174,9 @@ export function EditScribblePad(props) {
     let dataURL;
     mergedCanvas.width = canvas.width;
     mergedCanvas.height = canvas.height;
-
-    if (backgroundImages[currentImageIndex]) {
-      const image = new Image();
-      image.src = backgroundImages[currentImageIndex];
-      image.onload = () => {
-//         mergedCtx.drawImage(image, 0, 0);
-        mergedCtx.drawImage(canvas, 0, 0);
-        dataURL =  mergedCanvas.toDataURL();
-        save(dataURL);
-      };
-    } else {
-      // No background image case
-      mergedCtx.drawImage(canvas, 0, 0);
-      dataURL = mergedCanvas.toDataURL();
-      save(dataURL);
-    }
+    mergedCtx.drawImage(canvas, 0, 0);
+    dataURL = mergedCanvas.toDataURL();
+    save(dataURL);
   };
 
   const save = async (dataURL) => {
@@ -264,6 +210,7 @@ export function EditScribblePad(props) {
   };
 
   useEffect(() => {
+    drawImageOnCanvas(baseImage);
     if (currentImageIndex !== null && backgroundImages[currentImageIndex]) {
       drawImageOnCanvas(backgroundImages[currentImageIndex]);
     }
@@ -274,53 +221,29 @@ export function EditScribblePad(props) {
       <button style={{ position: 'absolute', top: '10px', right: '10px', padding: '8px 16px', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }} onClick={toggleFullScreen}>Toggle Full Screen</button>
       <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Scribble Pad</h1>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', flexGrow: 1 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginRight: '20px', maxHeight: '400px', overflowY: 'auto' }}>
-          <input type="file" id="imageUpload" onChange={handleImageUpload} accept="image/*,application/pdf" multiple style={{ display: 'none' }} />
-          <label htmlFor="imageUpload" style={{ marginBottom: '20px', padding: '8px 16px', backgroundColor: '#008CBA', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }}>Upload Images/PDFs</label>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {backgroundImages.map((image, index) => (
-              <div key={index} style={{ position: 'relative', marginBottom: '10px' }}>
-                <button onClick={() => switchImage(index)} style={{ position: 'relative', padding: '8px 16px', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }}>
-                  Pg {index + 1}
-                </button>
-                <button onClick={() => removeImage(index)} style={{
-                  position: 'absolute',
-                  top: '-10px',
-                  right: '-10px',
-                  backgroundColor: 'red',
-                  color: 'black',
-                  border: 'none',
-                  borderRadius: '50%',
-                  width: '20px',
-                  height: '20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer'
-                }}>x</button>
-                <img src={image} alt={`Background ${index + 1}`} style={{ display: 'block', marginTop: '10px', maxWidth: '150px', border: '1px solid #000' }} />
-              </div>
-            ))}
-          </div>
-          {pdfPages[currentImageIndex] && (
-            <div style={{ marginTop: '10px' }}>
-              <button onClick={prevPage} style={{ padding: '8px 16px', backgroundColor: '#008CBA', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', marginRight: '10px' }}>Previous Page</button>
-              <button onClick={nextPage} style={{ padding: '8px 16px', backgroundColor: '#008CBA', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Next Page</button>
-            </div>
-          )}
+        <div style={{ position: 'relative' }}>
+{/*             <canvas */}
+{/*               id="canvas1" */}
+{/*               ref={baseCanvasRef} */}
+{/*               width={800} */}
+{/*               height={500} */}
+{/*               style={{ top: 0, left: 0, position: 'absolute' }} */}
+{/*             /> */}
+            <canvas
+              id="canvas2"
+              ref={canvasRef}
+              width={800}
+              height={500}
+              onMouseDown={startDrawing}
+              onMouseMove={draw}
+              onMouseUp={stopDrawing}
+              onTouchStart={startDrawing}
+              onTouchMove={draw}
+              onTouchEnd={stopDrawing}
+              style={{ border: '1px solid #000', backgroundColor: 'white', cursor: 'crosshair' }}
+            />
         </div>
-        <canvas
-          ref={canvasRef}
-          width={800}
-          height={500}
-          onMouseDown={startDrawing}
-          onMouseMove={draw}
-          onMouseUp={stopDrawing}
-          onTouchStart={startDrawing}
-          onTouchMove={draw}
-          onTouchEnd={stopDrawing}
-          style={{ border: '1px solid #000', backgroundColor: 'white', cursor: 'crosshair' }}
-        />
+
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px', width: '100%', bottom: 0 }}>
         <label htmlFor="lineWidth" style={{ marginRight: '10px' }}>Line Width: </label>

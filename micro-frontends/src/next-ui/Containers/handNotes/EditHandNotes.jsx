@@ -17,6 +17,7 @@ export function EditHandNotes(props) {
                 encounterTypeUuid={encounterTypeUuid}
                 observationMapper={observationMapper}
                 onSaveSuccess={onSaveSuccess}
+                baseImage={baseImage}
             />
         </I18nProvider>
     );

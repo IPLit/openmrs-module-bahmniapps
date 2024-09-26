@@ -52,13 +52,13 @@ angular.module('bahmni.handnotes')
                         getHandNotes();
                         $scope.editOpen = false;
                     },
-                    baseImage: "/document_images/" + observation.src
+                    baseImage: observation.src
                 };
 
                 $scope.editOpen = true;
                 ngDialog.open({
                     template: './views/scribblePad.html',
-                    className: 'ngdialog-theme-default',
+                    className: 'gallery-dialog ngdialog-theme-default',
                     height: "100%",
                     width: "100%",
                     scope: $scope,
@@ -72,7 +72,6 @@ angular.module('bahmni.handnotes')
 
             var getHandNotes = function () {
                 return observationsService.fetch($rootScope.patient.uuid, "Hand Note").then(function (response) {
-                    console.log(response);
                     var handNotesObs = new Bahmni.Common.Obs.ObservationMapper().map(response.data, []);
                     $scope.bahmniObservations = new Bahmni.Common.DisplayControl.Observation.GroupingFunctions().groupByEncounterDate(handNotesObs);
                 });
