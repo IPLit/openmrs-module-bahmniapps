@@ -58,7 +58,7 @@ angular.module('bahmni.handnotes')
                 $scope.editOpen = true;
                 ngDialog.open({
                     template: './views/scribblePad.html',
-                    className: 'gallery-dialog ngdialog-theme-default',
+                    className: 'handnotes-dialog ngdialog-theme-default',
                     height: "100%",
                     width: "100%",
                     scope: $scope,
