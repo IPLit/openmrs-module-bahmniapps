@@ -5,7 +5,7 @@ import {I18nProvider} from "../../Components/i18n/I18nProvider";
 
 export function EditHandNotes(props) {
   const {hostData} = props;
-  const {patient, imageNoteConceptName, handnoteConceptName, locationUuid, encounterTypeUuid, observationMapper, onSaveSuccess, baseImage} = hostData;
+  const {patient, imageNoteConceptName, handnoteConceptName, locationUuid, encounterTypeUuid, observationMapper, onSaveSuccess, observation, observationFilter} = hostData;
 
     return (
         <I18nProvider>
@@ -17,7 +17,8 @@ export function EditHandNotes(props) {
                 encounterTypeUuid={encounterTypeUuid}
                 observationMapper={observationMapper}
                 onSaveSuccess={onSaveSuccess}
-                baseImage={baseImage}
+                observation={observation}
+                observationFilter={observationFilter}
             />
         </I18nProvider>
     );

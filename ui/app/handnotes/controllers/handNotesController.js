@@ -40,11 +40,20 @@ angular.module('bahmni.handnotes')
             };
 
             $scope.openEditPopUp = function (observation) {
+                var obsToEdit;
+                $scope.bahmniObservations.forEach(function (obs) {
+                    obs.value.forEach(function (ob) {
+                        if (ob.uuid === observation.uuid) {
+                            obsToEdit = ob;
+                        }
+                    })
+                });
                 $scope.editHostData = {
                     patient: $scope.patient,
                     locationUuid: locationUuid,
                     encounterTypeUuid: encounterTypeUuid,
                     observationMapper: new Bahmni.ConceptSet.ObservationMapper(),
+                    observationFilter: new Bahmni.Common.Domain.ObservationFilter(),
                     handnoteConceptName: "Hand Note",
                     imageNoteConceptName: "Image Note",
                     onSaveSuccess: function () {
@@ -52,7 +61,7 @@ angular.module('bahmni.handnotes')
                         getHandNotes();
                         $scope.editOpen = false;
                     },
-                    baseImage: observation.src
+                    observation: obsToEdit,
                 };
 
                 $scope.editOpen = true;

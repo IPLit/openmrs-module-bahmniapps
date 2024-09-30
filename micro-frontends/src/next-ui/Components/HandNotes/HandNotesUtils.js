@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SAVE_DOCUMENT_URL, CONCEPT_SET_URL, BAHMNI_DISTRO_ENCOUNTER_URL } from "../../constants";
+import { SAVE_DOCUMENT_URL, DELETE_DOCUMENT_URL, CONCEPT_SET_URL, BAHMNI_DISTRO_ENCOUNTER_URL, OBSERVATIONS_URL } from "../../constants";
 
 export const saveDocument = async (payload) => {
     try {
@@ -36,6 +36,28 @@ export const saveEncounter = async (imageUrl, handNoteConceptName, imageNoteConc
         return error;
     }
  };
+
+export const editEncounter = async (obsToEdit, imageNoteConceptName, newImageUrl, encounter, observationFilter) => {
+    const deleteResponse = await deleteDocument(obsToEdit.value.split("/").pop());
+    obsToEdit.groupMembers.map(gm => {
+        if (gm.concept.name === imageNoteConceptName) {
+           gm.value = newImageUrl;
+        }
+        return gm;
+    });
+
+    encounter.observations = observationFilter.filter([obsToEdit]);
+    try {
+        return await axios.post(BAHMNI_DISTRO_ENCOUNTER_URL, encounter, {
+            withCredentials: true,
+            headers: { Accept: "application/json", "Content-Type": "application/json" }
+        });
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+};
+
 const stripExtraConceptInfo = function (obs) {
     obs.concept = {uuid: obs.concept.uuid, name: obs.concept.name, dataType: obs.concept.dataType};
     obs.groupMembers = obs.groupMembers || [];
@@ -51,4 +73,22 @@ const getConceptByName = async (conceptName) => {
         console.log(error);
         return error;
     }
-}
+};
+
+const getObservation = async (observationUuid) => {
+    try {
+        return await axios.get(OBSERVATIONS_URL, {params: {observationUuid: observationUuid}});
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+};
+
+const deleteDocument = async (fileName) => {
+    try {
+        return await axios.delete(SAVE_DOCUMENT_URL, {params: {filename: fileName}});
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+};

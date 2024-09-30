@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { pdfjs } from 'react-pdf';
 import PropTypes from "prop-types";
-
-import { saveDocument, saveEncounter } from "./HandNotesUtils";
+import { saveDocument, saveEncounter, editEncounter } from "./HandNotesUtils";
 
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import './HandNotes.scss';
@@ -23,7 +22,7 @@ export function EditScribblePad(props) {
   const canvasRef = useRef(null);
 //   const baseCanvasRef = useRef(null);
   const ctxRef = useRef(null);
-  const {patient, imageNoteConceptName, handnoteConceptName, locationUuid, encounterTypeUuid, observationMapper, onSaveSuccess, baseImage} = props;
+  const {patient, imageNoteConceptName, handnoteConceptName, locationUuid, encounterTypeUuid, observationMapper, onSaveSuccess, observation, observationFilter} = props;
   useEffect(() => {
     const handleResize = () => {
       setCanvasWidth(window.innerWidth - 40); // Adjusted for some padding
@@ -184,12 +183,9 @@ export function EditScribblePad(props) {
     const format = dataURL.split(searchStr)[0].split("/")[1];
     let file = dataURL.substring(dataURL.indexOf(searchStr) + searchStr.length, dataURL.length);
     const response = await saveDocument({content: file, fileType: "image", format: format, encounterTypeName: "Consultation", patientUuid: patient.uuid});
-    const imageName = response.data.url;
-    const saveResponse = await saveEncounter(imageName,
-                            handnoteConceptName,
-                            imageNoteConceptName,
-                            observationMapper,
-                            {patientUuid: patient.uuid, locationUuid: locationUuid, encounterTypeUuid: encounterTypeUuid, visitType: "OPD"});
+    const newImageUrl = response.data.url;
+    const saveResponse = await editEncounter(observation, imageNoteConceptName, newImageUrl,
+                            {patientUuid: patient.uuid, locationUuid: locationUuid, encounterTypeUuid: encounterTypeUuid, visitType: "OPD"}, observationFilter);
     if (saveResponse.status === 200) {
       onSaveSuccess();
     }
@@ -210,7 +206,7 @@ export function EditScribblePad(props) {
   };
 
   useEffect(() => {
-    drawImageOnCanvas(baseImage);
+    drawImageOnCanvas("/document_images/" + observation.value);
     if (currentImageIndex !== null && backgroundImages[currentImageIndex]) {
       drawImageOnCanvas(backgroundImages[currentImageIndex]);
     }
@@ -265,6 +261,7 @@ EditScribblePad.propTypes = {
     locationUuid: PropTypes.string.isRequired,
     encounterTypeUuid: PropTypes.string.isRequired,
     observationMapper: PropTypes.object.isRequired,
-    baseImage: PropTypes.string.isRequired
+    observationFilter: PropTypes.object.isRequired,
+    observation: PropTypes.string.isRequired,
 }
 
