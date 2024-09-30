@@ -46,7 +46,7 @@ angular.module('bahmni.handnotes')
                         if (ob.uuid === observation.uuid) {
                             obsToEdit = ob;
                         }
-                    })
+                    });
                 });
                 $scope.editHostData = {
                     patient: $scope.patient,
@@ -61,7 +61,7 @@ angular.module('bahmni.handnotes')
                         getHandNotes();
                         $scope.editOpen = false;
                     },
-                    observation: obsToEdit,
+                    observation: obsToEdit
                 };
 
                 $scope.editOpen = true;
