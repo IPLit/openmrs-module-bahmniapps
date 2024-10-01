@@ -86,7 +86,7 @@ const getObservation = async (observationUuid) => {
 
 const deleteDocument = async (fileName) => {
     try {
-        return await axios.delete(SAVE_DOCUMENT_URL, {params: {filename: fileName}});
+        return await axios.delete(DELETE_DOCUMENT_URL, {params: {filename: fileName}});
     } catch (error) {
         console.log(error);
         return error;
