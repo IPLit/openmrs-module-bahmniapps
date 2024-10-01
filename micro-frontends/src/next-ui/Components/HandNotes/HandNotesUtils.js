@@ -42,6 +42,7 @@ export const editEncounter = async (obsToEdit, imageNoteConceptName, newImageUrl
     obsToEdit.groupMembers.map(gm => {
         if (gm.concept.name === imageNoteConceptName) {
            gm.value = newImageUrl;
+           gm.obsGroupUuid = null;
         }
         return gm;
     });

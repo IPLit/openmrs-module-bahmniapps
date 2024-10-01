@@ -8,6 +8,7 @@ angular.module('bahmni.handnotes')
                   $rootScope, $http, $q, $timeout, sessionService, $translate, messagingService, observationsService, ngDialog, $compile) {
             var encounterTypeUuid;
             var topLevelConceptUuid;
+            var activeEncounter = {};
             var customVisitParams = Bahmni.HandNotes.Constants.visitRepresentation;
             var DateUtil = Bahmni.Common.Util.DateUtil;
             var patientMapper = new Bahmni.PatientMapper($rootScope.patientConfig, $rootScope, $translate);
@@ -37,6 +38,21 @@ angular.module('bahmni.handnotes')
 
             var createVisit = function (visit) {
                 return angular.extend(new Bahmni.HandNotes.Visit(), visit);
+            };
+
+            $scope.canEdit = function (observation) {
+                var obsToEdit;
+                $scope.bahmniObservations.forEach(function (obs) {
+                    obs.value.forEach(function (ob) {
+                        if (ob.uuid === observation.uuid) {
+                            obsToEdit = ob;
+                        }
+                    });
+                });
+                var activeEncounter = _.find($scope.activeEncounters, function (encounter) {
+                    return encounter.uuid === obsToEdit.encounterUuid;
+                });
+                return activeEncounter !== undefined;
             };
 
             $scope.openEditPopUp = function (observation) {
@@ -91,6 +107,7 @@ angular.module('bahmni.handnotes')
                     return visitService.search({patient: $scope.patient.uuid, v: customVisitParams, includeInactive: false}).then(function (response) {
                         if (response.data.results.length > 0) {
                             $scope.activeVisit = true;
+                            $scope.activeEncounters = response.data.results[0].encounters;
                         } else {
                             $scope.activeVisit = false;
                         }
@@ -98,7 +115,7 @@ angular.module('bahmni.handnotes')
                 }
             };
 
-            $scope.closeDialog = function () {
+            $scope.closeDialogcloseDialog = function () {
                 ngDialog.close();
             };
 
@@ -121,7 +138,10 @@ angular.module('bahmni.handnotes')
                     observationMapper: new Bahmni.ConceptSet.ObservationMapper(),
                     handnoteConceptName: "Hand Note",
                     imageNoteConceptName: "Image Note",
-                    onSaveSuccess: getHandNotes
+                    onSaveSuccess: function () {
+                        getHandNotes();
+                        getActiveVisit();
+                    }
                 };
             }
             spinner.forPromise(init());
