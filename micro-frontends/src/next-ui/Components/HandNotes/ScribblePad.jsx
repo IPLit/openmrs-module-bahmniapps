@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { pdfjs } from 'react-pdf';
 import PropTypes from "prop-types";
 import { Modal } from "carbon-components-react";
@@ -11,6 +11,7 @@ import './HandNotes.scss';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 export function ScribblePad(props) {
+  const modalRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [lineWidth, setLineWidth] = useState(2);
   const [lineColor, setLineColor] = useState('#000000');
@@ -24,18 +25,18 @@ export function ScribblePad(props) {
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
   const {patient, imageNoteConceptName, handnoteConceptName, locationUuid, encounterTypeUuid, observationMapper, closeScribblePad, onSaveSuccess} = props;
-  useEffect(() => {
-    const handleResize = () => {
-      setCanvasWidth(window.innerWidth - 40); // Adjusted for some padding
-      setCanvasHeight(window.innerHeight - 250); // Adjusted for the top and bottom controls
-    };
-
-    handleResize();
-
-    window.addEventListener('resize', handleResize);
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+//   useEffect(() => {
+//     const handleResize = () => {
+//       setCanvasWidth(window.innerWidth - 40); // Adjusted for some padding
+//       setCanvasHeight(window.innerHeight - 250); // Adjusted for the top and bottom controls
+//     };
+//
+//     handleResize();
+//
+//     window.addEventListener('resize', handleResize);
+//
+//     return () => window.removeEventListener('resize', handleResize);
+//   }, []);
 
   const toggleFullScreen = () => {
     setIsFullScreen(!isFullScreen);
@@ -271,6 +272,14 @@ export function ScribblePad(props) {
     }
   };
 
+  useLayoutEffect(() => {
+    if (modalRef.current) {
+      const { width, height } = document.getElementsByClassName("bx--modal-container")[0].getBoundingClientRect();
+      setCanvasWidth(width * 0.77);
+      setCanvasHeight(height * 0.65);
+    }
+  }, []);
+
   useEffect(() => {
     if (currentImageIndex !== null && backgroundImages[currentImageIndex]) {
       drawImageOnCanvas(backgroundImages[currentImageIndex]);
@@ -279,13 +288,15 @@ export function ScribblePad(props) {
 
   return (
     <Modal
+        id="scribble-pad"
+        ref={modalRef}
         open
         passiveModal
-        className={` scribble-modal ${isFullScreen ? "modal-fullscreen" : "modal-normal" }`}
+        className={`ngdialog ng-dialog-theme-default scribble-modal ${isFullScreen ? "modal-fullscreen" : "modal-normal" }`}
         onRequestClose={handleClose}
         preventCloseOnClickOutside
     >
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <button style={{ position: 'absolute', top: '10px', right: '10px', padding: '8px 16px', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }} onClick={toggleFullScreen}>Toggle Full Screen</button>
       <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Scribble Pad</h1>
       <div>Patient Name: {patient.name}</div>
@@ -327,8 +338,8 @@ export function ScribblePad(props) {
         </div>
         <canvas
           ref={canvasRef}
-          width={800}
-          height={500}
+          width={canvasWidth}
+          height={canvasHeight}
           onMouseDown={startDrawing}
           onMouseMove={draw}
           onMouseUp={stopDrawing}

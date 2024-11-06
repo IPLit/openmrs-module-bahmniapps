@@ -123,6 +123,10 @@
       box-shadow: 0px 4px 4px 0px #0000004f;
     }
 
+    .bx--modal-content {
+        margin-bottom: 1rem;
+    }
+
     .section-title-wrapper {
         background: #669999;
         padding-right: 10px;
@@ -182,8 +186,9 @@
 
 .modal-normal {
     .bx--modal-container {
-        width: 80%;
-        height: 84%;
+        width: 90%;
+        height: 85%;
         max-width: 1180px;
     }
+}
 }

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { pdfjs } from 'react-pdf';
 import PropTypes from "prop-types";
 import { saveDocument, saveEncounter, editEncounter } from "./HandNotesUtils";
@@ -94,7 +94,11 @@ export function EditScribblePad(props) {
   const handleColorChange = (event) => {
     setLineColor(event.target.value);
   };
-
+  useLayoutEffect(() => {
+    const { width, height } = document.getElementsByClassName("handnotes-dialog")[0].getBoundingClientRect();
+    setCanvasWidth(width * 0.77);
+    setCanvasHeight(height * 0.65);
+  }, []);
   const renderPdf = (file) => {
     const reader = new FileReader();
     reader.onload = async () => {
@@ -213,7 +217,7 @@ export function EditScribblePad(props) {
   }, [currentImageIndex, backgroundImages]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <button style={{ position: 'absolute', top: '10px', right: '10px', padding: '8px 16px', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }} onClick={toggleFullScreen}>Toggle Full Screen</button>
       <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Scribble Pad</h1>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', flexGrow: 1 }}>
@@ -228,8 +232,8 @@ export function EditScribblePad(props) {
             <canvas
               id="canvas2"
               ref={canvasRef}
-              width={800}
-              height={500}
+              width={canvasWidth}
+              height={canvasHeight}
               onMouseDown={startDrawing}
               onMouseMove={draw}
               onMouseUp={stopDrawing}

@@ -115,7 +115,7 @@ angular.module('bahmni.handnotes')
                 }
             };
 
-            $scope.closeDialogcloseDialog = function () {
+            $scope.closeDialog = function () {
                 ngDialog.close();
             };
 
