@@ -1,4 +1,4 @@
-
+﻿
 
 /* Container styles */
 .container {
@@ -191,4 +191,15 @@
         max-width: 1180px;
     }
 }
+
+.bx--modal-header {
+    height: 52px;
+    background: #527A7A;
+    border-radius: 0;
+    box-sizing: border-box;
+    padding: 0 15px;
+    h3 {
+        color: #eee;
+        font-size: 16px;
+    }
 }

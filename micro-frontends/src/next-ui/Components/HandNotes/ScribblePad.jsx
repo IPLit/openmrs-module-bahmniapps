@@ -295,11 +295,10 @@ export function ScribblePad(props) {
         className={`ngdialog ng-dialog-theme-default scribble-modal ${isFullScreen ? "modal-fullscreen" : "modal-normal" }`}
         onRequestClose={handleClose}
         preventCloseOnClickOutside
+        modalHeading={patient.name}
     >
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <button style={{ position: 'absolute', top: '10px', right: '10px', padding: '8px 16px', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }} onClick={toggleFullScreen}>Toggle Full Screen</button>
-      <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Scribble Pad</h1>
-      <div>Patient Name: {patient.name}</div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', flexGrow: 1 }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginRight: '20px', maxHeight: '400px', overflowY: 'auto' }}>
           <input type="file" id="imageUpload" onChange={handleImageUpload} accept="image/*,application/pdf" multiple style={{ display: 'none' }} />
