@@ -1,5 +1,5 @@
 <section class="dashboard-section ng-scope pacs-orders">
-    <h2 class="section-title">{{::section | titleTranslate}}</h2>
+    <h2 ng-if="bahmniOrders.length>0" class="section-title">{{::section | titleTranslate}}</h2>
     <div>
         <section ng-hide="noOrdersMessage">
             <ul class="navigation-link-container clearfix">

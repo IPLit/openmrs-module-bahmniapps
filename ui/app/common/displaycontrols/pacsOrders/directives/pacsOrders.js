@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('bahmni.common.displaycontrol.pacsOrders')
-    .directive('pacsOrders', ['orderService', 'orderTypeService', 'spinner', 'messagingService', '$window', '$translate', 'pacsService',
-        function (orderService, orderTypeService, spinner, messagingService, $window, $translate, pacsService) {
+    .directive('pacsOrders', ['orderService', 'orderTypeService', 'spinner', 'messagingService', '$window', '$translate', 'pacsService', '$q',
+        function (orderService, orderTypeService, spinner, messagingService, $window, $translate, pacsService, $q) {
             var controller = function ($scope) {
                 $scope.orderTypeUuid = orderTypeService.getOrderTypeUuid($scope.orderType);
                 const radiologyImageUrl = $scope.section.pacsStudyUrl || "/oviyam2/viewer.html?patientID={{patientID}}&studyUID={{studyUID}}";
@@ -21,8 +21,11 @@ angular.module('bahmni.common.displaycontrol.pacsOrders')
                     return orderService.getOrders(params);
                 };
 
-                var queryPacsStudies = function () {
-                    return pacsService.search($scope.patient.identifier);
+                var queryPacsStudies = function (radiologyOrders) {
+                    if (radiologyOrders && radiologyOrders.data && radiologyOrders.data.length > 0) {
+                        return pacsService.search($scope.patient.identifier);
+                    }
+                    return $q.when({});
                 };
 
                 var correlateWithStudies = function (radiologyOrders, radiologyStudies) {
@@ -60,7 +63,7 @@ angular.module('bahmni.common.displaycontrol.pacsOrders')
 
                 var init = function () {
                     return getOrders().then(function (radiologyOrders) {
-                        queryPacsStudies().then(function successCallback (response) {
+                        queryPacsStudies(radiologyOrders).then(function successCallback (response) {
                             correlateWithStudies(radiologyOrders.data, response.data);
                         },
                         function errorCallback (errorResponse) {
