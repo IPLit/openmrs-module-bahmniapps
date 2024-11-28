@@ -133,8 +133,7 @@ angular.module('bahmni.clinical')
                     "headerUri": $location.protocol() + "://" + $location.host() + $scope.visitTabConfig.currentTab.printing.headerUri,
                     "showResults": true,
                     "handNotesConceptName": $scope.visitTabConfig.currentTab.printing.imageNoteName,
-                    "showFormName": $scope.visitTabConfig.currentTab.printing.showFormName,
-                    "showBorders": $scope.visitTabConfig.currentTab.printing.showBorders
+                    "showFormName": $scope.visitTabConfig.currentTab.printing.showFormName
                 }).then(function (response) {
                     var blob = new Blob([response.data], { type: mediaType });
                     var fileURL = window.URL.createObjectURL(blob);

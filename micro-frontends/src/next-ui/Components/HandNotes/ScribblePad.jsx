@@ -275,7 +275,7 @@ export function ScribblePad(props) {
   useLayoutEffect(() => {
     if (modalRef.current) {
       const { width, height } = document.getElementsByClassName("bx--modal-container")[0].getBoundingClientRect();
-      setCanvasWidth(width * 0.77);
+      setCanvasWidth(width * 0.8);
       setCanvasHeight(height * 0.65);
     }
   }, []);
@@ -298,11 +298,11 @@ export function ScribblePad(props) {
         modalHeading={patient.name}
     >
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <button style={{ position: 'absolute', top: '10px', right: '10px', padding: '8px 16px', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }} onClick={toggleFullScreen}>Toggle Full Screen</button>
+      <button style={{ position: 'absolute', top: '10px', right: '10px', padding: '8px 16px', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }} onClick={toggleFullScreen}><i class="fa fa-expand"></i></button>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', flexGrow: 1 }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginRight: '20px', maxHeight: '400px', overflowY: 'auto' }}>
           <input type="file" id="imageUpload" onChange={handleImageUpload} accept="image/*,application/pdf" multiple style={{ display: 'none' }} />
-          <label htmlFor="imageUpload" style={{ marginBottom: '20px', padding: '8px 16px', backgroundColor: '#008CBA', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }}>Upload Images/PDFs</label>
+          <label htmlFor="imageUpload" style={{ marginBottom: '20px', padding: '8px 16px', backgroundColor: '#008CBA', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }}><i class="fa fa-upload"></i></label>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {backgroundImages.map((image, index) => (
               <div key={index} style={{ position: 'relative', marginBottom: '10px' }}>
