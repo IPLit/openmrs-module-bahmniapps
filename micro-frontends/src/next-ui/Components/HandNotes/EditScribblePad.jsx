@@ -36,16 +36,6 @@ export function EditScribblePad(props) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const toggleFullScreen = () => {
-    setIsFullScreen(!isFullScreen);
-    const canvas = canvasRef.current
-    if (!isFullScreen) {
-        canvas.width = 1000;
-    } else {
-        canvas.width = 800;
-    }
-  };
-
   const startDrawing = (event) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -96,9 +86,10 @@ export function EditScribblePad(props) {
   };
   useLayoutEffect(() => {
     const { width, height } = document.getElementsByClassName("handnotes-dialog")[0].getBoundingClientRect();
-    setCanvasWidth(width * 0.8);
+    setCanvasWidth(width * 0.88);
     setCanvasHeight(height * 0.65);
   }, []);
+
   const renderPdf = (file) => {
     const reader = new FileReader();
     reader.onload = async () => {
@@ -218,8 +209,6 @@ export function EditScribblePad(props) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <button style={{ position: 'absolute', top: '10px', right: '10px', padding: '8px 16px', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }} onClick={toggleFullScreen}><i class="fa fa-expand"></i></button>
-      <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Scribble Pad</h1>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', flexGrow: 1 }}>
         <div style={{ position: 'relative' }}>
 {/*             <canvas */}

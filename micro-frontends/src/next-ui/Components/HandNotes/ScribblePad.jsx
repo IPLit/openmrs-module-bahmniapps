@@ -38,16 +38,6 @@ export function ScribblePad(props) {
 //     return () => window.removeEventListener('resize', handleResize);
 //   }, []);
 
-  const toggleFullScreen = () => {
-    setIsFullScreen(!isFullScreen);
-    const canvas = canvasRef.current
-    if (!isFullScreen) {
-        canvas.width = 1000;
-    } else {
-        canvas.width = 800;
-    }
-  };
-
   const startDrawing = (event) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -275,7 +265,7 @@ export function ScribblePad(props) {
   useLayoutEffect(() => {
     if (modalRef.current) {
       const { width, height } = document.getElementsByClassName("bx--modal-container")[0].getBoundingClientRect();
-      setCanvasWidth(width * 0.8);
+      setCanvasWidth(width * 0.88);
       setCanvasHeight(height * 0.65);
     }
   }, []);
@@ -298,7 +288,6 @@ export function ScribblePad(props) {
         modalHeading={patient.name}
     >
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <button style={{ position: 'absolute', top: '10px', right: '10px', padding: '8px 16px', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer', zIndex: 1000 }} onClick={toggleFullScreen}><i class="fa fa-expand"></i></button>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', flexGrow: 1 }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginRight: '20px', maxHeight: '400px', overflowY: 'auto' }}>
           <input type="file" id="imageUpload" onChange={handleImageUpload} accept="image/*,application/pdf" multiple style={{ display: 'none' }} />
