@@ -68,15 +68,6 @@ angular.module('bahmni.common.gallery')
                     }
                 };
 
-                $scope.editObs = function () {
-                    ngDialog.close();
-                    $scope.editObservation($scope.albums[getAlbumIndex()].images[$scope.imageIndex]);
-                };
-
-                $scope.canEdit = function () {
-                    return $scope.isEditable($scope.albums[getAlbumIndex()].images[$scope.imageIndex]);
-                };
-
                 $scope.showNext = function () {
                     var albumIndex = getAlbumIndex();
                     if ($scope.imageIndex < $scope.albums[albumIndex].images.length - 1) {

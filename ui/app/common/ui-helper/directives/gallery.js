@@ -68,9 +68,7 @@ angular.module('bahmni.common.uiHelper')
             controller: controller,
             scope: {
                 patient: "=",
-                accessImpression: "=?",
-                isEditable: "=",
-                editObservation: "="
+                accessImpression: "=?"
             }
         };
     }])

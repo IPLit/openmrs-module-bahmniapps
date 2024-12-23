@@ -135,6 +135,7 @@ angular.module('bahmni.home')
                   .map(function (attribute) {
                       return { display: attribute.value.name, uuid: attribute.value.uuid };
                   });
+
                 if (userAssignedLocations.length > 0) {
                     var loginUserAssignedLocations = userAssignedLocations.filter(function (uLoc) {
                         return _.find(initialData.locations, function (loc) {
@@ -199,9 +200,10 @@ angular.module('bahmni.home')
                             logAuditForLoginAttempts("USER_LOGIN_SUCCESS");
                             if (checkIfUserHasProviderAttributes()) {
                                 saveUserAssignedLocationsToLocalStorage();
-                            } else {
-                                localStorage.removeItem("loginLocations");
                             }
+                            /* else {
+                                localStorage.removeItem("loginLocations");
+                            } */
                             $scope.locations = identifyLoginLocations(initialData.locations);
                             if ($scope.locations && $scope.locations.length === 1) {
                                 $scope.loginInfo.currentLocation = $scope.locations[0];
@@ -277,9 +279,10 @@ angular.module('bahmni.home')
                         } else {
                             if (checkIfUserHasProviderAttributes()) {
                                 saveUserAssignedLocationsToLocalStorage();
-                            } else {
-                                localStorage.removeItem("loginLocations");
                             }
+                            /* else {
+                                localStorage.removeItem("loginLocations");
+                            } */
                             if ($scope.locations && $scope.locations.length > 1) {
                                 $state.go('loginLocation', {});
                             }
