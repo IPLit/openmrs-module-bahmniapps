@@ -7,7 +7,7 @@
             lowNormal:observation.lowNormal||observation.concept.lowNormal,
             hiNormal:observation.hiNormal||observation.concept.hiNormal,
             }"/>
-            <a href="{{'/document_images/openmrs/' + observation.value}}" download ng-if="observation.isVideoConcept()" class="button btn fr btn-download"><i class="fa fa-download" aria-hidden="true"></i></a>
+            <a href="{{'/document_images/' + observation.value}}" download ng-if="observation.isVideoConcept()" class="button btn fr btn-download"><i class="fa fa-download" aria-hidden="true"></i></a>
         </span>
         <span ng-if="observation.groupMembers.length > 0 && observation.groupMembers[0].concept.conceptClass != 'Image' && observation.groupMembers[0].concept.conceptClass != 'Video'" class="testUnderPanel left">
             <label>{{::(observation.getDisplayValue())}}</label>
@@ -18,7 +18,7 @@
             lowNormal:observation.lowNormal||observation.concept.lowNormal,
             hiNormal:observation.hiNormal||observation.concept.hiNormal,
             }"/>
-            <a href="{{'/document_images/openmrs/' + observation.value}}" download ng-if="observation.isVideoConcept()" class="button btn fr btn-download"><i class="fa fa-download" aria-hidden="true"></i></a>
+            <a href="{{'/document_images/' + observation.value}}" download ng-if="observation.isVideoConcept()" class="button btn fr btn-download"><i class="fa fa-download" aria-hidden="true"></i></a>
         </span>
         <span class="left" ng-class="::{
                        'text-only': (observation.concept.dataType ==='Text' && print),
@@ -32,14 +32,14 @@
             &nbsp;<span class="label-add-on">{{::observation.concept.units}}</span>
         </span>
         <a class="img-concept" ng-if="::(observation.isImageConcept() && !observation.hasPDFAsValue())">
-            <img align="middle" bm-observation-gallery-item observation="::observation" ng-src="{{'/document_images/openmrs/' + observation.getDisplayValue()}}"
+            <img align="middle" bm-observation-gallery-item observation="::observation" ng-src="{{'/document_images/' + observation.getDisplayValue()}}"
             alt="{{::observation.concept.name}}" />
         </a>
-        <a ng-if="::(observation.isImageConcept() && observation.hasPDFAsValue() && !print)" class="img-concept" ng-href="{{'/document_images/openmrs/' +observation.value}}" target="_blank" class="pdf-link">
+        <a ng-if="::(observation.isImageConcept() && observation.hasPDFAsValue() && !print)" class="img-concept" ng-href="{{'/document_images/' +observation.value}}" target="_blank" class="pdf-link">
             <img align="middle" src="../images/pdfIcon.png" alt="pdf" />
         </a>
         <div ng-if="::(observation.isVideoConcept())" class="hidden-print obs-video-thumb-container">
-            <img ng-src="{{'/document_images/openmrs/' + observation.value|thumbnail:'jpg'}}">
+            <img ng-src="{{'/document_images/' + observation.value|thumbnail:'jpg'}}">
             <button class="obs-play-btn" ng-click="openVideoInPopup(observation)"><i class="fa fa-play-circle" aria-hidden="true"></i>
             </button>
         </div>
