@@ -162,10 +162,10 @@ angular.module('bahmni.common.domain')
                 });
             };
 
-            this.findWith = function (params, getPreviousVisitData, conceptsToGetFromPrevVisit) {
+            this.findWith = function (params, getPreviousVisitData, conceptsToGetFromPrevVisit, filterBasedOnLocation) {
                 if (getPreviousVisitData && conceptsToGetFromPrevVisit && conceptsToGetFromPrevVisit.length > 0) {
                     return $http.post(Bahmni.Common.Constants.bahmniDistroEncounterUrl +
-                        '/findWith?getPreviousVisitData=' + getPreviousVisitData + '&getPreviousObs=' + conceptsToGetFromPrevVisit, params, {
+                        '/findWith?getPreviousVisitData=' + getPreviousVisitData + '&getPreviousObs=' + conceptsToGetFromPrevVisit + '&filterBasedOnLocation=' + filterBasedOnLocation, params, {
                             withCredentials: true
                         });
                 } else {

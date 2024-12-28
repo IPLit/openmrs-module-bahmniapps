@@ -13,6 +13,7 @@ angular.module('bahmni.registration')
             var regEncounterTypeUuid = $rootScope.regEncounterConfiguration.encounterTypes[Bahmni.Registration.Constants.registrationEncounterType];
             var visitLocationUuid = $rootScope.visitLocation;
             var redirectToDashboard = false;
+            var filterBasedOnLocation = appService.getAppDescriptor().getConfigValue("filterBasedOnLocation");
             var getPreviousVisitData = appService.getAppDescriptor().getConfigValue("getPreviousVisitData");
             getPreviousVisitData = getPreviousVisitData || false;
             var conceptsToGetFromPrevVisit = appService.getAppDescriptor().getConfigValue("previousVisitConceptNamesToPull");
@@ -39,7 +40,7 @@ angular.module('bahmni.registration')
                     "includeAll": false,
                     locationUuid: locationUuid,
                     encounterTypeUuids: [regEncounterTypeUuid]
-                }, getPreviousVisitData, getPreviousObs).then(function (response) {
+                }, getPreviousVisitData, getPreviousObs, filterBasedOnLocation).then(function (response) {
                     deferred.resolve(response);
                     if (response.data && response.data.context && response.data.context.visitAttributesTypes) {
                         var attrTypes = [];
