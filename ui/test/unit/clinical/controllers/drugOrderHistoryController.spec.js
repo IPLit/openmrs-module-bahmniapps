@@ -3,8 +3,8 @@
 describe("DrugOrderHistoryController", function () {
     beforeEach(module('bahmni.clinical'));
 
-    var scope, prescribedDrugOrders, activeDrugOrder, scheduledOrder, _treatmentService,
-        retrospectiveEntryService, appService, rootScope, visitHistory, allergyService;
+    var scope, prescribedDrugOrders, activeDrugOrder, scheduledOrder, _treatmentService, providerService, diagnosisService,
+        retrospectiveEntryService, appService, rootScope, visitHistory, allergyService, observationsService;
     var DateUtil = Bahmni.Common.Util.DateUtil;
     var treatmentConfig = {
         drugOrderHistoryConfig: {
@@ -37,6 +37,9 @@ describe("DrugOrderHistoryController", function () {
             }
         });
         allergyService = jasmine.createSpyObj('allergyService', ['getAllergyForPatient']);
+        observationsService = jasmine.createSpyObj('observationsService', ['fetch']);
+        diagnosisService = jasmine.createSpyObj('diagnosisService', ['getPatientDiagnosis']);
+        providerService = jasmine.createSpyObj('providerService', ['getAttributesForProvider']);
 
         rootScope = $rootScope;
         spyOn($rootScope, '$broadcast');
@@ -73,7 +76,10 @@ describe("DrugOrderHistoryController", function () {
             visitHistory: visitHistory,
             treatmentConfig: treatmentConfig,
             appService: appService,
-            allergyService: allergyService
+            allergyService: allergyService,
+            observationsService: observationsService,
+            diagnosisService: diagnosisService,
+            providerService: providerService
         });
         rootScope.$apply();
     };
@@ -544,8 +550,8 @@ describe("DrugOrderHistoryControllerIPD", function () {
 
     beforeEach(module('bahmni.clinical'));
 
-    var scope, prescribedDrugOrders, activeDrugOrder, updateDrugOrder, _treatmentService,
-        retrospectiveEntryService, appService, rootScope, visitHistory, allergyService;
+    var scope, prescribedDrugOrders, activeDrugOrder, updateDrugOrder, _treatmentService, diagnosisService, providerService,
+        retrospectiveEntryService, appService, rootScope, visitHistory, allergyService, observationsService, diagnosisService;
     var DateUtil = Bahmni.Common.Util.DateUtil;
     var treatmentConfig = {
         drugOrderHistoryConfig: {
@@ -578,6 +584,9 @@ describe("DrugOrderHistoryControllerIPD", function () {
             }
         });
         allergyService = jasmine.createSpyObj('allergyService', ['getAllergyForPatient']);
+        observationsService = jasmine.createSpyObj('observationsService', ['fetch']);
+        diagnosisService = jasmine.createSpyObj('diagnosisService', ['getPatientDiagnosis']);
+        providerService = jasmine.createSpyObj('providerService', ['getAttributesForProvider']);
 
         rootScope = $rootScope;
         spyOn($rootScope, '$broadcast');
@@ -609,7 +618,10 @@ describe("DrugOrderHistoryControllerIPD", function () {
             visitHistory: visitHistory,
             treatmentConfig: treatmentConfig,
             appService: appService,
-            allergyService: allergyService
+            allergyService: allergyService,
+            observationsService: observationsService,
+            diagnosisService: diagnosisService,
+            providerService: providerService
         });
         rootScope.$apply();
     };

@@ -1,7 +1,7 @@
 'use strict';
 
 describe("labOrderResultService", function() {
-    var mockHttp, configurationService, labOrderResultService;
+    var mockHttp, configurationService, labOrderResultService, appService, $bahmniCookieStore;
 
     beforeEach(module('bahmni.clinical'));
 
@@ -41,10 +41,20 @@ describe("labOrderResultService", function() {
         configurationService.getConfigurations.and.callFake(function() {
             return specUtil.respondWith(configurationServiceResponse);
         });
+        appService = jasmine.createSpyObj('appService', ['getAppDescriptor']);
+        appService.getAppDescriptor.and.returnValue({
+            getConfigValue: function (config) {
+                return false;
+            }
+        });
+
+        $bahmniCookieStore = jasmine.createSpyObj('$bahmniCookieStore', ['get']);
 
         $provide.value('$http', mockHttp);
         $provide.value('$q', Q);
         $provide.value('configurationService', configurationService);
+        $provide.value('appService', appService);
+        $provide.value('$bahmniCookieStore', $bahmniCookieStore);
     }));
 
     beforeEach(inject(['labOrderResultService', function (LabOrderResultServiceInjected) {
