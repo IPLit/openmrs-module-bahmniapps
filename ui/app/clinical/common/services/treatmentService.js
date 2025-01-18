@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('bahmni.clinical')
-    .factory('treatmentService', ['$http', '$q', '$compile', '$timeout', 'spinner', 'appService', '$rootScope', 'transmissionService', '$filter', 'printer', '$bahmniCookieStore', function ($http, $q, $compile, $timeout, spinner, appService, $rootScope, transmissionService, $filter, printer, $bahmniCookieStore) {
+    .factory('treatmentService', ['$http', '$q', '$compile', '$timeout', 'spinner', 'appService', '$rootScope', 'transmissionService', '$filter', 'printer', '$bahmniCookieStore',
+     function ($http, $q, $compile, $timeout, spinner, appService, $rootScope, transmissionService, $filter, printer, $bahmniCookieStore) {
         var createDrugOrder = function (drugOrder) {
             return Bahmni.Clinical.DrugOrder.create(drugOrder);
         };

@@ -13,6 +13,7 @@ describe("TreamentService", function () {
     beforeEach(module(function ($provide) {
         var appService = jasmine.createSpyObj('appService', ['getAppDescriptor']);
         var appDescriptor = jasmine.createSpyObj('appDescriptor', ['getConfigValue']);
+        var $bahmniCookieStore = jasmine.createSpyObj('$bahmniCookieStore', ['get']);
         appDescriptor.getConfigValue.and.returnValue({showDetailsWithinDateRange: false});
         appService.getAppDescriptor.and.returnValue(appDescriptor);
         var transmissionService = jasmine.createSpyObj('transmissionService', ['sendEmail']);
@@ -20,6 +21,7 @@ describe("TreamentService", function () {
         $provide.value('$q', Q);
         $provide.value('appService',appService);
         $provide.value('transmissionService',transmissionService);
+        $provide.value('$bahmniCookieStore',$bahmniCookieStore);
     }));
 
 

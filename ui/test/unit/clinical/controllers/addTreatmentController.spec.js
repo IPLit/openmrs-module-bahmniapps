@@ -257,8 +257,8 @@ describe("AddTreatmentController", function () {
         }]
     }];
 
-    var $q, scope, stateParams, rootScope, contextChangeHandler, newTreatment,
-        editTreatment, clinicalAppConfigService, ngDialog, drugService, drugs,
+    var $q, scope, stateParams, rootScope, contextChangeHandler, newTreatment, visitService,
+        editTreatment, clinicalAppConfigService, ngDialog, drugService, drugs, observationsService, diagnosisService,
         encounterDateTime, appService, appConfig, defaultDrugsPromise, orderSetService, locationService, $state, cdssService, calculateQuantityAndUnit, diagnosisService;
 
     stateParams = {
@@ -401,7 +401,10 @@ describe("AddTreatmentController", function () {
                 orderSetService: orderSetService,
                 $state: $state,
                 cdssService: cdssService,
-                diagnosisService: diagnosisService
+                diagnosisService: diagnosisService,
+                visitService: visitService,
+                diagnosisService: diagnosisService,
+                observationsService: observationsService
             });
             scope.treatments = [];
             scope.orderSetTreatments = [];
