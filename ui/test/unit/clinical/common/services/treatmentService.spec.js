@@ -20,8 +20,8 @@ describe("TreamentService", function () {
         $provide.value('$http', _$http);
         $provide.value('$q', Q);
         $provide.value('appService',appService);
-        $provide.value('transmissionService',transmissionService);
-        $provide.value('$bahmniCookieStore',$bahmniCookieStore);
+        $provide.value('transmissionService', transmissionService);
+        $provide.value('$bahmniCookieStore', $bahmniCookieStore);
     }));
 
 
