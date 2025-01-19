@@ -27,6 +27,9 @@ describe('LocationService', function () {
     mockBahmniCookieStore.get.and.callFake(function () {
         return {uuid: "locationUuid"};
     });
+
+    var appService = jasmine.createSpyObj('appService', ['getAppDescriptor']);
+
     var mockHttp = {
             defaults: {
                 headers: {
@@ -42,6 +45,7 @@ describe('LocationService', function () {
     beforeEach(module(function ($provide) {
         $provide.value('$http', mockHttp);
         $provide.value('$bahmniCookieStore', mockBahmniCookieStore);
+        $provide.value('appService', appService);
     }));
 
     it('should get locations by tag', inject(['locationService', function(locationService){

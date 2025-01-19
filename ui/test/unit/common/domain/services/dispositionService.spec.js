@@ -2,7 +2,6 @@
 
 describe('dispositionService', function () {
 
-
     var _$http;
     var rootScope;
     beforeEach(module('bahmni.common.domain'));
@@ -46,6 +45,8 @@ describe('dispositionService', function () {
     ];
 
     beforeEach(module(function ($provide) {
+        var $bahmniCookieStore = jasmine.createSpyObj('$bahmniCookieStore', ['get']);
+        var appService = jasmine.createSpyObj('appService', ['getAppDescriptor']);
         _$http = jasmine.createSpyObj('$http', ['get']);
         _$http.get.and.callFake(function (url) {
             if (url.indexOf(Bahmni.Common.Constants.bahmniDispositionByVisitUrl) > -1) {
@@ -59,6 +60,8 @@ describe('dispositionService', function () {
 
         $provide.value('$http', _$http);
         $provide.value('$q', Q);
+        $provide.value('$bahmniCookieStore', $bahmniCookieStore);
+        $provide.value('appService', appService);
     }));
 
     var dispositionService;
