@@ -15,7 +15,7 @@ angular.module('bahmni.registration')
             $scope.moduleName = appService.getAppDescriptor().getConfigValue('registrationModuleName');
             var patientId;
 
-            var uniquePersonAttribute = appService.getAppDescriptor().getConfigValue("uniquePersonAttribute");
+            var uniquePersonAttribute = appService.getAppDescriptor().getConfigValue("uniquePersonAttribute") || undefined;
             var loginLocationUuid = sessionService.getLoginLocationUuid();
             const patientSearchByPersonAttributeUrl = Bahmni.Common.Constants.bahmniCommonsSearchUrl + "/patient?patientAttributes=" + uniquePersonAttribute + "&s=byIdOrNameOrVillage&startIndex=0&patientSearchResultsConfig=" + uniquePersonAttribute + "&customAttribute=";
             const uniquePersonAttributeErrorText = appService.getAppDescriptor().getConfigValue("uniquePersonAttributeErrorText") || "";
@@ -225,7 +225,7 @@ angular.module('bahmni.registration')
             };
 
             var validateUniquePersonAttribute = function () {
-                var errorText = null;
+                var errorText = '';
                 var deferred = $q.defer();
                 if (uniquePersonAttribute) {
                     var uniquePersonAttributeVal = $scope.patient[uniquePersonAttribute];

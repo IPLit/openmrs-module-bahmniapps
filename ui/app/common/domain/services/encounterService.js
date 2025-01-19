@@ -156,21 +156,16 @@ angular.module('bahmni.common.domain')
                 });
             };
 
-            this.find = function (params) {
-                return $http.post(Bahmni.Common.Constants.bahmniEncounterUrl + '/find', params, {
-                    withCredentials: true
-                });
-            };
-
-            this.findWith = function (params, getPreviousVisitData, conceptsToGetFromPrevVisit, filterBasedOnLocation) {
+            this.find = function (params, getPreviousVisitData, conceptsToGetFromPrevVisit, filterBasedOnLocation) {
                 if (getPreviousVisitData && conceptsToGetFromPrevVisit && conceptsToGetFromPrevVisit.length > 0) {
-                    return $http.post(Bahmni.Common.Constants.bahmniDistroEncounterUrl +
+                    return $http.post(Bahmni.Common.Constants.bahmniEncounterUrl +
                         '/findWith?getPreviousVisitData=' + getPreviousVisitData + '&getPreviousObs=' + conceptsToGetFromPrevVisit + '&filterBasedOnLocation=' + filterBasedOnLocation, params, {
                             withCredentials: true
                         });
-                } else {
-                    return this.find(params);
                 }
+                return $http.post(Bahmni.Common.Constants.bahmniEncounterUrl + '/find', params, {
+                    withCredentials: true
+                });
             };
 
             this.findByEncounterUuid = function (encounterUuid, params) {

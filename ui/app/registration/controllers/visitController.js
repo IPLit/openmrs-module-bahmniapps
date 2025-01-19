@@ -13,7 +13,7 @@ angular.module('bahmni.registration')
             var regEncounterTypeUuid = $rootScope.regEncounterConfiguration.encounterTypes[Bahmni.Registration.Constants.registrationEncounterType];
             var visitLocationUuid = $rootScope.visitLocation;
             var redirectToDashboard = false;
-            var filterBasedOnLocation = appService.getAppDescriptor().getConfigValue("filterBasedOnLocation");
+            var filterBasedOnLocation = appService.getAppDescriptor().getConfigValue("filterBasedOnLocation") || false;
             var getPreviousVisitData = appService.getAppDescriptor().getConfigValue("getPreviousVisitData");
             getPreviousVisitData = getPreviousVisitData || false;
             var conceptsToGetFromPrevVisit = appService.getAppDescriptor().getConfigValue("previousVisitConceptNamesToPull");
@@ -34,7 +34,7 @@ angular.module('bahmni.registration')
 
             var getActiveEncounter = function () {
                 var deferred = $q.defer();
-                encounterService.findWith({
+                encounterService.find({
                     "patientUuid": patientUuid,
                     "providerUuids": !_.isEmpty($scope.currentProvider.uuid) ? [$scope.currentProvider.uuid] : null,
                     "includeAll": false,

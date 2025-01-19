@@ -2,13 +2,15 @@
 
 describe('CreatePatientController', function() {
     var $aController, q, scopeMock, rootScopeMock, stateMock, patientServiceMock, preferencesMock, spinnerMock,
-        appServiceMock, ngDialogMock, ngDialogLocalScopeMock, httpBackend, http, sections, identifiersMock, messagingService;
+        appServiceMock, ngDialogMock, ngDialogLocalScopeMock, httpBackend, http, sections, identifiersMock, messagingService, sessionServiceMock;
 
     beforeEach(module('bahmni.registration'));
     beforeEach(module('bahmni.common.models'));
 
     beforeEach(module(function($provide){
         identifiersMock = jasmine.createSpyObj('identifiers', ['create']);
+        patientServiceMock = jasmine.createSpyObj('patientService', ['create']);
+        sessionServiceMock = jasmine.createSpyObj('sessionService', ['getLoginLocationUuid']);
         identifiersMock.create.and.returnValue({
             primaryIdentifier: {
                 identifierType: {
@@ -23,6 +25,8 @@ describe('CreatePatientController', function() {
             }
         });
 
+        $provide.value('patientService', patientServiceMock);
+        $provide.value('sessionService', sessionServiceMock);
         $provide.value('identifiers', identifiersMock);
 
     }));
@@ -39,7 +43,7 @@ describe('CreatePatientController', function() {
 
     beforeEach(function() {
         stateMock = jasmine.createSpyObj('stateMock', ['go']);
-        patientServiceMock = jasmine.createSpyObj('patientServiceMock', ['create']);
+        // patientServiceMock = jasmine.createSpyObj('patientServiceMock', ['create']);
         preferencesMock = jasmine.createSpyObj('preferencesMock', ['']);
         spinnerMock = jasmine.createSpyObj('spinnerMock', ['forPromise']);
         appServiceMock = jasmine.createSpyObj('appServiceMock', ['getAppDescriptor']);
@@ -507,7 +511,8 @@ describe('CreatePatientController', function() {
             preferences: preferencesMock,
             spinner: spinnerMock,
             appService: appServiceMock,
-            ngDialog: ngDialogMock
+            ngDialog: ngDialogMock,
+            sessionService: sessionServiceMock
         });
         expect(scopeMock.disablePhotoCapture).toBeTruthy();
     });

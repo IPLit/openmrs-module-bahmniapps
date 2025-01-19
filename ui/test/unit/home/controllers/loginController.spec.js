@@ -5,6 +5,10 @@ describe('loginController', function () {
 
     beforeEach(module('bahmni.home'));
 
+    //beforeEach(module(function($provide){
+
+    //}));
+
     beforeEach(function () {
         localeService = jasmine.createSpyObj('localeService', ['getLoginText', 'allowedLocalesList', 'serverDateTime', 'getLocalesLangs', 'defaultLocale']);
         sessionService = jasmine.createSpyObj('sessionService', ['loginUser', 'loadCredentials', 'updateSession']);

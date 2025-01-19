@@ -11,7 +11,7 @@ angular.module('bahmni.common.displaycontrol.visitAttributes')
                 var getPreviousObs = conceptsToGetFromPrevVisit.join(',');
                 var encounterTypeUuid = configurations.encounterConfig().getRegistrationEncounterTypeUuid();
                 console.log($scope.visitSummary);
-                return encounterService.findWith({
+                return encounterService.find({
                     "patientUuid": $scope.patientUuid,
                     "providerUuids": !_.isEmpty($rootScope.currentProvider.uuid) ? [$rootScope.currentProvider.uuid] : null,
                     "includeAll": false,

@@ -3,14 +3,29 @@
 describe('Order Service', function () {
     var orderService;
     var mockHttp = jasmine.createSpyObj('$http', ['get']);
+    var mockBahmniCookieStore = jasmine.createSpyObj('$bahmniCookieStore', ['get']);
+    var mockAppService = jasmine.createSpyObj('appService', ['getAppDescriptor']);
+
     mockHttp.get.and.callFake(function(param) {
         return specUtil.respondWith("success");
+    });
+
+    mockBahmniCookieStore.get.and.callFake(function(param) {
+        return specUtil.respondWith("success");
+    });
+
+    mockAppService.getAppDescriptor.and.returnValue({
+        getConfigValue: function (config) {
+            return false;
+        }
     });
 
     beforeEach(function () {
         module('bahmni.common.orders');
         module(function ($provide) {
             $provide.value('$http', mockHttp);
+            $provide.value('$bahmniCookieStore', mockBahmniCookieStore);
+            $provide.value('appService', mockAppService);
         });
 
         inject(['orderService', function (orderServiceInjected) {
