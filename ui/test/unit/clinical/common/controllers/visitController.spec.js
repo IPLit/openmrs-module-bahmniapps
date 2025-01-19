@@ -2,7 +2,7 @@
 
 describe('VisitController', function () {
     var scope, $controller, success, encounterService, patient, dateUtil, $timeout, getEncounterPromise, window;
-    var locationService, appService, $location, auditLogService, sessionService, diagnosisService, observationsService, visitService;
+    var locationService, appService, $location, auditLogService, sessionService, diagnosisService, observationsService, visitService, orderTypeService;
     var q, state, rootScope, controller, allergyService;
     var configurations = {
         encounterConfig: function () {
@@ -55,8 +55,10 @@ describe('VisitController', function () {
         getEncounterPromise = specUtil.createServicePromise('getEncountersForEncounterType');
         allergyService = jasmine.createSpyObj('allergyService', ['getAllergyForPatient']);
         $location = jasmine.createSpyObj('$location', ['search']);
+        orderTypeService = jasmine.createSpyObj('orderTypeService', ['getOrderTypeUuid']);
         auditLogService = jasmine.createSpyObj('auditLogService', ['log']);
         sessionService = jasmine.createSpyObj('sessionService', ['destroy']);
+        visitService = jasmine.createSpyObj('visitService', ['getVisit']);
         allergyService.getAllergyForPatient.and.returnValue(Promise.resolve(allergiesMock));
         encounterService.getEncountersForEncounterType.and.returnValue(getEncounterPromise);
         $location.search.and.returnValue({source: "clinical"});
@@ -67,6 +69,7 @@ describe('VisitController', function () {
         sessionService.destroy.and.returnValue({
             then: function() { }
         });
+        visitService.getVisit.and.returnValue(specUtil.respondWithPromise($q, {data: {}}));
         spyOn(clinicalAppConfigService, 'getVisitConfig').and.returnValue([]);
         spyOn(configurations, 'encounterConfig').and.returnValue({
             getPatientDocumentEncounterTypeUuid: function () {
@@ -110,7 +113,8 @@ describe('VisitController', function () {
                 observationsService: observationsService,
                 visitService: visitService,
                 $location: $location,
-                $window: window
+                $window: window,
+                orderTypeService: orderTypeService
             });
     }]));
 
