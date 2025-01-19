@@ -26,9 +26,17 @@ describe('Registration Visit Service', function () {
     beforeEach(function () {
         module('bahmni.common.domain');
         module(function ($provide) {
+            var appService = jasmine.createSpyObj('appService', ['getAppDescriptor']);
+            appService.getAppDescriptor.and.returnValue({
+                getConfigValue: function (config) {
+                    return false;
+                }
+            });
             Bahmni.Common.Constants.endVisitUrl = endVisitUrl;
             Bahmni.Common.Constants.visitUrl = openmrsVisitUrl;
             $provide.value('$http', mockHttp);
+            $provide.value('appService', appService);
+
         });
 
         inject(['visitService', function (visitServiceInjectted) {

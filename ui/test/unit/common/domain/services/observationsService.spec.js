@@ -3,6 +3,13 @@
 describe("observationsService", function () {
     var mockBackend, observationsService;
 
+     beforeEach(module(function ($provide) {
+        var $bahmniCookieStore = jasmine.createSpyObj('$bahmniCookieStore', ['get']);
+        var appService = jasmine.createSpyObj('appService', ['getAppDescriptor']);
+        $provide.value('$bahmniCookieStore', $bahmniCookieStore);
+        $provide.value('appService', appService);
+    }));
+
     beforeEach(function () {
         module('bahmni.common.domain');
         inject(function (_observationsService_, $httpBackend) {

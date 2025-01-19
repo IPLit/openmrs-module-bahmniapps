@@ -2,7 +2,7 @@
 
 describe('VisitController', function () {
     var scope, $controller, success, encounterService, patient, dateUtil, $timeout, getEncounterPromise, window;
-    var locationService, appService, $location, auditLogService, sessionService;
+    var locationService, appService, $location, auditLogService, sessionService, diagnosisService, observationsService, visitService;
     var q, state, rootScope, controller, allergyService;
     var configurations = {
         encounterConfig: function () {
@@ -106,6 +106,9 @@ describe('VisitController', function () {
                 allergyService: allergyService,
                 auditLogService: auditLogService,
                 sessionService: sessionService,
+                diagnosisService: diagnosisService,
+                observationsService: observationsService,
+                visitService: visitService,
                 $location: $location,
                 $window: window
             });
