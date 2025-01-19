@@ -98,7 +98,7 @@ describe('loginController', function () {
             expect(sessionService.loginUser.calls.count()).toBe(2);
             expect(sessionService.loadCredentials.calls.count()).toBe(1);
             expect(scopeMock.errorMessageTranslateKey).toBe(null);
-            expect($bahmniCookieStore.remove.calls.count()).toBe(2);
+            expect($bahmniCookieStore.remove.calls.count()).toBe(3);
             expect($bahmniCookieStore.remove).toHaveBeenCalledWith(Bahmni.Common.Constants.JSESSIONID, {
                 path: '/',
                 expires: 1

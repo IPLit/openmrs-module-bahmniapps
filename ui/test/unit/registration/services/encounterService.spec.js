@@ -2,11 +2,13 @@
 
 describe('EncounterService', function () {
 
-    var $http,
+    var mockHttp,
         $bahmniCookieStore,
         configurations,
         getPromise = Q.defer();
     var encounterService;
+
+    mockHttp = jasmine.createSpyObj('$http', ['get', 'post', 'delete']);
 
     var getFunction = function (params, args) {
         var data = {results: []};
@@ -41,12 +43,13 @@ describe('EncounterService', function () {
         getPromise.resolve();
         return specUtil.respondWith({"data": data});
     };
-    var mockHttp = {
-        defaults: {headers: {common: {'X-Requested-With': 'present'}}},
-        get: jasmine.createSpy('Http get').and.callFake(getFunction),
-        post: jasmine.createSpy('Http post').and.returnValue('success'),
-        delete: jasmine.createSpy('Http delete').and.returnValue('success')
-    };
+
+    //var mockHttp = {
+        mockHttp.defaults = {headers: {common: {'X-Requested-With': 'present'}}};
+        mockHttp.get = jasmine.createSpy('Http get').and.callFake(getFunction);
+        mockHttp.post = jasmine.createSpy('Http post').and.returnValue('success');
+        mockHttp.delete = jasmine.createSpy('Http delete').and.returnValue('success');
+    //};
     var rootScope = {currentProvider: {uuid: 'provider-uuid'}};
 
     beforeEach(module('bahmni.registration'));
@@ -63,7 +66,6 @@ describe('EncounterService', function () {
     beforeEach(inject(['encounterService', function (encounterServiceInjected) {
         encounterService = encounterServiceInjected;
     }]));
-
 
     it('should create a encounter', inject(['encounterService', function (encounterService) {
         var openmrsUrl = 'http://blah.com';

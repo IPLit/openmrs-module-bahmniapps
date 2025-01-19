@@ -100,7 +100,7 @@ angular.module('bahmni.common.domain')
             this.create = function (encounter) {
                 encounter = this.buildEncounter(encounter);
 
-                return $http.post(Bahmni.Common.Constants.bahmniDistroEncounterUrl, encounter, {
+                return $http.post(Bahmni.Common.Constants.bahmniEncounterUrl, encounter, {
                     withCredentials: true
                 });
             };
