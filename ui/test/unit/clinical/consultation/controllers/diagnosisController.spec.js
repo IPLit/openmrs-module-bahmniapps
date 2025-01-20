@@ -138,10 +138,9 @@ describe("Diagnosis Controller", function () {
         }]
     }];
 
-    beforeEach(inject(function ($controller, $rootScope, $q, diagnosisService) {
+    beforeEach(inject(function ($controller, $rootScope, $q) {
         $scope = $rootScope.$new();
         rootScope = $rootScope;
-        mockDiagnosisService = diagnosisService;
         q = $q;
         deferred = $q.defer();
         $scope.consultation = {
@@ -156,10 +155,11 @@ describe("Diagnosis Controller", function () {
         mockAppDescriptor.getConfigValue.and.returnValue(true);
 
         appService = jasmine.createSpyObj('appService', ['getAppDescriptor']);
+        mockDiagnosisService = jasmine.createSpyObj('diagnosisService', ['getDiagnosisConceptSet', 'deleteDiagnosis', 'getAllFor', 'getPastAndCurrentDiagnoses']);
         appService.getAppDescriptor.and.returnValue(mockAppDescriptor);
 
         contextChangeHandler = jasmine.createSpyObj('contextChangeHandler', ['add']);
-        spyOn(diagnosisService, 'getDiagnosisConceptSet').and.returnValue(deferred.promise);
+        mockDiagnosisService.getDiagnosisConceptSet.and.returnValue(deferred.promise);
 
         spinner = jasmine.createSpyObj('spinner', ['forPromise']);
         spinner.forPromise.and.callFake(function (param) {
@@ -235,7 +235,7 @@ describe("Diagnosis Controller", function () {
     describe("getDiagnosis()", function () {
         it("should make a call to diagnosis service getAllFor", function () {
             $scope.getDiagnosis({term:"primary"}).then(function (list) {
-                spyOn(diagnosisService, 'getAllFor').and.returnValue(specUtil.simplePromise({data: [{"conceptName":"Cold, unspec.","conceptUuid":"uuid1","matchedName":null,"code":"T69.9XXA"}]}));
+                spyOn(mockDiagnosisService, 'getAllFor').and.returnValue(specUtil.simplePromise({data: [{"conceptName":"Cold, unspec.","conceptUuid":"uuid1","matchedName":null,"code":"T69.9XXA"}]}));
                 expect(mockDiagnosisService.getAllFor).toHaveBeenCalledWith("primary", "en");
                 expect(list.length).toBe(1);
                 expect(list[0].value).toBe("Cold, unspec. (T69.9XXA)");
