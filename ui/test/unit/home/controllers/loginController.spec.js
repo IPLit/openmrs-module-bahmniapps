@@ -1,13 +1,13 @@
 'use strict';
 
 describe('loginController', function () {
-    var localeService, $aController, rootScopeMock, $window, $q, state, _spinner, initialData, scopeMock, sessionService, $bahmniCookieStore, currentUser, auditLogService;
+    var localeService, $aController, rootScopeMock, $window, $q, state, _spinner, initialData, scopeMock, sessionService, mockBahmniCookieStore, currentUser, auditLogService;
 
     beforeEach(module('bahmni.home'));
 
-    //beforeEach(module(function($provide){
-
-    //}));
+    beforeEach(module(function($provide){
+        $provide.value('$bahmniCookieStore', mockBahmniCookieStore);
+    }));
 
     beforeEach(function () {
         localeService = jasmine.createSpyObj('localeService', ['getLoginText', 'allowedLocalesList', 'serverDateTime', 'getLocalesLangs', 'defaultLocale']);
@@ -29,8 +29,13 @@ describe('loginController', function () {
             {locales: [{code: "en", nativeName: "English"}, {code: "es", nativeName: "Español"}]
             }));
         localeService.defaultLocale.and.returnValue(specUtil.simplePromise({data: "en"}));
-        $bahmniCookieStore = jasmine.createSpyObj('$bahmniCookieStore', ['get', 'remove', 'put']);
-        $bahmniCookieStore.get.and.callFake(function () { return {}; });
+        mockBahmniCookieStore = jasmine.createSpyObj('$bahmniCookieStore', ['get', 'remove', 'put']);
+        // mockBahmniCookieStore.get.and.callFake(function(param) {
+        //     return specUtil.respondWith("success");
+        // });
+        
+        mockBahmniCookieStore.get.and.callFake(function (param) { return {}; });
+
         $window = jasmine.createSpyObj('$window', ['location']);
         $window.location.and.callFake(function () { return {}; });
         initialData = {location: " "};
@@ -45,6 +50,7 @@ describe('loginController', function () {
             state = $state;
             scopeMock = rootScopeMock.$new();
             rootScopeMock.currentUser = currentUser;
+           // mockBahmniCookieStore = mockBahmniCookieStore;
         })
     );
 
@@ -60,7 +66,7 @@ describe('loginController', function () {
             localeService: localeService,
             sessionService: sessionService,
             auditLogService: auditLogService,
-            $bahmniCookieStore: $bahmniCookieStore,
+            $bahmniCookieStore: mockBahmniCookieStore,
             $window : $window
         });
     };
@@ -98,8 +104,8 @@ describe('loginController', function () {
             expect(sessionService.loginUser.calls.count()).toBe(2);
             expect(sessionService.loadCredentials.calls.count()).toBe(1);
             expect(scopeMock.errorMessageTranslateKey).toBe(null);
-            expect($bahmniCookieStore.remove.calls.count()).toBe(3);
-            expect($bahmniCookieStore.remove).toHaveBeenCalledWith(Bahmni.Common.Constants.JSESSIONID, {
+            expect(mockBahmniCookieStore.remove.calls.count()).toBe(3);
+            expect(mockBahmniCookieStore.remove).toHaveBeenCalledWith(Bahmni.Common.Constants.JSESSIONID, {
                 path: '/',
                 expires: 1
             });
@@ -161,11 +167,11 @@ describe('loginController', function () {
                     success({currentProvider : {uuid: "providerUuid"}});
                 }
             };
-            scopeMock.loginInfo = { username: 'superman' };
+            scopeMock.loginInfo = { username: 'superman', password: 'Admin123' };
             sessionService.loginUser.and.returnValue(fakeHttpGetPromise);
-            $bahmniCookieStore.get.and.returnValue("/ipd");
+            mockBahmniCookieStore.get.and.returnValue("/ipd");
             scopeMock.login();
-            expect($bahmniCookieStore.get).toHaveBeenCalled();
-            expect($bahmniCookieStore.get.calls.count()).toBe(2);
+            expect(mockBahmniCookieStore.get).toHaveBeenCalled();
+            expect(mockBahmniCookieStore.get.calls.count()).toBe(1);
     }); 
 });

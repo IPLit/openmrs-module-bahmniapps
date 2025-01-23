@@ -138,7 +138,7 @@ describe("PacsOrdersDisplayControl", function () {
 
             var section = $(element.children()[0]);
 
-            expect($(section.children()[1]).children()[1].localName).toBeDefined();
+            expect($(section.children()[0]).children()[1].localName).toBeDefined();
         });
 
         it('should not show the noOrdersMessage when there are orders', function () {
