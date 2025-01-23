@@ -215,14 +215,6 @@ angular.module('bahmni.registration')
                 return deferred.promise;
             };
 
-            var searchDuplicatePersonAttributePatients = function (pa) {
-                var loginLocation = '&loginLocationUuid=' + loginLocationUuid;
-                var finalPatientSearchUrl = patientSearchByPersonAttributeUrl + pa + loginLocation;
-                return $http.get(finalPatientSearchUrl, {
-                    method: "GET",
-                    withCredentials: true
-                });
-            };
 
             var validateUniquePersonAttribute = function () {
                 var errorText = '';
@@ -230,7 +222,7 @@ angular.module('bahmni.registration')
                 if (uniquePersonAttribute) {
                     var uniquePersonAttributeVal = $scope.patient[uniquePersonAttribute];
                     if (uniquePersonAttributeVal) {
-                        return searchDuplicatePersonAttributePatients(uniquePersonAttributeVal).then(function (result) {
+                        return patientService.searchDuplicatePersonAttributePatients(uniquePersonAttributeVal).then(function (result) {
                             deferred.resolve(result);
                             if (result.data && result.data.pageOfResults && result.data.pageOfResults.length === 0) {
                                 errorText = '';

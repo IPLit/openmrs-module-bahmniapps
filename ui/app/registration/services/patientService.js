@@ -104,6 +104,16 @@ angular.module('bahmni.registration')
             return message;
         };
 
+        var searchDuplicatePersonAttributePatients = function (pa) {
+            var loginLocation = '&loginLocationUuid=' + loginLocationUuid;
+            var finalPatientSearchUrl = patientSearchByPersonAttributeUrl + pa + loginLocation;
+            return $http.get(finalPatientSearchUrl, {
+                method: "GET",
+                withCredentials: true
+            });
+        };
+
+
         return {
             search: search,
             searchByIdentifier: searchByIdentifier,
@@ -113,6 +123,7 @@ angular.module('bahmni.registration')
             updateImage: updateImage,
             searchByNameOrIdentifier: searchByNameOrIdentifier,
             getAllPatientIdentifiers: getAllPatientIdentifiers,
-            getRegistrationMessage: getRegistrationMessage
+            getRegistrationMessage: getRegistrationMessage,
+            searchDuplicatePersonAttributePatients: searchDuplicatePersonAttributePatients
         };
     }]);
