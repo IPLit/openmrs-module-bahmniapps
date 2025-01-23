@@ -160,7 +160,6 @@ describe("Diagnosis Controller", function () {
 
         contextChangeHandler = jasmine.createSpyObj('contextChangeHandler', ['add']);
         mockDiagnosisService.getDiagnosisConceptSet.and.returnValue(deferred.promise);
-//        mockDiagnosisService.getAllFor.and.returnValue(deferred.promise);
 
         spinner = jasmine.createSpyObj('spinner', ['forPromise']);
         spinner.forPromise.and.callFake(function (param) {

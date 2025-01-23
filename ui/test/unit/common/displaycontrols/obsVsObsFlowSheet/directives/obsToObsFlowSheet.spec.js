@@ -18,11 +18,6 @@ describe('obsToObsFlowSheet DisplayControl', function () {
     beforeEach(module('bahmni.clinical'));
     beforeEach(module('bahmni.common.conceptSet'));
 
-    beforeEach(module(function ($provide) {
-        conceptSetUiConfigService = jasmine.createSpyObj('conceptSetUiConfigService', ['getConfig']);
-        $provide.value('conceptSetUiConfigService', conceptSetUiConfigService);
-    }));
-
     beforeEach(module('bahmni.common.displaycontrol.obsVsObsFlowSheet'), function ($provide) {
         var _spinner = jasmine.createSpyObj('spinner', ['forPromise', 'then']);
         _spinner.forPromise.and.callFake(function () {
@@ -30,18 +25,17 @@ describe('obsToObsFlowSheet DisplayControl', function () {
             deferred.resolve({data: dispositions});
             return deferred.promise;
         });
-
         _spinner.then.and.callThrough({data: dispositions});
-
-        observationsService = jasmine.createSpyObj('observationsService', ['getObsInFlowSheet', 'getTemplateDisplayName']);
-
+        conceptSetUiConfigService = jasmine.createSpyObj('conceptSetUiConfigService', ['getConfig']);
+        observationsService = jasmine.createSpyObj('observationsService', ['getObsInFlowSheet']);
         translate = jasmine.createSpyObj('$translate', ['instant']);
-
         conceptSetService = jasmine.createSpyObj('conceptSetService', ['getConcept']);
 
+        $provide.value('conceptSetUiConfigService', conceptSetUiConfigService);
         $provide.value('observationsService', observationsService);
         $provide.value('conceptSetService', conceptSetService);
         $provide.value('spinner', _spinner);
+        $provide.value('$translate', translate);
     });
 
     beforeEach(inject(function ($compile, $httpBackend, $rootScope, $q) {

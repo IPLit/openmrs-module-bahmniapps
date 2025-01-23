@@ -61,14 +61,12 @@ describe('Disposition DisplayControl', function () {
             return deferred.promise;
         });
         _spinner.then.and.callThrough({data: dispositions});
-        dispositionService = jasmine.createSpyObj('dispositionService', ['getDispositionByPatient']);
-        $translate = jasmine.createSpyObj('$translate', ['instant']);
+        dispositionService = jasmine.createSpyObj('dispositionService', ['getDispositionByPatient', 'getDispositionByVisit']);
         $translate.instant.and.callFake(function (value) {
             return value;
         });
-         $provide.value('spinner', _spinner);
-         $provide.value('dispositionService', dispositionService);
-         $provide.value('$translate', $translate);
+        $provide.value('spinner', _spinner);
+        $provide.value('dispositionService', dispositionService);
     });
 
     beforeEach(inject(function ($compile, $httpBackend, $rootScope,$q, $timeout) {
@@ -79,10 +77,10 @@ describe('Disposition DisplayControl', function () {
         timeout = $timeout;
 
         rootScope.currentUser = {
-                    userProperties: function () {
-                        return {defaultLocale: 'en'};
-                    }
-                }
+            userProperties: function () {
+                return {defaultLocale: 'en'};
+            }
+        }
     }));
 
     it('should call dispositons by visit when visitUuid is passed', function () {
