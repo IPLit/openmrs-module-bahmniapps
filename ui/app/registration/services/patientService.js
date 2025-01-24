@@ -113,7 +113,6 @@ angular.module('bahmni.registration')
             });
         };
 
-
         return {
             search: search,
             searchByIdentifier: searchByIdentifier,

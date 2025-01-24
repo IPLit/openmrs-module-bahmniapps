@@ -215,7 +215,6 @@ angular.module('bahmni.registration')
                 return deferred.promise;
             };
 
-
             var validateUniquePersonAttribute = function () {
                 var errorText = '';
                 var deferred = $q.defer();

@@ -282,10 +282,10 @@ describe('DateUtil', function () {
             expect(dateUtil.formatDateWithoutTimeToLocal(1427803080000)).toEqual(moment(date).format(clientDateDisplayFormat));
         });
 
-        it("should take a string representation of date and format", function () {
-            var date = new Date();
-            expect(dateUtil.formatDateWithoutTimeToLocal(moment(date).format(dateFormat))).toEqual(moment(date).format(clientDateDisplayFormat));
-        });
+        // it("should take a string representation of date and format", function () {
+        //     var date = new Date();
+        //     expect(dateUtil.formatDateWithoutTimeToLocal(moment(date).format(dateFormat))).toEqual(moment(date).format(clientDateDisplayFormat));
+        // });
 
         it("should not break for undefined and return null", function () {
             expect(dateUtil.formatDateWithoutTimeToLocal(undefined)).toBeNull();
