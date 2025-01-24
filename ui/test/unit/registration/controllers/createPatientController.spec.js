@@ -9,7 +9,7 @@ describe('CreatePatientController', function() {
 
     beforeEach(module(function($provide){
         identifiersMock = jasmine.createSpyObj('identifiers', ['create']);
-        patientServiceMock = jasmine.createSpyObj('patientService', ['create']);
+        patientServiceMock = jasmine.createSpyObj('patientService', ['create', 'searchDuplicatePersonAttributePatients']);
         sessionServiceMock = jasmine.createSpyObj('sessionService', ['getLoginLocationUuid']);
         identifiersMock.create.and.returnValue({
             primaryIdentifier: {
@@ -480,12 +480,14 @@ describe('CreatePatientController', function() {
             return deferred1.promise;
         });
 
+        patientServiceMock.searchDuplicatePersonAttributePatients.and.returnValue({});
+
         spinnerMock.forPromise.and.returnValue(defer.promise);
         scopeMock.create();
         scopeMock.$apply();
-            expect(patientServiceMock.create.calls.count()).toEqual(1);
-            expect(messagingService.showMessage).toHaveBeenCalled();
-            done();
+        expect(patientServiceMock.create.calls.count()).toEqual(1);
+        expect(messagingService.showMessage).toHaveBeenCalled();
+        done();
 
 
 

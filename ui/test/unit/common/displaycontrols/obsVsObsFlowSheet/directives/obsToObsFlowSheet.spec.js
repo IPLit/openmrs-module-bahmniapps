@@ -1,16 +1,13 @@
 'use strict';
 
 describe('obsToObsFlowSheet DisplayControl', function () {
-    var q,
-        compile,
-        mockBackend,
-        rootScope,
-        deferred,
-        observationsService,
-        conceptSetService,
-        translate,
-        conceptSetUiConfigService,
+    var q, compile, mockBackend, rootScope, deferred, observationsService, conceptSetService, translate, conceptSetUiConfigService,
         simpleHtml = '<obs-to-obs-flow-sheet patient="patient" section="section" is-on-dashboard="true"></obs-to-obs-flow-sheet>';
+    conceptSetUiConfigService = jasmine.createSpyObj('conceptSetUiConfigService', ['getConfig']);
+    observationsService = jasmine.createSpyObj('observationsService', ['getObsInFlowSheet']);
+    translate = jasmine.createSpyObj('$translate', ['instant']);
+    conceptSetService = jasmine.createSpyObj('conceptSetService', ['getConcept']);
+    conceptSetUiConfigService.getConfig.and.returnValue("configInfo");
 
     beforeEach(module('ngHtml2JsPreprocessor'));
     beforeEach(module('bahmni.common.uiHelper'));
@@ -18,32 +15,30 @@ describe('obsToObsFlowSheet DisplayControl', function () {
     beforeEach(module('bahmni.clinical'));
     beforeEach(module('bahmni.common.conceptSet'));
 
-    beforeEach(module('bahmni.common.displaycontrol.obsVsObsFlowSheet'), function ($provide) {
-        var _spinner = jasmine.createSpyObj('spinner', ['forPromise', 'then']);
-        _spinner.forPromise.and.callFake(function () {
-            deferred = q.defer();
-            deferred.resolve({data: dispositions});
-            return deferred.promise;
+    beforeEach(function() {
+        module('bahmni.common.displaycontrol.obsVsObsFlowSheet');
+        module(function ($provide) {
+             var _spinner = jasmine.createSpyObj('spinner', ['forPromise', 'then']);
+            _spinner.forPromise.and.callFake(function () {
+                deferred = q.defer();
+                deferred.resolve({data: {}});
+                return deferred.promise;
+            });
+            _spinner.then.and.callThrough({data: {}});
+
+            $provide.value('conceptSetUiConfigService', conceptSetUiConfigService);
+            $provide.value('observationsService', observationsService);
+            $provide.value('conceptSetService', conceptSetService);
+            $provide.value('spinner', _spinner);
+            $provide.value('$translate', translate);
         });
-        _spinner.then.and.callThrough({data: dispositions});
-        conceptSetUiConfigService = jasmine.createSpyObj('conceptSetUiConfigService', ['getConfig']);
-        observationsService = jasmine.createSpyObj('observationsService', ['getObsInFlowSheet']);
-        translate = jasmine.createSpyObj('$translate', ['instant']);
-        conceptSetService = jasmine.createSpyObj('conceptSetService', ['getConcept']);
-
-        $provide.value('conceptSetUiConfigService', conceptSetUiConfigService);
-        $provide.value('observationsService', observationsService);
-        $provide.value('conceptSetService', conceptSetService);
-        $provide.value('spinner', _spinner);
-        $provide.value('$translate', translate);
+        inject(function ($compile, $httpBackend, $rootScope, $q) {
+            compile = $compile;
+            mockBackend = $httpBackend;
+            rootScope = $rootScope;
+            q = $q;
+        });
     });
-
-    beforeEach(inject(function ($compile, $httpBackend, $rootScope, $q) {
-        compile = $compile;
-        mockBackend = $httpBackend;
-        rootScope = $rootScope;
-        q = $q;
-    }));
 
     describe('initialization', function() {
         it("should make the right http call as specified by its input", function() {

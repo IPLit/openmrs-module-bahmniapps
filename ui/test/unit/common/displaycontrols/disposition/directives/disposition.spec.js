@@ -1,15 +1,7 @@
 'use strict';
 
 describe('Disposition DisplayControl', function () {
-    var q,
-        dispositions,
-        compile,
-        mockBackend,
-        rootScope,
-        deferred,
-        timeout,
-        dispositionService,
-        $translate,
+    var q, dispositions, compile, _spinner, mockBackend, rootScope, deferred, timeout, dispositionService, $translate,
         simpleHtml = '<disposition id="disposition" params="section" patient-uuid="patientUuid" visit-uuid="visitUuid"></disposition>';
 
     dispositions = [
@@ -52,36 +44,37 @@ describe('Disposition DisplayControl', function () {
 
     beforeEach(module('bahmni.common.uiHelper'), function(){});
     beforeEach(module('bahmni.common.domain'), function(){});
+    beforeEach(function () {
+        module('bahmni.common.displaycontrol.disposition');
+        module(function ($provide) {
+            dispositionService = jasmine.createSpyObj('dispositionService', ['getDispositionByPatient', 'getDispositionByVisit']);
+            dispositionService.getDispositionByPatient.and.returnValue(specUtil.createFakePromise(dispositions));
 
-    beforeEach(module('bahmni.common.displaycontrol.disposition'), function($provide){
-        var _spinner = jasmine.createSpyObj('spinner',['forPromise','then']);
-        _spinner.forPromise.and.callFake(function(){
-            deferred = q.defer();
-            deferred.resolve({data: dispositions});
-            return deferred.promise;
+            _spinner = jasmine.createSpyObj('spinner',['forPromise','then']);
+            _spinner.forPromise.and.callFake(function(){
+                deferred = q.defer();
+                deferred.resolve({data: dispositions});
+                return deferred.promise;
+            });
+            _spinner.then.and.callThrough({data: dispositions});
+
+            $provide.value('spinner', _spinner);
+            $provide.value('dispositionService', dispositionService);
         });
-        _spinner.then.and.callThrough({data: dispositions});
-        dispositionService = jasmine.createSpyObj('dispositionService', ['getDispositionByPatient', 'getDispositionByVisit']);
-        $translate.instant.and.callFake(function (value) {
-            return value;
-        });
-        $provide.value('spinner', _spinner);
-        $provide.value('dispositionService', dispositionService);
-    });
+        inject(function ($compile, $httpBackend, $rootScope,$q, $timeout) {
+            compile = $compile;
+            mockBackend = $httpBackend;
+            rootScope = $rootScope;
+            q = $q;
+            timeout = $timeout;
 
-    beforeEach(inject(function ($compile, $httpBackend, $rootScope,$q, $timeout) {
-        compile = $compile;
-        mockBackend = $httpBackend;
-        rootScope = $rootScope;
-        q = $q;
-        timeout = $timeout;
-
-        rootScope.currentUser = {
-            userProperties: function () {
-                return {defaultLocale: 'en'};
+            rootScope.currentUser = {
+                userProperties: function () {
+                    return {defaultLocale: 'en'};
+                }
             }
-        }
-    }));
+        });
+    });
 
     it('should call dispositons by visit when visitUuid is passed', function () {
         var scope = rootScope.$new();
