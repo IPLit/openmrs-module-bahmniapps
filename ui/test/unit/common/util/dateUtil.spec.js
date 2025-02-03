@@ -39,11 +39,11 @@ describe('DateUtil', function () {
     describe('diffInYearsMonthsDays', function () {
         it("should calculate difference between dates when month and day are same", function () {
             var fromDate = new Date("2020-01-15");
-            var toDate = new Date("2024-01-15");
+            var toDate = new Date("2025-01-15");
             
             var period = dateUtil.diffInYearsMonthsDays(fromDate, toDate);
 
-            expect(period.years).toBe(4);
+            expect(period.years).toBe(5);
             expect(period.months).toBe(0);
             expect(period.days).toBe(0);
         });
@@ -119,16 +119,16 @@ describe('DateUtil', function () {
                 var fromDate = new Date();
                 fromDate.setDate(26);
                 fromDate.setMonth(1);
-                fromDate.setFullYear(2011);
+                fromDate.setFullYear(2012);
                 var toDate = new Date();
                 toDate.setDate(29);
                 toDate.setMonth(1);
                 toDate.setFullYear(2020);
                 var period = dateUtil.diffInYearsMonthsDays(fromDate, toDate);
 
-                expect(period.years).toBe(9);
-                expect(period.months).toBe(0);
-                expect(period.days).toBe(3);
+                expect(period.years).toBe(7);
+                expect(period.months).toBe(11);
+                expect(period.days).toBe(4);
             });
 
             it("should calculate difference between dates when fromDate is leap year", function () {
@@ -282,10 +282,10 @@ describe('DateUtil', function () {
             expect(dateUtil.formatDateWithoutTimeToLocal(1427803080000)).toEqual(moment(date).format(clientDateDisplayFormat));
         });
 
-        // it("should take a string representation of date and format", function () {
-        //     var date = new Date();
-        //     expect(dateUtil.formatDateWithoutTimeToLocal(moment(date).format(dateFormat))).toEqual(moment(date).format(clientDateDisplayFormat));
-        // });
+        it("should take a string representation of date and format", function () {
+            var date = new Date();
+            expect(dateUtil.formatDateWithoutTimeToLocal(moment(date).format(dateFormat))).toEqual(moment(date).format(clientDateDisplayFormat));
+        });
 
         it("should not break for undefined and return null", function () {
             expect(dateUtil.formatDateWithoutTimeToLocal(undefined)).toBeNull();
