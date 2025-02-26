@@ -131,7 +131,7 @@ angular.module('bahmni.clinical')
                     "labOrderTypeUuid": labOrderTypeUuid,
                     "formName": $scope.visitTabConfig.currentTab.printing.forms,
                     "headerUri": $location.protocol() + "://" + $location.host() + $scope.visitTabConfig.currentTab.printing.headerUri,
-                    "showResults": true,
+                    "showResults": $scope.visitTabConfig.currentTab.printing.showLabResults,
                     "handNotesConceptName": $scope.visitTabConfig.currentTab.printing.imageNoteName,
                     "showFormName": $scope.visitTabConfig.currentTab.printing.showFormName
                 }).then(function (response) {
