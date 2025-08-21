@@ -5850,7 +5850,7 @@ bahmni-carbon-ui@0.1.6:
 
 "bahmni-form-controls@git+https://github.com/IPLit/form-controls.git#master":
   version "0.93.22"
-  resolved "git+https://github.com/IPLit/form-controls.git#9f9b10d27c0b1cebe3928a0fb12b82a6a39259d6"
+  resolved "git+https://github.com/IPLit/form-controls.git#abb62a9f44529027590943d08712a21d838e0151"
   dependencies:
     base64-inline-loader "^1.1.0"
     classnames "^2.2.5"
