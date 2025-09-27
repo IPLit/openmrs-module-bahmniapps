@@ -66,7 +66,7 @@ describe('formService', function () {
         var httpPromise = this.formService.getFormDetail('someFormUuid', { v: "custom:(uuid,name)" });
 
         expect(httpPromise).toEqual(response);
-        expect(http.get).toHaveBeenCalledWith("/openmrs/ws/rest/v1/bahmnicore/distro/meta/getFormDetail/someFormUuid");
+        expect(http.get).toHaveBeenCalledWith("/openmrs/ws/rest/v1/form/someFormUuid", { params: { v: "custom:(uuid,name)" }});
     });
 
 
