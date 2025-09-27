@@ -38,7 +38,7 @@
                                                  obs-scope="::conceptSet.options.scope" show-title="false" concept-set-focused="::$index === 0"></concept-set>
                                 </article>
                                 <article ng-if="isFormTemplate(conceptSet)" class="fl obs-section-form" id={{::conceptSet.formUuid}}>
-                                    <form-controls form="conceptSet" patient="patient" validate-form="true"></form-controls>
+                                    <form-controls form="conceptSet" patient="patient" validate-form="true" form-scope=""></form-controls>
                                 </article>
                                 <article ng-if="::conceptSet.options.showLatest" class="obs-section fr" id="observationSection">
                                     <bahmni-observation patient="patient" config="{conceptNames: conceptSet.options.conceptNames, scope: 'latest'}" section-title="'REGISTRATON_LATEST_KEY'"></bahmni-observation>

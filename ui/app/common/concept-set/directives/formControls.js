@@ -36,12 +36,12 @@ angular.module('bahmni.common.conceptSet')
                                         var formTranslations = !_.isEmpty(response.data) ? response.data[0] : {};
                                         loadedFormTranslations[formUuid] = formTranslations;
                                         $scope.form.component = renderWithControls(formDetails, formObservations,
-                                            formUuid, collapse, $scope.patient, validateForm, locale, formTranslations);
+                                            formUuid, collapse, $scope.patient, validateForm, locale, formTranslations, $scope.formScope);
                                     }, function () {
                                         var formTranslations = {};
                                         loadedFormTranslations[formUuid] = formTranslations;
                                         $scope.form.component = renderWithControls(formDetails, formObservations,
-                                            formUuid, collapse, $scope.patient, validateForm, locale, formTranslations);
+                                            formUuid, collapse, $scope.patient, validateForm, locale, formTranslations, $scope.formScope);
                                     })
                                 );
                             }
@@ -52,7 +52,7 @@ angular.module('bahmni.common.conceptSet')
                     $timeout(function () {
                         $scope.form.events = loadedFormDetails[formUuid].events;
                         $scope.form.component = renderWithControls(loadedFormDetails[formUuid], formObservations,
-                            formUuid, collapse, $scope.patient, validateForm, locale, loadedFormTranslations[formUuid]);
+                            formUuid, collapse, $scope.patient, validateForm, locale, loadedFormTranslations[formUuid], $scope.formScope);
                         unMountReactContainer($scope.form.formUuid);
                     }, 0, false);
                 }
@@ -61,7 +61,7 @@ angular.module('bahmni.common.conceptSet')
                     var collapse = $scope.form.collapseInnerSections && $scope.form.collapseInnerSections.value;
                     if (loadedFormDetails[formUuid]) {
                         $scope.form.component = renderWithControls(loadedFormDetails[formUuid], formObservations,
-                            formUuid, collapse, $scope.patient, validateForm, locale, loadedFormTranslations[formUuid]);
+                            formUuid, collapse, $scope.patient, validateForm, locale, loadedFormTranslations[formUuid], $scope.formScope);
                     }
                 });
 
@@ -85,7 +85,8 @@ angular.module('bahmni.common.conceptSet')
                 scope: {
                     form: "=",
                     patient: "=",
-                    validateForm: "="
+                    validateForm: "=",
+                    formScope: "="
                 },
                 controller: controller
             };
