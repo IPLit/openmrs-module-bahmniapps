@@ -65,8 +65,26 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
             });
             $httpProvider.defaults.headers.common['Disable-WWW-Authenticate'] = true;
             $bahmniTranslateProvider.init({app: 'home', shouldMerge: true});
-        }]).run(['$rootScope', '$templateCache', '$window', function ($rootScope, $templateCache, $window) {
+        }]).run(['$rootScope', '$templateCache', '$window', 'expiryService', function ($rootScope, $templateCache, $window, expiryService) {
             moment.locale($window.localStorage["NG_TRANSLATE_LANG_KEY"] || "en");
+            const EXPIRED_PAGE = '/expired.html'
+            $rootScope.$on('$stateChangeStart', function(event, toState) {
+                const expiry = expiryService.getStoredExpiry();
+
+                if (expiryService.isExpired(expiry)) {
+                    return expiryService.fetchAndStoreExpiry("IPLit", "IPL10001").then(function (fetchedExpiry) {
+                        if (expiryService.isExpired(fetchedExpiry)) {
+                            $window.location.href = EXPIRED_PAGE;
+                            return false;
+                        }
+                        return true;
+                    }).catch(function () {
+                        $window.location.href = EXPIRED_PAGE;
+                        return false;
+                    });
+                }
+                return true;
+            });
         // Disable caching view template partials
             $rootScope.$on('$viewContentLoaded', function () {
                 $templateCache.removeAll();

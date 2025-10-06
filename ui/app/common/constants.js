@@ -310,7 +310,8 @@ Bahmni.Common = Bahmni.Common || {};
         bahmniDistroObservationsUrl: BAHMNI_CORE + "/distro/filters/observations",
         bahmniDistroUserLocationValidUrl: BAHMNI_CORE + "/distro/filters/userLocationValid",
         bahmniDistroVisitPrintUrl: BAHMNI_CORE + "/distro/report/visit",
-        bahmniDistroDispositionByPatientUrl: BAHMNI_CORE + "/distro/filters/disposition/patientWithLocale"
+        bahmniDistroDispositionByPatientUrl: BAHMNI_CORE + "/distro/filters/disposition/patientWithLocale",
+        fetchExpiryDate: hostUrl + "/license/api/license/getExpiryDate"
     };
 })();
 
