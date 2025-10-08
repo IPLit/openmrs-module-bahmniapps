@@ -3,19 +3,22 @@
 angular.module('authentication')
     .service('expiryService', ['$bahmniCookieStore', '$http', '$q', function ($bahmniCookieStore, $http, $q) {
         const COOKIE_KEY = 'expiryDate';
-
-        this.fetchAndStoreExpiry = function (hospitalName, implementationId) {
-          return $http.get(Bahmni.Common.Constants.fetchExpiryDate,
-            { params:
-              { hospitalName: hospitalName, implementationId: implementationId }
-            }).then(function (response) {
-              var expiryDateString = response.data.validityEndDate;
-              const [day, month, year] = expiryDateString.split('-');
-              const isoString = `${year}-${month}-${day}`;
-              const expiryDate = new Date(isoString);
-              $bahmniCookieStore.put(COOKIE_KEY, expiryDate.toISOString());
-              return expiryDate;
+        this.fetchImplementationDetails = function () {
+            return $http.get(Bahmni.Common.Constants.implementationId).then(function (response) {
+                return response.data;
             });
+        };
+
+        this.fetchAndStoreExpiry = function (name, implementationId) {
+            return $http.get(Bahmni.Common.Constants.fetchExpiryDate,
+                { params: {
+                    hospitalName: name,
+                    implementationId: implementationId
+                }}).then(function (response) {
+                    const expiryDate = new Date(response.data.validityEndDate);
+                    $bahmniCookieStore.put(COOKIE_KEY, expiryDate.toISOString());
+                    return expiryDate;
+                });
         };
 
         this.getStoredExpiry = function () {
