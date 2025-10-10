@@ -69,26 +69,35 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
             });
             $httpProvider.defaults.headers.common['Disable-WWW-Authenticate'] = true;
             $bahmniTranslateProvider.init({app: 'home', shouldMerge: true});
-        }]).run(['$rootScope', '$state', '$templateCache', '$window', 'expiryService', function ($rootScope, $state, $templateCache, $window, expiryService) {
+        }]).run(['$rootScope', '$state', '$templateCache', '$window', 'expiryService', 'messagingService', function ($rootScope, $state, $templateCache, $window, expiryService, messagingService) {
             moment.locale($window.localStorage["NG_TRANSLATE_LANG_KEY"] || "en");
             const EXPIRED_PAGE = '/expired.html'
             $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
                 if (fromState.name === 'login') {
-                    const expiry = expiryService.getStoredExpiry();
-                    if (expiryService.isExpired(expiry)) {
-                        expiryService.fetchImplementationDetails().then(function (response) {
-                            return expiryService.fetchAndStoreExpiry(response.name, response.implementationId).then(function (fetchedExpiry) {
-                                if (expiryService.isExpired(fetchedExpiry)) {
-                                    $state.go('expired');
-                                    return false;
-                                }
-                                return true;
-                            }).catch(function () {
-                                $state.go('expired');
-                                return false;
-                            });
-                        });
-                    }
+                    expiryService.fetchLicenseCheckType().then(function (response) {
+                        if (response.data === "Check" || response.data === "CheckAndAllow") {
+                            const expiry = expiryService.getStoredExpiry();
+                            if (expiryService.isExpired(expiry)) {
+                                expiryService.fetchImplementationDetails().then(function (implementationResponse) {
+                                    return expiryService.fetchAndStoreExpiry(implementationResponse.name, implementationResponse.implementationId).then(function (fetchedExpiry) {
+                                        if (expiryService.isExpired(fetchedExpiry)) {
+                                            if (response.data === "Check") {
+                                                $state.go('expired');
+                                                return false;
+                                            } else {
+                                                messagingService.showMessage("info", "MESSAGE_LICENSE_EXPIRED");
+                                                return true;
+                                            }
+                                        }
+                                        return true;
+                                    }).catch(function () {
+                                        $state.go('expired');
+                                        return false;
+                                    });
+                                });
+                            }
+                        }
+                    });
                     return true;
                 }
             });

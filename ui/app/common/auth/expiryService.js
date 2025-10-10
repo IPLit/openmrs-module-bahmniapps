@@ -3,6 +3,19 @@
 angular.module('authentication')
     .service('expiryService', ['$bahmniCookieStore', '$http', '$q', function ($bahmniCookieStore, $http, $q) {
         const COOKIE_KEY = 'expiryDate';
+
+        this.fetchLicenseCheckType = function () {
+            return $http.get(Bahmni.Common.Constants.globalPropertyUrl, {
+                params: {
+                    property: 'admin.licExpType'
+                },
+                withCredentials: true,
+                headers: {
+                    Accept: 'text/plain'
+                }
+            });
+        };
+
         this.fetchImplementationDetails = function () {
             return $http.get(Bahmni.Common.Constants.implementationId).then(function (response) {
                 return response.data;
