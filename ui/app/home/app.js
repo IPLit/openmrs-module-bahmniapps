@@ -71,8 +71,8 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
             $bahmniTranslateProvider.init({app: 'home', shouldMerge: true});
         }]).run(['$rootScope', '$state', '$templateCache', '$window', 'expiryService', 'messagingService', function ($rootScope, $state, $templateCache, $window, expiryService, messagingService) {
             moment.locale($window.localStorage["NG_TRANSLATE_LANG_KEY"] || "en");
-            const EXPIRED_PAGE = '/expired.html'
-            $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+            const EXPIRED_PAGE = '/expired.html';
+            $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
                 if (fromState.name === 'login') {
                     expiryService.fetchLicenseCheckType().then(function (response) {
                         if (response.data === "Check" || response.data === "CheckAndAllow") {

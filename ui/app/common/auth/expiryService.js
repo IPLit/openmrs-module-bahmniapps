@@ -35,8 +35,8 @@ angular.module('authentication')
         };
 
         this.getStoredExpiry = function () {
-          const stored = $bahmniCookieStore.get(COOKIE_KEY);
-          return stored ? new Date(stored) : null;
+            const stored = $bahmniCookieStore.get(COOKIE_KEY);
+            return stored ? new Date(stored) : null;
         };
 
         this.isExpired = function (expiry) {
