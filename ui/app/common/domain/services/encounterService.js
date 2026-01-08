@@ -158,7 +158,7 @@ angular.module('bahmni.common.domain')
 
             this.find = function (params, getPreviousVisitData, conceptsToGetFromPrevVisit, filterBasedOnLocation) {
                 if (getPreviousVisitData && conceptsToGetFromPrevVisit && conceptsToGetFromPrevVisit.length > 0) {
-                    return $http.post(Bahmni.Common.Constants.bahmniEncounterUrl +
+                    return $http.post(Bahmni.Common.Constants.bahmniDistroEncounterUrl +
                         '/findWith?getPreviousVisitData=' + getPreviousVisitData + '&getPreviousObs=' + conceptsToGetFromPrevVisit + '&filterBasedOnLocation=' + filterBasedOnLocation, params, {
                             withCredentials: true
                         });

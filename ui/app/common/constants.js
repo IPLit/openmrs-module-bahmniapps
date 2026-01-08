@@ -101,7 +101,7 @@ Bahmni.Common = Bahmni.Common || {};
         bahmniSearchUrl: BAHMNI_CORE + "/search",
         bahmniCommonsSearchUrl: BAHMNI_COMMONS + "/search",
         bahmniLabOrderResultsUrl: BAHMNI_CORE + "/labOrderResults",
-        bahmniEncounterUrl: BAHMNI_CORE + "/distro/bahmniencounter",
+        bahmniEncounterUrl: BAHMNI_CORE + "/bahmniencounter",
         conceptUrl: RESTWS_V1 + "/concept",
         bahmniConceptAnswerUrl: RESTWS_V1 + "/bahmniconceptanswer",
         conceptSearchByFullNameUrl: RESTWS_V1 + "/concept?s=byFullySpecifiedName",
@@ -312,7 +312,8 @@ Bahmni.Common = Bahmni.Common || {};
         bahmniDistroVisitPrintUrl: BAHMNI_CORE + "/distro/report/visit",
         bahmniDistroDispositionByPatientUrl: BAHMNI_CORE + "/distro/filters/disposition/patientWithLocale",
         fetchExpiryDate: hostUrl + "/license/api/license/getExpiryDate",
-        implementationId: RESTWS_V1 + "/implementationid"
+        implementationId: RESTWS_V1 + "/implementationid",
+        bahmniDistroEncounterUrl: BAHMNI_CORE + "/distro/bahmniencounter"
     };
 })();
 
