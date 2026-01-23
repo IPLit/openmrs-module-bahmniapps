@@ -16,7 +16,7 @@ Bahmni.Common = Bahmni.Common || {};
     var CUSTOM_URL = hostUrl + "/implementation_config/openmrs/apps/";
     var IE_APPS_API = RESTWS_V1 + "/bahmniie";
     var IPD = RESTWS_V1 + "/ipd";
-    var FHIR_BASE_URL = hostUrl + "/openmrs/ws/fhir2/R4";
+    var FHIR_BASE_URL = hostUrl + "/openmrs/ms/fhir2Servlet";
 
     var serverErrorMessages = [
         {
@@ -238,7 +238,6 @@ Bahmni.Common = Bahmni.Common || {};
         userUrl: RESTWS_V1 + "/user",
         passwordUrl: RESTWS_V1 + "/password",
         formUrl: RESTWS_V1 + "/form",
-        // formUrl: BAHMNI_CORE + "/distro/meta/getFormDetail",
         allFormsUrl: RESTWS_V1 + "/bahmniie/form/allForms",
         medicationSchedulesForOrders: IPD + "/schedule/type/medication",
         patientAllergiesURL: FHIR_BASE_URL + "/AllergyIntolerance?patient={{patientUuid}}&_summary=data",
