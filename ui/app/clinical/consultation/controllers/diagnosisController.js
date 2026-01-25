@@ -371,7 +371,7 @@ angular.module('bahmni.clinical')
                     if (newCondition.conditionNonCoded) {
                         return condition.conditionNonCoded == newCondition.conditionNonCoded;
                     }
-                    return condition.concept.uuid == newCondition.concept.uuid;
+                    return condition.concept && newCondition.concept && condition.concept.uuid == newCondition.concept.uuid;
                 });
             };
 

@@ -49,9 +49,12 @@ angular.module('bahmni.common.domain')
         };
         var getLatestActiveCondition = function (conditionHistories, latestCondition) {
             var conditionHistory = _.find(conditionHistories, {
-                conceptUuid: latestCondition.concept.uuid,
-                conditionNonCoded: latestCondition.conditionNonCoded
+                conceptUuid: latestCondition && latestCondition.concept && latestCondition.concept.uuid,
+                conditionNonCoded: latestCondition && latestCondition.conditionNonCoded
             });
+            if (!conditionHistory) {
+                return { };
+            }
             return Bahmni.Common.Domain.Conditions.getPreviousActiveCondition(latestCondition, conditionHistory.conditions);
         };
         this.getConditions = function (patientUuid) {
