@@ -16,7 +16,7 @@ Bahmni.Common = Bahmni.Common || {};
     var CUSTOM_URL = hostUrl + "/implementation_config/openmrs/apps/";
     var IE_APPS_API = RESTWS_V1 + "/bahmniie";
     var IPD = RESTWS_V1 + "/ipd";
-    var FHIR_BASE_URL = hostUrl + "/openmrs/ms/fhir2Servlet";
+    var FHIR_BASE_URL = hostUrl + "/openmrs/ws/fhir2/R4";
 
     var serverErrorMessages = [
         {
@@ -272,8 +272,8 @@ Bahmni.Common = Bahmni.Common || {};
         loginText: "/bahmni_config/openmrs/apps/home/whiteLabel.json",
         auditLogUrl: RESTWS_V1 + "/auditlog",
         appointmentServiceUrl: RESTWS_V1 + "/appointmentService",
-        conditionUrl: EMRAPI + '/condition',
-        conditionHistoryUrl: EMRAPI + '/conditionhistory',
+        conditionUrl: RESTWS_V1 + '/condition',
+        conditionHistoryUrl: RESTWS_V1 + '/condition',
         followUpConditionConcept: 'Follow-up Condition',
         localeLangs: "/bahmni_config/openmrs/apps/home/locale_languages.json",
         privilegeRequiredErrorMessage: "PRIVILEGE_REQUIRED",

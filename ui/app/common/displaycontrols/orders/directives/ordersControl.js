@@ -69,7 +69,7 @@ angular.module('bahmni.common.displaycontrol.orders')
                 $scope.translatedLabel = function (concept) {
                     var localName = "";
                     if (typeof concept != 'undefined') {
-                        var currentLocale = $rootScope.currentUser.userProperties.defaultLocale;
+                        var currentLocale = window.localStorage["NG_TRANSLATE_LANG_KEY"] || "en";
                         var namesMap = concept.names;
                         if (namesMap != null && (typeof namesMap != 'undefined')) {
                             namesMap.forEach(function (names) {

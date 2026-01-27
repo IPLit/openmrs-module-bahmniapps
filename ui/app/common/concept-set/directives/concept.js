@@ -82,7 +82,7 @@ angular.module('bahmni.common.conceptSet')
                 };
                 scope.translatedLabel = function (observation) {
                     if (observation && observation.concept) {
-                        var currentLocale = $rootScope.currentUser.userProperties.defaultLocale;
+                        var currentLocale = window.localStorage["NG_TRANSLATE_LANG_KEY"] || "en";
                         var conceptNames = observation.concept.names ? observation.concept.names : [];
                         var shortName = conceptNames.find(function (cn) {
                             return cn.locale === currentLocale && cn.conceptNameType === "SHORT";

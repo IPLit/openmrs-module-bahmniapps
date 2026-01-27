@@ -34,7 +34,7 @@ angular.module('bahmni.clinical')
                     startDate: startDate,
                     endDate: endDate,
                     getEffectiveOrdersOnly: getEffectiveOrdersOnly,
-                    preferredLocale: $rootScope.currentUser.userProperties.defaultLocale
+                    preferredLocale: window.localStorage["NG_TRANSLATE_LANG_KEY"] || "en"
                 },
                 withCredentials: true
             }).success(function (response) {

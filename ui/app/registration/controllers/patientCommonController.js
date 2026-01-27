@@ -295,7 +295,7 @@ angular.module('bahmni.registration')
                                 var activeDeathConcepts = filterRetireDeathConcepts($scope.deathConcepts);
                                 _.forEach(activeDeathConcepts, function (deathConcept, index) {
                                     activeDeathConcepts[index] = $scope.updateDisplayFieldToLocaleSpecific(
-                                    $scope.filterNamesForLocale(deathConcept, $rootScope.currentUser.userProperties.defaultLocale, "FULLY_SPECIFIED"));
+                                    $scope.filterNamesForLocale(deathConcept, window.localStorage["NG_TRANSLATE_LANG_KEY"] || "en", "FULLY_SPECIFIED"));
                                 });
                             });
                         }

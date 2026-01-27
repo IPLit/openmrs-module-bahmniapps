@@ -78,7 +78,7 @@ angular.module('bahmni.common.displaycontrol.forms')
 
                 $scope.getDisplayName = function (data) {
                     var concept = data.concept;
-                    var defaultLocale = $rootScope.currentUser.userProperties.defaultLocale;
+                    var defaultLocale = window.localStorage["NG_TRANSLATE_LANG_KEY"] || "en";
                     var displayName = getLocaleSpecificConceptName(concept, defaultLocale, "FULLY_SPECIFIED");
                     return displayName;
                 };
