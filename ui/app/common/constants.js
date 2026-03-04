@@ -257,6 +257,7 @@ Bahmni.Common = Bahmni.Common || {};
         encryptionType: {
             SHA3: 'SHA3'
         },
+        patientPortalUrl: hostUrl + "patient-portal?token=",
         LoginInformation: 'LoginInformation',
         // orderSetSpecialUnits:["mg/kg","mg/m2"],
         ServerDateTimeFormat: 'YYYY-MM-DDTHH:mm:ssZZ',

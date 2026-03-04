@@ -55,6 +55,13 @@ angular.module('admin')
                 data: {
                     backLinks: [{label: "Home", state: "admin.dashboard", icon: "fa-users"}]
                 }
+            }).state('admin.generateLink', {
+                url: '/generateLink',
+                templateUrl: 'views/generateLink.html',
+                controller: 'TokenShareController',
+                data: {
+                    backLinks: [{label: "Home", state: "admin.dashboard", icon: "fa-users"}]
+                }
             }).state('admin.auditLog', {
                 url: '/auditLog',
                 templateUrl: 'views/auditLog.html',
