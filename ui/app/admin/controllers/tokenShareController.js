@@ -9,20 +9,26 @@ angular.module('bahmni.admin')
                 return;
             }
 
-            $http.post('/openmrs/ws/patientportal/generate-token?programUuid=' + $scope.programUuid)
-                .then(function (response) {
-                    const token = response.data.token;
-                    const tokenLink = Bahmni.Common.Constants.patientPortalUrl + token;
-                    const message = encodeURIComponent(
-                        "Please use the below link to register:\n\n" + tokenLink
-                    );
-                    const whatsappUrl = "https://wa.me/" +
-                        $scope.phoneNumber +
-                        "?text=" + message;
-                    $window.open(whatsappUrl, '_blank');
-                }).catch(function () {
-                    alert("Unable to generate token");
-                });
+            $http({
+                method: 'POST',
+                url: '/openmrs/ws/patientportal/generate-token?programUuid=' + $scope.programUuid,
+                headers: {
+                    'Accept': 'text/plain'
+                },
+                responseType: 'text'
+            }).then(function (response) {
+                const token = response.data;
+                const tokenLink = window.location.origin + "/" + Bahmni.Common.Constants.patientPortalUrl + token;
+                const message = encodeURIComponent(
+                    "Please use the below link to register:\n\n" + tokenLink
+                );
+                const whatsappUrl = "https://wa.me/" +
+                    $scope.phoneNumber +
+                    "?text=" + message;
+                $window.open(whatsappUrl, '_blank');
+            }).catch(function () {
+                alert("Unable to generate token");
+            });
         };
 
         function init () {
