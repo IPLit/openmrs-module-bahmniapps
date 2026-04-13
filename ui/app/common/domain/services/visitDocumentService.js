@@ -44,16 +44,16 @@ angular.module('bahmni.common.domain')
                 fileType: "image",
                 fileName: "HandNotes",
                 content: file.substring(file.indexOf(searchStr) + searchStr.length, file.length),
-                format: format,
+                format: format
             };
 
             var url = Bahmni.Common.Constants.aiScribbleApi + "/upload";
-            return $http.post(url, body).then(function(response) {
+            return $http.post(url, body).then(function (response) {
                 console.log("Clinical Result", response.data);
-            }, function(error) {
+            }, function (error) {
                 console.error("Upload Failed", error);
             });
-        }
+        };
 
         this.saveFile = function (file, patientUuid, encounterTypeName, fileName, fileType) {
             var searchStr = ";base64";
