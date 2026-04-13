@@ -34,7 +34,11 @@ angular.module('signature').directive('signaturePad', ['$interval', '$timeout', 
               var providerUuid = $rootScope.currentProvider.uuid;
               var handnotes= null;
               var patientUuid = $scope.$parent.ngDialogData.patientUuid;
+              var locationUuid = visit.location.uuid;
               var template = null;
+              visitDocumentService.processNotes($scope.dataurl, patientUuid, locationUuid, $scope.$parent.ngDialogData.encounterTypeUuid, providerUuid)
+                .then(function (response) {
+              });
               visitDocumentService.saveFile($scope.dataurl, patientUuid, "Consultation", "notes_" + Date.now() , "image").then(function (response) {
                 // var fileUrl = Bahmni.Common.Constants.documentsPath + '/' + response.data.url;
                 //var savedFile = visit.addFile(fileUrl); 

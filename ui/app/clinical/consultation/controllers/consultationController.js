@@ -613,7 +613,8 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                     width: "70%",
                     data: {
                         patientUuid: $scope.patient.uuid,
-                        visit: visitHistory.activeVisit
+                        visit: visitHistory.activeVisit,
+                        encounterTypeUuid: configurations.encounterConfig().getConsultationEncounterTypeUuid()
                     },
                     preCloseCallback: function (value) {
                         if (confirm('Are you sure you want to close?')) {
