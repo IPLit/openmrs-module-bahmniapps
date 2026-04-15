@@ -33,7 +33,7 @@ angular.module('bahmni.common.domain')
             });
         };
 
-        this.processNotes = function (file, patientUuid, encounterTypeUuid, locationUuid, providerUuid) {
+        this.processNotes = function (file, patientUuid, locationUuid, encounterTypeUuid, providerUuid) {
             var searchStr = ";base64";
             var format = file.split(searchStr)[0].split("/")[1];
             var body = {
