@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('bahmni.ipd')
-    .controller('BedManagementController', ['$scope', '$rootScope', '$stateParams', '$state', 'spinner', 'wardService', 'bedManagementService', 'visitService', 'messagingService', 'appService', 'ngDialog',
-        function ($scope, $rootScope, $stateParams, $state, spinner, wardService, bedManagementService, visitService, messagingService, appService, ngDialog) {
+    .controller('BedManagementController', ['$scope', '$rootScope', '$stateParams', '$state', 'spinner', 'wardService',
+        'bedManagementService', 'visitService', 'messagingService', 'appService', 'ngDialog', 'sessionService', 'locationService',
+        function ($scope, $rootScope, $stateParams, $state, spinner, wardService, bedManagementService, visitService, messagingService, appService, ngDialog, sessionService, locationService) {
             $scope.wards = null;
             $scope.ward = {};
             $scope.editTagsPrivilege = Bahmni.IPD.Constants.editTagsPrivilege;
@@ -14,7 +15,7 @@ angular.module('bahmni.ipd')
                 }
             };
             var patientForwardUrl = appService.getAppDescriptor().getConfigValue("patientForwardUrl") || links.dashboard.url;
-
+            var filterBasedOnLocation = appService.getAppDescriptor().getConfigValue("filterWardsBasedOnLocation") || false;
             var isDepartmentPresent = function (department) {
                 if (!department) return false;
                 return _.values(department).indexOf() === -1;
@@ -39,7 +40,28 @@ angular.module('bahmni.ipd')
 
             var loadAllWards = function () {
                 return spinner.forPromise(wardService.getWardsList().success(function (wardsList) {
-                    $scope.wards = wardsList.results;
+                    if (filterBasedOnLocation) {
+                        $scope.wards = [];
+                        var loginLocationUuid = sessionService.getLoginLocationUuid();
+                        return locationService.getVisitLocation(loginLocationUuid).then(function (response) {
+                            var visitLocationUuid = response.data ? response.data.uuid : null;
+                            wardsList.results.forEach(function (result) {
+                                if (result.ward.uuid === visitLocationUuid) {
+                                    $scope.wards.push(result);
+                                }
+                                result.ward.tags.forEach(function (tag) {
+                                    if (tag.display === "Visit Location" && tag.uuid === visitLocationUuid) {
+                                        $scope.wards.push(result);
+                                    }
+                                });
+                                if (result.ward.parentLocation && result.ward.parentLocation.uuid === visitLocationUuid) {
+                                    $scope.wards.push(result);
+                                }
+                            });
+                        });
+                    } else {
+                        $scope.wards = wardsList.results;
+                    }
                 }));
             };
 
