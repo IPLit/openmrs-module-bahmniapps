@@ -1,21 +1,29 @@
 "use strict";
 
 angular.module('bahmni.ipd')
-.controller('CareViewController', ['$rootScope', '$scope', '$state', '$window', 'auditLogService', 'sessionService', function ($rootScope, $scope, $state, $window, auditLogService, sessionService) {
+.controller('CareViewController', ['$rootScope', '$scope', '$state', '$window', 'auditLogService', 'sessionService', 'locationService', function ($rootScope, $scope, $state, $window, auditLogService, sessionService, locationService) {
     function handleLogoutShortcut (event) {
         if ((event.metaKey || event.ctrlKey) && event.key === $rootScope.quickLogoutComboKey) {
             $scope.hostApi.onLogOut();
         }
     }
+    var init = function () {
+        var loginLocationUuid = sessionService.getLoginLocationUuid();
+        return locationService.getVisitLocation(loginLocationUuid).then(function (response) {
+            $scope.visitLocationUuid = response.data ? response.data.uuid : null;
+            $scope.hostData = {
+                currentUser: $rootScope.currentUser,
+                provider: $rootScope.currentProvider,
+                visitLocation: $scope.visitLocationUuid
+            };
+        });
+    };
     function cleanup () {
         $window.removeEventListener('keydown', handleLogoutShortcut);
     }
     $window.addEventListener('keydown', handleLogoutShortcut);
     $scope.$on('$destroy', cleanup);
-    $scope.hostData = {
-        provider: $rootScope.currentProvider,
-        currentUser: $rootScope.currentUser
-    };
+
     $scope.hostApi = {
         onHome: function () {
             $state.go('home');
@@ -32,4 +40,5 @@ angular.module('bahmni.ipd')
             return auditLogService.log(patientUuid, eventType, messageParams, module);
         }
     };
+    init();
 }]);

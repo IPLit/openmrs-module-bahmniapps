@@ -18,6 +18,7 @@ export function CareViewDashboard(props) {
 CareViewDashboard.propTypes = {
   hostData: PropTypes.shape({
     patientId: PropTypes.string,
+    visitLocationUuid: PropTypes.string,
   }).isRequired,
   hostApi: PropTypes.shape({
     onHome: PropTypes.func,
