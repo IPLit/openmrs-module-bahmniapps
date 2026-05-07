@@ -26,6 +26,15 @@ resource_name          = Appointments App
 replace_edited_strings = false
 keep_translations      = false
 
+
+[o:openmrs:p:bahmni:r:claims-app]
+file_filter            = ui/app/i18n/claims/locale_<lang>.json
+source_file            = ui/app/i18n/claims/locale_en.json
+source_lang            = en
+type                   = KEYVALUEJSON
+replace_edited_strings = false
+keep_translations      = false
+
 [o:openmrs:p:bahmni:r:clinical-app]
 file_filter            = ui/app/i18n/clinical/locale_<lang>.json
 source_file            = ui/app/i18n/clinical/locale_en.json

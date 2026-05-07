@@ -212,6 +212,7 @@ module.exports = function (grunt) {
                 '<%= yeoman.app %>/handnotes/**/*.html',
                 '<%= yeoman.app %>/home/**/*.html',
                 '<%= yeoman.app %>/admin/**/*.html',
+                '<%= yeoman.app %>/claims/**/*.html',
                 '<%= yeoman.app %>/registration/**/*.html',
                 '<%= yeoman.app %>/ot/**/*.html',
                 '<%= yeoman.app %>/document-upload/**/*.html',
@@ -287,6 +288,7 @@ module.exports = function (grunt) {
                             'home/**/*.html',
                             'ot/**/*.html',
                             'admin/**/*.html',
+                            'claims/**/*.html',
                             'reports/**/*.html',
                             'registration/**/*.html',
                             'document-upload/**/*.html'
@@ -446,6 +448,12 @@ module.exports = function (grunt) {
                         src: ['admin.*.js'],
                         dest: '<%= yeoman.dist %>/admin/'
                     },
+                    {
+                        expand: true,
+                        cwd: '<%= yeoman.dist %>',
+                        src: ['claims.*.js'],
+                        dest: '<%= yeoman.dist %>/claims/'
+                    },
                     { expand: true, cwd: '<%= yeoman.root %>', src: ['common.*.js'], dest: '<%= yeoman.dist %>/' },
                     {
                         expand: true,
@@ -507,6 +515,12 @@ module.exports = function (grunt) {
                         cwd: '<%= yeoman.dist %>',
                         src: ['admin.*.css'],
                         dest: '<%= yeoman.dist %>/admin/'
+                    },
+                    {
+                        expand: true,
+                        cwd: '<%= yeoman.dist %>',
+                        src: ['claims.*.css'],
+                        dest: '<%= yeoman.dist %>/claims/'
                     },
                     {
                         expand: true,
@@ -582,6 +596,7 @@ module.exports = function (grunt) {
                 files: {
                     '<%= yeoman.dist %>/registration.min.js': '<%= yeoman.dist %>/registration.min.js',
                     '<%= yeoman.dist %>/admin.min.js': '<%= yeoman.dist %>/admin.min.js',
+                    '<%= yeoman.dist %>/claims.min.js': '<%= yeoman.dist %>/claims.min.js',
                     '<%= yeoman.dist %>/adt.min.js': '<%= yeoman.dist %>/adt.min.js',
                     '<%= yeoman.dist %>/bedmanagement.min.js': '<%= yeoman.dist %>/bedmanagement.min.js',
                     '<%= yeoman.dist %>/document-upload.min.js': '<%= yeoman.dist %>/document-upload.min.js',
