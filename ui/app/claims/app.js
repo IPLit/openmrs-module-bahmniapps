@@ -27,7 +27,7 @@ angular.module('claims')
                     extensionPointId: 'org.bahmni.claims.dashboard'
                 }
             }).state('claims.preauth', {
-                url: '/preauth',
+                url: '/preauth?patientUuid',
                 templateUrl: 'views/preAuth.html',
                 controller: 'NhcxController',
                 data: {
@@ -35,9 +35,9 @@ angular.module('claims')
                 },
                 params: {
                     patient: null
-                },
+                }
             }).state('claims.coverageEligibility', {
-                url: '/coverage',
+                url: '/coverage?patientUuid',
                 templateUrl: 'views/coverageEligibility.html',
                 controller: 'NhcxController',
                 data: {
@@ -45,9 +45,9 @@ angular.module('claims')
                 },
                 params: {
                     patient: null
-                },
+                }
             }).state('claims.submit', {
-                url: '/submit',
+                url: '/submit?patientUuid',
                 templateUrl: 'views/submit.html',
                 controller: 'NhcxController',
                 data: {
@@ -55,7 +55,7 @@ angular.module('claims')
                 },
                 params: {
                     patient: null
-                },
+                }
             });
             $httpProvider.defaults.headers.common['Disable-WWW-Authenticate'] = true;
             $bahmniTranslateProvider.init({app: 'claims', shouldMerge: true});

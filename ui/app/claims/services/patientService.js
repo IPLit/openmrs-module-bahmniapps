@@ -82,7 +82,6 @@ angular.module('bahmni.claims')
             return defer.promise;
         };
 
-
         var getAllPatientIdentifiers = function (uuid) {
             var url = Bahmni.Registration.Constants.basePatientUrl + uuid + "/identifier";
             return $http.get(url, {

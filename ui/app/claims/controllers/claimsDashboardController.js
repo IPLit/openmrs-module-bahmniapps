@@ -2,10 +2,10 @@
 
 angular.module('bahmni.claims')
     .controller('ClaimsDashboardController', ['$scope', '$stateParams', 'visitService', 'patientService', 'encounterService',
-         'spinner', '$rootScope', '$http', '$q', '$timeout', 'sessionService', '$state',
-         '$translate', 'messagingService', 'observationsService', 'ngDialog', '$compile', 'appService', '$location',
-         function ($scope, $stateParams, visitService, patientService, encounterService, spinner,
-             $rootScope, $http, $q, $timeout, sessionService, $state, $translate, messagingService, observationsService, ngDialog, $compile, appService, $location) {
+        'spinner', '$rootScope', '$http', '$q', '$timeout', 'sessionService', '$state',
+        '$translate', 'messagingService', 'observationsService', 'ngDialog', '$compile', 'appService', '$location',
+        function ($scope, $stateParams, visitService, patientService, encounterService, spinner,
+            $rootScope, $http, $q, $timeout, sessionService, $state, $translate, messagingService, observationsService, ngDialog, $compile, appService, $location) {
             $scope.results = [];
             var searching = false;
             var maxAttributesFromConfig = 5;
@@ -375,7 +375,13 @@ angular.module('bahmni.claims')
             };
 
             $scope.preauth = function (patient) {
-                $location.url("/preauth?patientUuid=" + patient.uuid);
-            }
-         }
-     ]);
+                $state.go("claims.preauth", {patient: patient, patientUuid: patient.uuid});
+            };
+            $scope.predetermination = function (patient) {
+                $state.go("claims.coverageEligibility", {patient: patient, patientUuid: patient.uuid});
+            };
+            $scope.submit = function (patient) {
+                $state.go("claims.submit", {patient: patient, patientUuid: patient.uuid});
+            };
+        }
+    ]);
