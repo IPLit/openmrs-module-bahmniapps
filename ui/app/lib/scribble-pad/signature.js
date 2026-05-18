@@ -105,12 +105,23 @@ angular.module('signature').directive('signaturePad', ['$interval', '$timeout', 
           };
 
           $scope.updateModel = function () {
-            /*
-             defer handling mouseup event until $scope.signaturePad handles
-             first the same event
-             */
             $timeout().then(function () {
-              $scope.dataurl = $scope.signaturePad.isEmpty() ? EMPTY_IMAGE : $scope.signaturePad.toDataURL();
+              if ($scope.signaturePad.isEmpty()) {
+                $scope.dataurl = EMPTY_IMAGE;
+              } else {
+                var originalCanvas = $scope.element.find('canvas')[0];
+                var exportCanvas = document.createElement('canvas');
+                exportCanvas.width = originalCanvas.width;
+                exportCanvas.height = originalCanvas.height;
+                var exportCtx = exportCanvas.getContext('2d');
+
+                // White background for OCR visibility
+                exportCtx.fillStyle = '#ffffff';
+                exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+                exportCtx.drawImage(originalCanvas, 0, 0);
+
+                $scope.dataurl = exportCanvas.toDataURL('image/png');
+              }
             });
           };
 
@@ -140,8 +151,8 @@ angular.module('signature').directive('signaturePad', ['$interval', '$timeout', 
         canvas.width = width;
         canvas.height = height;
 
-        scope.signaturePad = new SignaturePad(canvas);
-
+        scope.signaturePad = new SignaturePad(canvas, { backgroundColor: 'rgb(255, 255, 255)' });
+        scope.element = element;
         scope.setDataUrl = function (dataUrl) {
           var ratio = Math.max(window.devicePixelRatio || 1, 1);
 
@@ -164,23 +175,31 @@ angular.module('signature').directive('signaturePad', ['$interval', '$timeout', 
         var calculateScale = function () {
           var scaleWidth = Math.min(parent.clientWidth / width, 1);
           var scaleHeight = Math.min(parent.clientHeight / height, 1);
-
           var newScale = Math.min(scaleWidth, scaleHeight);
 
           if (newScale === scale) {
             return;
           }
 
-          var newWidth = width * newScale;
-          var newHeight = height * newScale;
-          canvas.style.height = Math.round(newHeight) + "px";
-          canvas.style.width = Math.round(newWidth) + "px";
+          var newWidth = Math.round(width * newScale);
+          var newHeight = Math.round(height * newScale);
+
+          // Resize the pixel buffer to match display size
+          // This keeps getBoundingClientRect() in sync with actual drawing coords
+          canvas.width = newWidth;
+          canvas.height = newHeight;
+          canvas.style.width = newWidth + "px";
+          canvas.style.height = newHeight + "px";
+          canvas.style.transform = '';
+
+          // Reset context — no scaling transform needed since buffer == display
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+          // Re-init SignaturePad so it picks up new canvas dimensions
+          scope.signaturePad.clear();
 
           scale = newScale;
-          ctx.setTransform(1, 0, 0, 1, 0, 0);
-          ctx.scale(1 / scale, 1 / scale);
         };
-
         var resizeIH = $interval(calculateScale, 200);
         scope.$on('$destroy', function () {
           $interval.cancel(resizeIH);

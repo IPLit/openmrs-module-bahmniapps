@@ -34,8 +34,8 @@ angular.module('bahmni.common.domain')
         };
 
         this.processNotes = function (file, patientUuid, locationUuid, encounterTypeUuid, providerUuid) {
-            var searchStr = ";base64";
-            var format = file.split(searchStr)[0].split("/")[1];
+            var format = file.split(";")[0].split("/")[1];
+            var rawBase64 = file.split(",")[1];
             var body = {
                 patientUuid: patientUuid,
                 encounterTypeUuid: encounterTypeUuid,
@@ -43,7 +43,7 @@ angular.module('bahmni.common.domain')
                 locationUuid: locationUuid,
                 fileType: "image",
                 fileName: "HandNotes",
-                content: file.substring(file.indexOf(searchStr) + searchStr.length, file.length),
+                content: rawBase64,
                 format: format
             };
 
