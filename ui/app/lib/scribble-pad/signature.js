@@ -5,8 +5,8 @@
 
 angular.module('signature', []);
 
-angular.module('signature').directive('signaturePad', ['$interval', '$timeout', '$window', 'visitDocumentService', 'messagingService','ngDialog','encounterService','sessionService','spinner','observationsService', 'conceptSetService','conceptSetUiConfigService','$rootScope',
-  function ($interval, $timeout, $window, visitDocumentService, messagingService,ngDialog,encounterService,sessionService,spinner,observationsService,conceptSetService,conceptSetUiConfigService,$rootScope) {
+angular.module('signature').directive('signaturePad', ['$interval', '$timeout', '$window', 'appService', 'visitDocumentService', 'messagingService','ngDialog','encounterService','sessionService','spinner','observationsService', 'conceptSetService','conceptSetUiConfigService','$rootScope',
+  function ($interval, $timeout, $window, appService, visitDocumentService, messagingService,ngDialog,encounterService,sessionService,spinner,observationsService,conceptSetService,conceptSetUiConfigService,$rootScope) {
     'use strict';
 
     var signaturePad, element, EMPTY_IMAGE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAjgAAADcCAQAAADXNhPAAAACIklEQVR42u3UIQEAAAzDsM+/6UsYG0okFDQHMBIJAMMBDAfAcADDATAcwHAAwwEwHMBwAAwHMBzAcAAMBzAcAMMBDAcwHADDAQwHwHAAwwEMB8BwAMMBMBzAcADDATAcwHAADAcwHADDAQwHMBwAwwEMB8BwAMMBDAfAcADDATAcwHAAwwEwHMBwAAwHMBzAcAAMBzAcAMMBDAcwHADDAQwHwHAAwwEwHMBwAMMBMBzAcAAMBzAcwHAADAcwHADDAQwHMBwAwwEMB8BwAMMBDAfAcADDATAcwHAAwwEwHMBwAAwHMBzAcCQADAcwHADDAQwHwHAAwwEMB8BwAMMBMBzAcADDATAcwHAADAcwHMBwAAwHMBwAwwEMBzAcAMMBDAfAcADDAQwHwHAAwwEwHMBwAAwHMBzAcAAMBzAcAMMBDAcwHADDAQwHwHAAwwEMB8BwAMMBMBzAcADDATAcwHAADAcwHMBwAAwHMBwAwwEMB8BwAMMBDAfAcADDATAcwHAAwwEwHMBwAAwHMBzAcAAMBzAcAMMBDAcwHADDAQwHwHAAwwEMB8BwAMMBMBzAcADDkQAwHMBwAAwHMBwAwwEMBzAcAMMBDAfAcADDAQwHwHAAwwEwHMBwAMMBMBzAcAAMBzAcwHAADAcwHADDAQwHMBwAwwEMB8BwAMMBMBzAcADDATAcwHAADAcwHMBwAAwHMBwAwwEMBzAcAMMBDAegeayZAN3dLgwnAAAAAElFTkSuQmCC';   
@@ -36,9 +36,12 @@ angular.module('signature').directive('signaturePad', ['$interval', '$timeout', 
               var patientUuid = $scope.$parent.ngDialogData.patientUuid;
               var locationUuid = visit.location.uuid;
               var template = null;
-              visitDocumentService.processNotes($scope.dataurl, patientUuid, locationUuid, $scope.$parent.ngDialogData.encounterTypeUuid, providerUuid)
-                .then(function (response) {
-              });
+              var isAiProcessingEnabled = appService.getAppDescriptor().getConfigValue('enableAiProcessing');
+              if (isAiProcessingEnabled) {
+                visitDocumentService.processNotes($scope.dataurl, patientUuid, locationUuid, $scope.$parent.ngDialogData.encounterTypeUuid, providerUuid)
+                  .then(function (response) {
+                });
+              }
               visitDocumentService.saveFile($scope.dataurl, patientUuid, "Consultation", "notes_" + Date.now() , "image").then(function (response) {
                 // var fileUrl = Bahmni.Common.Constants.documentsPath + '/' + response.data.url;
                 //var savedFile = visit.addFile(fileUrl); 
