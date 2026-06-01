@@ -1,10 +1,74 @@
-<div>
-    <div>Patient Name:</div>
-    <div>Patient Identifier:</div>
-    <div>Policy Name:</div>
-    <div>Payor:</div>
-    <div>Policy Period:</div>
+<div class="nhcx-container">
 
-    <button ng-click="preAuth(patient)">Submit Pre-Auth Request</button>
+    <div class="bahmni-box">
+        <h2 class="section-title">NHCX Claim Request</h2>
+
+        <div class="patient-info">
+            <div class="info-row">
+                <label>Patient Identifier</label>
+                <span>{{ getPatientIdentifier() }}</span>
+            </div>
+
+            <div class="info-row">
+                <label>Patient Name</label>
+                <span>{{ getPatientName() }}</span>
+            </div>
+
+            <div class="info-row">
+                <label>Policy Name</label>
+                <span>{{ getPatientAttribute('Insurance Number') }}</span>
+            </div>
+
+            <div class="info-row">
+                <label>Payor</label>
+                <span>{{ getPatientAttribute('Insurance Company Name') }}</span>
+            </div>
+
+            <div class="info-row">
+                <label>Policy Period</label>
+                <span>
+                    {{ getCombinedAttributes(['Insurance Start Date', 'Insurance End Date'], ' to ') }}
+                </span>
+            </div>
+
+            <div class="info-row">
+                <label>Select Visit</label>
+
+                <select class="form-control visit-select"
+                        ng-model="selectedVisitUuid"
+                        ng-options="visit.uuid as (
+                            (visit.visitType.display || 'Visit') +
+                            ' - ' +
+                            (visit.startDatetime | date:'dd MMM yyyy, hh:mm a')
+                        ) for visit in visits">
+
+                    <option value="">
+                        Select Visit
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn bahmni-btn"
+                    ng-click="preAuth(patient)"
+                    ng-disabled="!selectedVisitUuid">
+                Submit Pre-Auth Request
+            </button>
+
+            <button class="btn bahmni-btn secondary"
+                    ng-click="submitPredetermination()"
+                    ng-disabled="!selectedVisitUuid">
+                Submit Predetermination
+            </button>
+
+            <button class="btn bahmni-btn"
+                    ng-click="submitClaim()"
+                    ng-disabled="!selectedVisitUuid">
+                Submit Claim
+            </button>
+        </div>
+
+    </div>
 
 </div>

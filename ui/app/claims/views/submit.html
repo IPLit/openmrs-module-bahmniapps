@@ -9,15 +9,12 @@
 
         <div class="summary-card">
             <label>Patient</label>
-            <span>
-                {{patient.givenName}}
-                {{patient.familyName}}
-            </span>
+            <span>{{ getPatientName() }}</span>
         </div>
 
         <div class="summary-card">
             <label>Patient Identifier</label>
-            <span>{{patient.identifier}}</span>
+            <span>{{ getPatientIdentifier() }}</span>
         </div>
 
         <div class="summary-card">
@@ -28,9 +25,7 @@
     </div>
 
     <form class="simple-form-ui">
-
         <section class="form-section">
-<!--            <h3>Insurance Details</h3>-->
         </section>
 
         <section class="form-section">

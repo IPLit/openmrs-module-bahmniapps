@@ -114,12 +114,24 @@ angular.module('bahmni.claims')
             });
         };
 
+        var getPatient = function (uuid, rep) {
+            if (!rep) {
+                rep = "full";
+            }
+            return $http.get(Bahmni.Common.Constants.openmrsUrl + "/ws/rest/v1/patient/" + uuid, {
+                method: "GET",
+                params: {v: rep},
+                withCredentials: true
+            });
+        };
+
         return {
             search: search,
             searchByIdentifier: searchByIdentifier,
             searchByNameOrIdentifier: searchByNameOrIdentifier,
             getAllPatientIdentifiers: getAllPatientIdentifiers,
             getRegistrationMessage: getRegistrationMessage,
-            searchDuplicatePersonAttributePatients: searchDuplicatePersonAttributePatients
+            searchDuplicatePersonAttributePatients: searchDuplicatePersonAttributePatients,
+            getPatient: getPatient
         };
     }]);
