@@ -24,7 +24,7 @@ Bahmni.Registration.Constants = {
     enableDashboardRedirect: false,
     dashboardUrl: "/bahmni/clinical/index.html#/default/patient/{{patientUuid}}/dashboard",
     certificateHeader: "Print Header",
-    faceRecognitionServerUrl: "https://localhost/face-project"
+    faceRecognitionServerUrl: "/face-project"
 };
 
 Bahmni.Registration.Constants.Errors = {
