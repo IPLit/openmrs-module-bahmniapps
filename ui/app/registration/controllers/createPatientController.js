@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('bahmni.registration')
-    .controller('CreatePatientController', ['$scope', '$rootScope', '$state', 'patientService', 'patient', 'spinner', 'appService', 'messagingService', 'ngDialog', '$q', '$translate', 'sessionService', '$http',
-        function ($scope, $rootScope, $state, patientService, patient, spinner, appService, messagingService, ngDialog, $q, $translate, sessionService, $http) {
+    .controller('CreatePatientController', ['$scope', '$rootScope', '$state', 'patientService', 'patient', 'spinner', 'appService', 'messagingService', 'ngDialog', '$q', '$translate', 'sessionService', '$http', 'faceRecognitionService',
+        function ($scope, $rootScope, $state, patientService, patient, spinner, appService, messagingService, ngDialog, $q, $translate, sessionService, $http, faceRecognitionService) {
             var dateUtil = Bahmni.Common.Util.DateUtil;
             $scope.actions = {};
             var errorMessage;
@@ -13,6 +13,7 @@ angular.module('bahmni.registration')
             $scope.relatedIdentifierAttribute = appService.getAppDescriptor().getConfigValue('relatedIdentifierAttribute');
             $scope.today = Bahmni.Common.Util.DateTimeFormatter.getDateWithoutTime(dateUtil.now());
             $scope.moduleName = appService.getAppDescriptor().getConfigValue('registrationModuleName');
+            var enabledFaceRecognition = appService.getAppDescriptor().getConfigValue('enableFaceRecognition') || false;
             var patientId;
 
             var uniquePersonAttribute = appService.getAppDescriptor().getConfigValue("uniquePersonAttribute") || undefined;
@@ -179,9 +180,26 @@ angular.module('bahmni.registration')
                 $scope.patient.newlyAddedRelationships = [{}];
                 $scope.actions.followUpAction(patientProfileData);
                 patientId = patientProfileData.patient.identifiers[0].identifier;
+
+                if (enabledFaceRecognition && $rootScope.imageDataUrl) {
+                    faceRecognitionService.register($scope.patient.name, null, $scope.patient.uuid, $rootScope.imageDataUrl).then(function (response) {
+                        var data = response.data;
+                        $rootScope.imageDataUrl = null;
+                        if (response.status === 201 && data.success) {
+                            messagingService.showMessage('info', $translate.instant('REGISTRATION_FACE_DONE'));
+                        } else {
+                            messagingService.showMessage('error', $translate.instant('REGISTRATION_FACE_FAILED', {
+                                name: $scope.patient.name
+                            }));
+                        }
+                    });
+                }
             };
 
             var createPatient = function (jumpAccepted) {
+                if (enabledFaceRecognition && $rootScope.imageDataUrl) {
+                    $scope.patient.image = $rootScope.imageDataUrl;
+                }
                 return patientService.create($scope.patient, jumpAccepted).then(function (response) {
                     copyPatientProfileDataToScope(response);
                 }, function (response) {

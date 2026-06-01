@@ -23,7 +23,8 @@ Bahmni.Registration.Constants = {
     enableWhatsAppButton: false,
     enableDashboardRedirect: false,
     dashboardUrl: "/bahmni/clinical/index.html#/default/patient/{{patientUuid}}/dashboard",
-    certificateHeader: "Print Header"
+    certificateHeader: "Print Header",
+    faceRecognitionServerUrl: "https://localhost/face-project"
 };
 
 Bahmni.Registration.Constants.Errors = {

@@ -92,12 +92,39 @@ video {
     .photo-video-container {
         position: relative;
         width: 229px;
+        overflow: hidden;
+
+        .photoCapture-video-blur,
+        .photoCapture-video-sharp {
+            display: block;
+            width: 225px;
+            height: 180px;
+        }
+
+        .photoCapture-video-blur {
+            position: absolute;
+            left: 2px;
+            top: 6px;
+            z-index: 0;
+            filter: blur(10px);
+            transform: scale(1.08);
+            transform-origin: center center;
+        }
+
+        .photoCapture-video-sharp {
+            position: relative;
+            z-index: 1;
+            margin: 6px 2px 0;
+            clip-path: ellipse(42% 48% at 50% 46%);
+        }
+
         .photoCapture-left-overlay {
             position: absolute;
             height: 169px;
             width: 25px;
             left: 0px;
             top: 6px;
+            z-index: 2;
             background: $lightestGray;
         }
         .photoCapture-right-overlay {
@@ -106,6 +133,7 @@ video {
             width: 31px;
             right: 0px;
             top: 6px;
+            z-index: 2;
             background: $lightestGray;
         }
     }

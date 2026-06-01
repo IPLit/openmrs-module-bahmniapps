@@ -123,5 +123,12 @@
     "PATIENT_ATTRIBUTE_FAMILY_NAME_LOCAL": "Last Name in Arabic",
     "PATIENT_ATTRIBUTE_MIDDLE_NAME_LOCAL": "Middle Name in Arabic",
     "RELATED_PATIENT_IDENTIFIER_LABEL": "Patient",
-    "REGISTRATION_LABEL_SAVE_REDIRECTION": "Saved and Visit Started Successfully"
+    "REGISTRATION_LABEL_SAVE_REDIRECTION": "Saved and Visit Started Successfully",
+    "REGISTRATION_LABEL_IDENTIFY_BY_FACE": "Identify Face",
+    "REGISTRATION_FACE_NO_MATCH": "No matching bahmni patient found",
+    "REGISTRATION_FACE_SERVICE_OFFLINE": "Face recognition service is offline (check face-project on port 5000)",
+    "REGISTRATION_FACE_LOW_CONFIDENCE": "Low confidence match: {{name}} ({{similarity}}%)",
+    "REGISTRATION_FACE_NOT_IN_BAHMNI": "Face matched \"{{name}}\" but no patient found in Bahmni",
+    "REGISTRATION_FACE_DONE": "Face registration done successfully",
+    "REGISTRATION_FACE_FAILED": "Face registration failed for {{name}}"
 }

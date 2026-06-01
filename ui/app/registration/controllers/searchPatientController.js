@@ -2,8 +2,8 @@
 
 angular.module('bahmni.registration')
     .controller('SearchPatientController', ['$rootScope', '$scope', '$location', '$window', 'spinner', 'patientService', 'appService',
-        'messagingService', '$translate', '$filter',
-        function ($rootScope, $scope, $location, $window, spinner, patientService, appService, messagingService, $translate, $filter) {
+        'messagingService', '$translate', '$filter', '$q', 'faceRecognitionService',
+        function ($rootScope, $scope, $location, $window, spinner, patientService, appService, messagingService, $translate, $filter, $q, faceRecognitionService) {
             $scope.results = [];
             var searching = false;
             var maxAttributesFromConfig = 5;
@@ -17,6 +17,7 @@ angular.module('bahmni.registration')
             });
             var patientSearchResultConfigs = appService.getAppDescriptor().getConfigValue("patientSearchResults") || {};
             maxAttributesFromConfig = !_.isEmpty(allSearchConfigs.programAttributes) ? maxAttributesFromConfig - 1 : maxAttributesFromConfig;
+            $scope.enabledFaceRecognition = appService.getAppDescriptor().getConfigValue('enableFaceRecognition') || false;
 
             $scope.getAddressColumnName = function (column) {
                 var columnName = "";
@@ -210,6 +211,45 @@ angular.module('bahmni.registration')
                 $scope.addressSearchResultsConfig = patientSearchResultConfigs.address;
             };
 
+            var initializeFaceRecognition = function () {
+                $scope.faceRecognitionOnline = false;
+                $scope.faceIdentifyInProgress = false;
+                if ($scope.enabledFaceRecognition) {
+                    faceRecognitionService.health().then(function () {
+                        $scope.faceRecognitionOnline = true;
+                    }).catch(function () {
+                        $scope.faceRecognitionOnline = false;
+                    });
+                }
+            };
+
+            var applyPatientSearchResults = function (data) {
+                mapExtraIdentifiers(data);
+                mapCustomAttributesSearchResults(data);
+                mapAddressAttributesSearchResults(data);
+                mapProgramAttributesSearchResults(data);
+                if (data.pageOfResults && data.pageOfResults.length === 1) {
+                    var patient = data.pageOfResults[0];
+                    var forwardUrl = appService.getAppDescriptor().getConfigValue("searchByIdForwardUrl") || "/patient/{{patientUuid}}";
+                    $location.url(appService.getAppDescriptor().formatUrl(forwardUrl, {'patientUuid': patient.uuid}));
+                } else if (data.pageOfResults && data.pageOfResults.length > 1) {
+                    $scope.results = data.pageOfResults;
+                    $scope.noResultsMessage = null;
+                } else if (data.patient && data.patient.uuid) {
+                    $scope.noResultsMessage = null;
+                    // $scope.results = [data.patient];
+                    var forwardUrl = appService.getAppDescriptor().getConfigValue("searchByIdForwardUrl") || "/patient/{{patientUuid}}";
+                    $location.url(appService.getAppDescriptor().formatUrl(forwardUrl, {'patientUuid': data.patient.uuid}));
+                } else {
+                    $scope.noResultsMessage = 'REGISTRATION_LABEL_COULD_NOT_FIND_PATIENT';
+                }
+                return data;
+            };
+
+            var searchBahmniPatientsByUuid = function (patientUuid) {
+                return patientService.get(patientUuid).then(applyPatientSearchResults);
+            };
+
             var initialize = function () {
                 $scope.searchParameters = {};
                 $scope.searchActions = appService.getAppDescriptor().getExtensions("org.bahmni.registration.patient.search.result.action");
@@ -218,6 +258,7 @@ angular.module('bahmni.registration')
                 setCustomAttributesSearchConfig();
                 setProgramAttributesSearchConfig();
                 setSearchResultsConfig();
+                initializeFaceRecognition();
             };
 
             var identifyParams = function (querystring) {
@@ -497,5 +538,69 @@ angular.module('bahmni.registration')
 
             $scope.isExtraIdentifierConfigured = function () {
                 return !_.isEmpty($scope.extraIdentifierTypes);
+            };
+
+            $scope.onFaceImageCaptured = function (imageDataUrl) {
+                if (!$scope.enabledFaceRecognition) {
+                    return;
+                }
+                var deferred = $q.defer();
+                var finish = function (success) {
+                    $scope.faceIdentifyInProgress = false;
+                    if (success) {
+                        deferred.resolve();
+                    } else {
+                        deferred.resolve();
+                    }
+                };
+                if (!isUserPrivilegedForSearch()) {
+                    showInsufficientPrivMessage();
+                    finish(false);
+                    return deferred.promise;
+                }
+                if (!$scope.faceRecognitionOnline) {
+                    messagingService.showMessage('error', $translate.instant('REGISTRATION_FACE_SERVICE_OFFLINE'));
+                    finish(false);
+                    return deferred.promise;
+                }
+                $scope.faceIdentifyInProgress = true;
+                spinner.forPromise(faceRecognitionService.identify(imageDataUrl).then(function (response) {
+                    var data = response.data;
+                    if (response.status === 200 && data && data.found && data.patient) {
+                        if (!data.confident) {
+                            messagingService.showMessage('alert', $translate.instant('REGISTRATION_FACE_LOW_CONFIDENCE', {
+                                name: data.patient.name,
+                                similarity: Math.round(data.similarity * 100)
+                            }));
+                        }
+                        if (data.patient.uuid) {
+                            return searchBahmniPatientsByUuid(data.patient.uuid).then(function (searchResponse) {
+                                if (searchResponse.data && searchResponse.data.pageOfResults && searchResponse.data.pageOfResults.length === 0) {
+                                    messagingService.showMessage('error', $translate.instant('REGISTRATION_FACE_NOT_IN_BAHMNI', {
+                                        name: data.patient.name
+                                    }));
+                                    finish(true);
+                                } else {
+                                    finish(true);
+                                }
+                            });
+                        } else {
+                            $rootScope.imageDataUrl = imageDataUrl;
+                            messagingService.showMessage('alert', $translate.instant('REGISTRATION_FACE_NO_MATCH'));
+                            finish(false);
+                            $location.url('/patient/new');
+                        }
+                    } else if (!data.found) {
+                        $rootScope.imageDataUrl = imageDataUrl;
+                        messagingService.showMessage('alert', $translate.instant('REGISTRATION_FACE_NO_MATCH'));
+                        finish(false);
+                        $location.url('/patient/new');
+                    }
+                }, function (error) {
+                    var errorMessage = (error.data && error.data.error) ? error.data.error : $translate.instant('REGISTRATION_FACE_SERVICE_OFFLINE');
+                    messagingService.showMessage('error', errorMessage);
+                    finish(false);
+                }));
+                return deferred.promise;
             };
         }]);

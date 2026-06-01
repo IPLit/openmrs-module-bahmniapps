@@ -28,6 +28,29 @@
           margin-top: 4px;
         }
       }
+      .face-identify-wrapper{
+        margin-top: 12px;
+        clear: both;
+        label{
+          display: block;
+          margin-bottom: 6px;
+        }
+        .face-identify-controls{
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .face-identify-photo{
+          .capture-photo-btn .upload-btn{
+            display: none;
+          }
+        }
+        .face-service-status{
+          font-size: 0.75rem;
+          color: $darkGray;
+        }
+      }
       input[type="text"]{
         margin-right:5px;
         padding: 5px 10px;
