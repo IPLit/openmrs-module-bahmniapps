@@ -77,3 +77,21 @@
     background: #cccccc;
     cursor: not-allowed;
 }
+.claim-history {
+    margin-top: 20px;
+}
+
+.claim-status.pending {
+    color: #f39c12;
+    font-weight: 600;
+}
+
+.claim-status.approved {
+    color: #27ae60;
+    font-weight: 600;
+}
+
+.claim-status.rejected {
+    color: #c0392b;
+    font-weight: 600;
+}

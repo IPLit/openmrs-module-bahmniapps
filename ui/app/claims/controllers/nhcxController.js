@@ -7,6 +7,8 @@ angular.module('bahmni.claims')
         $scope.claimRequest = {
             items: []
         };
+        $scope.claims = [];
+        $scope.loadingClaims = false;
         var getPatient = function () {
             return patientService.getPatient($stateParams.patientUuid).then(function (patientResponse) {
                 $scope.patient = patientResponse.data;
@@ -19,25 +21,51 @@ angular.module('bahmni.claims')
                 });
         };
 
+        $scope.loadClaims = function () {
+            if (!$scope.patientUuid) {
+                return;
+            }
+
+            $scope.loadingClaims = true;
+
+            nhcxService.getPatientClaims($scope.patientUuid)
+                .then(function (response) {
+                    $scope.claims = response.data || [];
+                })
+                .finally(function () {
+                    $scope.loadingClaims = false;
+                });
+        };
+
         var init = function () {
             if ($stateParams.patient !== null && $stateParams.patient !== undefined) {
                 $scope.patientUuid = $stateParams.patient.uuid;
                 $scope.patient = $stateParams.patient;
                 getVisits();
+                $scope.loadClaims();
             }
+
             var urlParams = $location.$$search;
             if (urlParams !== undefined && urlParams.patientUuid != null) {
                 $scope.patientUuid = urlParams.patientUuid;
             }
 
             if ($scope.patient === undefined) {
-                getPatient().then(getVisits);
+                getPatient().then(function () {
+                    getVisits();
+                    $scope.loadClaims();
+                });
             }
         };
+
         init();
 
         $scope.preAuth = function (patient) {
-            return nhcxService.submitPreauth({patientUuid: patient.uuid, visitUuid: $scope.selectedVisitUuid});
+            return nhcxService.submitPreauth({ patientUuid: patient.uuid, visitUuid: $scope.selectedVisitUuid })
+            .then(function (response) {
+                $scope.response = response.data;
+                $scope.loadClaims();
+            });
         };
 
         $scope.addBillItem = function () {
@@ -68,15 +96,36 @@ angular.module('bahmni.claims')
             nhcxService.submitPredetermination($scope.claimRequest).then(function (response) {
 //                Bahmni.Common.UI.Notification.success('Predetermination submitted successfully');
                 $scope.response = response.data;
+                $scope.loadClaims();
             });
         };
 
+        $scope.checkClaimStatus = function (claim) {
+            if (!claim || !claim.correlationId) {
+                return;
+            }
+
+            claim.checkingStatus = true;
+            nhcxService.getStatus(claim.correlationId).then(function (response) {
+                var status = response.data && response.data.status;
+                if (status) {
+                    claim.status = status.toUpperCase();
+                }
+            })
+            .catch(function (error) {
+                console.error("Status check failed", error);
+            })
+            .finally(function () {
+                claim.checkingStatus = false;
+            });
+        };
         $scope.submitClaim = function () {
             $scope.claimRequest.patientUuid = $scope.patientUuid;
             $scope.claimRequest.visitUuid = $scope.selectedVisitUuid;
             nhcxService.submitClaim($scope.claimRequest).then(function (response) {
 //                Bahmni.Common.UI.Notification.success('Claim submitted successfully');
                 $scope.response = response.data;
+                $scope.loadClaims();
             });
         };
 
@@ -90,7 +139,6 @@ angular.module('bahmni.claims')
             }
 
             var attributes = $scope.patient.person.attributes;
-
             var attribute = attributes.find(function (attr) {
                 return attr.attributeType &&
                     attr.attributeType.display === attributeName &&

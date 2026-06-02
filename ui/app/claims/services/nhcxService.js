@@ -6,11 +6,23 @@ angular.module('bahmni.claims')
 
     function post (path, params) {
         return $http.post(BASE_URL + path, params)
-            .then(function (response) { return response; },
-                  function (error) {
-                      console.error('NHCX error [' + path + ']:', error.data);
-                      return $q.reject(error);
-                  });
+            .then(function (response) {
+                return response;
+            }, function (error) {
+                console.error('NHCX error [' + path + ']:', error.data);
+                return $q.reject(error);
+            });
+    }
+
+    function get (path, params) {
+        return $http.get(BASE_URL + path, {
+            params: params || {}
+        }).then(function (response) {
+            return response;
+        }, function (error) {
+            console.error('NHCX GET error [' + path + ']:', error.data);
+            return $q.reject(error);
+        });
     }
 
     return {
@@ -26,9 +38,13 @@ angular.module('bahmni.claims')
         },
 
         getStatus: function (correlationId) {
-            return $http.get(BASE_URL + '/status', {
-                params: { correlationId: correlationId }
+            return get('/status', {
+                correlationId: correlationId
             });
+        },
+
+        getPatientClaims: function (patientUuid) {
+            return get('/patient/' + patientUuid);
         },
 
         previewBundle: function (params) {

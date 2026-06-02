@@ -1,0 +1,55 @@
+<div class="bahmni-box claim-history" ng-if="claims.length">
+    <h3 class="section-title">
+        Existing Requests
+    </h3>
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Type</th>
+            <th>Visit</th>
+            <th>Correlation ID</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="claim in claims">
+            <td>
+                {{ claim.requestType || '-' }}
+            </td>
+            <td>
+                {{ claim.visitUuid }}
+            </td>
+            <td>
+                {{ claim.correlationId }}
+            </td>
+            <td>
+                <span class="claim-status"
+                      ng-class="{
+                        'pending': claim.status === 'PENDING',
+                        'approved': claim.status === 'APPROVED',
+                        'rejected': claim.status === 'REJECTED'
+                      }">
+                    {{ claim.status || 'UNKNOWN' }}
+                </span>
+            </td>
+            <td>
+                {{ claim.submittedAt | date:'dd MMM yyyy hh:mm a' }}
+            </td>
+            <td>
+                <button class="btn bahmni-btn secondary"
+                        ng-if="claim.status === 'PENDING'"
+                        ng-click="checkClaimStatus(claim)"
+                        ng-disabled="claim.checkingStatus">
+
+                    {{ claim.checkingStatus ? 'Checking...' : 'Check Status' }}
+                </button>
+                <span ng-if="claim.status !== 'PENDING'">
+                    —
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
