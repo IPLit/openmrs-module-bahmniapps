@@ -66,7 +66,7 @@ angular.module('bahmni.claims')
             $scope.claimRequest.patientUuid = $scope.patientUuid;
             $scope.claimRequest.visitUuid = $scope.selectedVisitUuid;
             nhcxService.submitPredetermination($scope.claimRequest).then(function (response) {
-                Bahmni.Common.UI.Notification.success('Predetermination submitted successfully');
+//                Bahmni.Common.UI.Notification.success('Predetermination submitted successfully');
                 $scope.response = response.data;
             });
         };
@@ -75,7 +75,7 @@ angular.module('bahmni.claims')
             $scope.claimRequest.patientUuid = $scope.patientUuid;
             $scope.claimRequest.visitUuid = $scope.selectedVisitUuid;
             nhcxService.submitClaim($scope.claimRequest).then(function (response) {
-                Bahmni.Common.UI.Notification.success('Claim submitted successfully');
+//                Bahmni.Common.UI.Notification.success('Claim submitted successfully');
                 $scope.response = response.data;
             });
         };
