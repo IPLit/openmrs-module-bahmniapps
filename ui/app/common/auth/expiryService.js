@@ -16,14 +16,26 @@ angular.module('authentication')
             });
         };
 
+        this.fetchLicenseServerUrl = function () {
+            return $http.get(Bahmni.Common.Constants.globalPropertyUrl, {
+                params: {
+                    property: 'admin.licenseUrl'
+                },
+                withCredentials: true,
+                headers: {
+                    Accept: 'text/plain'
+                }
+            });
+        };
+
         this.fetchImplementationDetails = function () {
             return $http.get(Bahmni.Common.Constants.implementationId).then(function (response) {
                 return response.data;
             });
         };
 
-        this.fetchAndStoreExpiry = function (name, implementationId) {
-            return $http.get(Bahmni.Common.Constants.fetchExpiryDate,
+        this.fetchAndStoreExpiry = function (name, implementationId, serverUrl) {
+            return $http.get(serverUrl + Bahmni.Common.Constants.fetchExpiryDate,
                 { params: {
                     hospitalName: name,
                     implementationId: implementationId

@@ -79,20 +79,26 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
                             const expiry = expiryService.getStoredExpiry();
                             if (expiryService.isExpired(expiry)) {
                                 expiryService.fetchImplementationDetails().then(function (implementationResponse) {
-                                    return expiryService.fetchAndStoreExpiry(implementationResponse.name, implementationResponse.implementationId).then(function (fetchedExpiry) {
-                                        if (expiryService.isExpired(fetchedExpiry)) {
-                                            if (response.data === "Check") {
-                                                $state.go('expired');
-                                                return false;
-                                            } else {
-                                                messagingService.showMessage("info", "MESSAGE_LICENSE_EXPIRED");
-                                                return true;
-                                            }
+                                    expiryService.fetchLicenseServerUrl().then(function (serverUrlResponse) {
+                                        var serverUrl = Bahmni.Common.Constants.hostURL;
+                                        if (serverUrlResponse !== undefined) {
+                                            serverUrl = serverUrlResponse.data;
                                         }
-                                        return true;
-                                    }).catch(function () {
-                                        $state.go('expired');
-                                        return false;
+                                        return expiryService.fetchAndStoreExpiry(implementationResponse.name, implementationResponse.implementationId, serverUrl).then(function (fetchedExpiry) {
+                                            if (expiryService.isExpired(fetchedExpiry)) {
+                                                if (response.data === "Check") {
+                                                    $state.go('expired');
+                                                    return false;
+                                                } else {
+                                                    messagingService.showMessage("info", "MESSAGE_LICENSE_EXPIRED");
+                                                    return true;
+                                                }
+                                            }
+                                            return true;
+                                        }).catch(function () {
+                                            $state.go('expired');
+                                            return false;
+                                        });
                                     });
                                 });
                             }

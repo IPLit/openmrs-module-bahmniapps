@@ -311,7 +311,7 @@ Bahmni.Common = Bahmni.Common || {};
         bahmniDistroUserLocationValidUrl: BAHMNI_CORE + "/distro/filters/userLocationValid",
         bahmniDistroVisitPrintUrl: BAHMNI_CORE + "/distro/report/visit",
         bahmniDistroDispositionByPatientUrl: BAHMNI_CORE + "/distro/filters/disposition/patientWithLocale",
-        fetchExpiryDate: hostUrl + "/license/api/license/getExpiryDate",
+        fetchExpiryDate: "/license/api/license/getExpiryDate",
         implementationId: RESTWS_V1 + "/implementationid",
         bahmniDistroEncounterUrl: BAHMNI_CORE + "/distro/bahmniencounter",
         aiScribbleApi: hostUrl + "/bahmni-ai-service/api/scribble"
