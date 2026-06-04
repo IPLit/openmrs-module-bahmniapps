@@ -109,6 +109,9 @@ angular.module('bahmni.registration')
                 expandSectionsWithDefaultValue();
                 $scope.patientLoaded = true;
                 $scope.createPatient = true;
+                if (enabledFaceRecognition && $rootScope.imageDataUrl) {
+                    $scope.patient.image = $rootScope.imageDataUrl;
+                }
 
                 // IPLit: initially selecting patient id source === logged in location IdentifierSourceName, location id prefix
                 if ($rootScope.loggedInLocation && $rootScope.loggedInLocation.attributes) {
@@ -197,9 +200,6 @@ angular.module('bahmni.registration')
             };
 
             var createPatient = function (jumpAccepted) {
-                if (enabledFaceRecognition && $rootScope.imageDataUrl) {
-                    $scope.patient.image = $rootScope.imageDataUrl;
-                }
                 return patientService.create($scope.patient, jumpAccepted).then(function (response) {
                     copyPatientProfileDataToScope(response);
                 }, function (response) {

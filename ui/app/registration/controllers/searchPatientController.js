@@ -581,22 +581,24 @@ angular.module('bahmni.registration')
                             return verifyPatientExistsInBahmni(data.patient.uuid, data.patient.name).then(function () {
                                 finish();
                             });
+                        } else {
+                            $rootScope.imageDataUrl = imageDataUrl;
+                            messagingService.showMessage('info', $translate.instant('REGISTRATION_FACE_NO_MATCH'));
+                            $location.url('/patient/new');
+                            finish();
+                            return;
                         }
+                    } else if (response.status === 200 && data && !data.found) {
                         $rootScope.imageDataUrl = imageDataUrl;
                         messagingService.showMessage('info', $translate.instant('REGISTRATION_FACE_NO_MATCH'));
                         $location.url('/patient/new');
                         finish();
                         return;
-                    }
-                    if (response.status === 200 && data && !data.found) {
-                        $rootScope.imageDataUrl = imageDataUrl;
+                    } else {
                         messagingService.showMessage('info', $translate.instant('REGISTRATION_FACE_NO_MATCH'));
-                        $location.url('/patient/new');
                         finish();
                         return;
                     }
-                    messagingService.showMessage('info', $translate.instant('REGISTRATION_FACE_NO_MATCH'));
-                    finish();
                 }, function (error) {
                     var errorMessage = (error.data && error.data.error) ? error.data.error : $translate.instant('REGISTRATION_FACE_SERVICE_OFFLINE');
                     messagingService.showMessage('error', errorMessage);
