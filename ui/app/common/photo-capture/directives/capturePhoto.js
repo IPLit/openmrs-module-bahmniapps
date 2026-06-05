@@ -15,6 +15,9 @@ angular.module('bahmni.common.photoCapture')
             var captureDialogElement = iElement.find(".photoCaptureDialog"),
                 captureVideo = captureDialogElement.find("video")[0],
                 captureActiveStream,
+                backgroundBlurRadius = 10,
+                portraitEllipseRadiusX = 0.40,
+                portraitEllipseRadiusY = 0.42,
                 captureCanvas = captureDialogElement.find("canvas")[0],
                 captureContext = captureCanvas.getContext("2d"),
                 captureConfirmImageButton = captureDialogElement.find(".confirmImage"),
@@ -51,11 +54,9 @@ angular.module('bahmni.common.photoCapture')
                 }
             };
 
-            var drawImage = function (canvas, context, image, imageWidth, imageHeight) {
+            var getImageCrop = function (canvas, imageWidth, imageHeight) {
                 var sourceX = 0;
                 var sourceY = 0;
-                var destX = 0;
-                var destY = 0;
                 var stretchRatio, sourceWidth, sourceHeight;
                 if (canvas.width > canvas.height) {
                     stretchRatio = (imageWidth / canvas.width);
@@ -68,9 +69,63 @@ angular.module('bahmni.common.photoCapture')
                     sourceHeight = imageHeight;
                     sourceX = Math.floor((imageWidth - sourceWidth) / 2);
                 }
-                var destWidth = Math.floor(canvas.width / pixelRatio);
-                var destHeight = Math.floor(canvas.height / pixelRatio);
-                context.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+                return {
+                    sourceX: sourceX,
+                    sourceY: sourceY,
+                    sourceWidth: sourceWidth,
+                    sourceHeight: sourceHeight,
+                    destWidth: Math.floor(canvas.width / pixelRatio),
+                    destHeight: Math.floor(canvas.height / pixelRatio)
+                };
+            };
+
+            var supportsCanvasFilter = function () {
+                var testCanvas = document.createElement('canvas');
+                var testContext = testCanvas.getContext('2d');
+                testContext.filter = 'blur(1px)';
+                return testContext.filter === 'blur(1px)';
+            };
+
+            var drawImage = function (canvas, context, image, imageWidth, imageHeight, applyBackgroundBlur) {
+                var crop = getImageCrop(canvas, imageWidth, imageHeight);
+                var destX = 0;
+                var destY = 0;
+
+                if (!applyBackgroundBlur || !supportsCanvasFilter()) {
+                    context.drawImage(
+                        image,
+                        crop.sourceX, crop.sourceY, crop.sourceWidth, crop.sourceHeight,
+                        destX, destY, crop.destWidth, crop.destHeight
+                    );
+                    return;
+                }
+
+                context.save();
+                context.filter = 'blur(' + backgroundBlurRadius + 'px)';
+                context.drawImage(
+                    image,
+                    crop.sourceX, crop.sourceY, crop.sourceWidth, crop.sourceHeight,
+                    destX, destY, crop.destWidth, crop.destHeight
+                );
+                context.restore();
+
+                context.save();
+                context.beginPath();
+                context.ellipse(
+                    crop.destWidth / 2,
+                    crop.destHeight * 0.46,
+                    crop.destWidth * portraitEllipseRadiusX,
+                    crop.destHeight * portraitEllipseRadiusY,
+                    0, 0, 2 * Math.PI
+                );
+                context.clip();
+                context.filter = 'none';
+                context.drawImage(
+                    image,
+                    crop.sourceX, crop.sourceY, crop.sourceWidth, crop.sourceHeight,
+                    destX, destY, crop.destWidth, crop.destHeight
+                );
+                context.restore();
             };
 
             scope.launchPhotoCapturePopup = function () {
@@ -93,7 +148,8 @@ angular.module('bahmni.common.photoCapture')
                     navigatorUserMedia(
                         {video: true, audio: false},
                         function (localMediaStream) {
-                            captureVideo.src = $window.URL.createObjectURL(localMediaStream);
+                            var streamUrl = $window.URL.createObjectURL(localMediaStream);
+                            captureVideo.src = streamUrl;
                             captureActiveStream = localMediaStream;
                             captureDialogElement.dialog('open');
                         },
@@ -111,7 +167,7 @@ angular.module('bahmni.common.photoCapture')
             };
 
             scope.captureClickImage = function () {
-                drawImage(captureCanvas, captureContext, captureVideo, captureVideo.videoWidth, captureVideo.videoHeight);
+                drawImage(captureCanvas, captureContext, captureVideo, captureVideo.videoWidth, captureVideo.videoHeight, true);
                 captureConfirmImageButton.prop('disabled', false);
                 captureConfirmImageButton.focus();
             };
@@ -131,6 +187,7 @@ angular.module('bahmni.common.photoCapture')
 
             scope.uploadConfirmImage = function () {
                 confirmImage(uploadCanvas, uploadDialogElement);
+                uploadDialogElement.dialog('close');
             };
 
             scope.launchPhotoUploadPopup = function () {
@@ -161,7 +218,7 @@ angular.module('bahmni.common.photoCapture')
                     fileReader.onload = function (e) {
                         var image = new Image();
                         image.onload = function () {
-                            drawImage(uploadCanvas, uploadContext, image, image.width, image.height);
+                            drawImage(uploadCanvas, uploadContext, image, image.width, image.height, true);
                         };
                         image.src = e.target.result;
                     };
