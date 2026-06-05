@@ -73,39 +73,39 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
             moment.locale($window.localStorage["NG_TRANSLATE_LANG_KEY"] || "en");
             const EXPIRED_PAGE = '/expired.html';
             $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-                if (fromState.name === 'login') {
-                    expiryService.fetchLicenseCheckType().then(function (response) {
-                        if (response.data === "Check" || response.data === "CheckAndAllow") {
-                            const expiry = expiryService.getStoredExpiry();
-                            if (expiryService.isExpired(expiry)) {
-                                expiryService.fetchImplementationDetails().then(function (implementationResponse) {
-                                    expiryService.fetchLicenseServerUrl().then(function (serverUrlResponse) {
-                                        var serverUrl = Bahmni.Common.Constants.hostURL;
-                                        if (serverUrlResponse !== undefined) {
-                                            serverUrl = serverUrlResponse.data;
-                                        }
-                                        return expiryService.fetchAndStoreExpiry(implementationResponse.name, implementationResponse.implementationId, serverUrl).then(function (fetchedExpiry) {
-                                            if (expiryService.isExpired(fetchedExpiry)) {
-                                                if (response.data === "Check") {
-                                                    $state.go('expired');
-                                                    return false;
-                                                } else {
-                                                    messagingService.showMessage("info", "MESSAGE_LICENSE_EXPIRED");
-                                                    return true;
-                                                }
-                                            }
-                                            return true;
-                                        }).catch(function () {
-                                            $state.go('expired');
-                                            return false;
-                                        });
-                                    });
-                                });
-                            }
-                        }
-                    });
+                if (toState.name === 'login' || toState.name === 'expired') {
                     return true;
                 }
+                expiryService.fetchLicenseCheckType().then(function (response) {
+                    if (response.data === "Check" || response.data === "CheckAndAllow") {
+                        const expiry = expiryService.getStoredExpiry();
+                        if (expiryService.isExpired(expiry)) {
+                            expiryService.fetchImplementationDetails().then(function (implementationResponse) {
+                                expiryService.fetchLicenseServerUrl().then(function (serverUrlResponse) {
+                                    var serverUrl = Bahmni.Common.Constants.hostURL;
+                                    if (serverUrlResponse !== undefined) {
+                                        serverUrl = serverUrlResponse.data;
+                                    }
+                                    return expiryService.fetchAndStoreExpiry(implementationResponse.name, implementationResponse.implementationId, serverUrl).then(function (fetchedExpiry) {
+                                        if (expiryService.isExpired(fetchedExpiry)) {
+                                            if (response.data === "Check") {
+                                                $state.go('expired');
+                                                return false;
+                                            } else {
+                                                messagingService.showMessage("info", "MESSAGE_LICENSE_EXPIRED");
+                                                return true;
+                                            }
+                                        }
+                                        return true;
+                                    }).catch(function () {
+                                        $state.go('expired');
+                                        return false;
+                                    });
+                                });
+                            });
+                        }
+                    }
+                });
             });
         // Disable caching view template partials
             $rootScope.$on('$viewContentLoaded', function () {
