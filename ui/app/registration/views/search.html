@@ -1,35 +1,28 @@
 <section class="reg-search-wrapper">
     <section class="reg-search">
         <article class="search-seperator-l" ng-if="::patientIdentifierSearchConfig.show">
-            <form name="searchByIdForm" ng-submit="searchById()" class="simple-form-ui clearfix" >
-                <div class="search-patient-id">
-                    <span class="fl">
-                        <label for="registrationNumber"><strong style="padding-left: 5px;">{{ ::'REGISTRATION_LABEL_PATIENT_ID' | translate}}</strong></label>
-                        <div class="search-patient-id fl">
-                            <input tabindex="2" class="fl" type="text" id="registrationNumber"
+            <form name="searchByIdForm" ng-submit="searchById()" class="simple-form-ui clearfix">
+                <span class="search-patient-id">
+                    <label for="registrationNumber"><strong style="padding-left: 5px;">{{ ::'REGISTRATION_LABEL_PATIENT_ID' | translate}}</strong></label>
+                    <span class="search-id-controls">
+                        <input tabindex="2" type="text" id="registrationNumber"
                             ng-model="searchParameters.registrationNumber" focus-me="true"
-                                placeholder="{{ ::'REGISTRATION_LABEL_ENTER_ID' | translate}}"/>
-                            <div class="reg-srch-btn fl">
-                                <button tabindex="3" type="submit" ng-disabled="!searchParameters.registrationNumber" >{{ ::'REGISTRATION_LABEL_SEARCH' | translate}}</button>
-                            </div>
-                        </div>
-                    </span>
-                    <span class="face-identify-wrapper" display="inline-block" ng-if="::enabledFaceRecognition">
-                        <label for="faceIdentify" style="padding-left: 5px;"><strong>{{ ::'REGISTRATION_LABEL_IDENTIFY_BY_FACE' | translate}}</strong></label>
-                        <span class="face-identify-controls">
-                            <div class="photo-container face-identify-photo">
-                                <div id="faceIdentify" ng-model="faceCaptureImage" capture-photo="onFaceImageCaptured" class="capture-photo-btn"></div>
-                            </div>
-                            <span class="face-service-status" ng-if="!faceRecognitionOnline">{{ ::'REGISTRATION_FACE_SERVICE_OFFLINE' | translate}}</span>
+                            placeholder="{{ ::'REGISTRATION_LABEL_ENTER_ID' | translate}}"/>
+                        <span class="reg-srch-btn">
+                            <button tabindex="3" type="submit" ng-disabled="!searchParameters.registrationNumber">{{ ::'REGISTRATION_LABEL_SEARCH' | translate}}</button>
                         </span>
-                        <!-- <span>
-                                <button ng-click="toggleScanning()" ng-hide="isScanning">{{ isScanning ? 'Stop' : 'Scan' }}</button>
-                                <div id="video-container">
-                                    <video id="video" style="height:0%; width:0%;" autoplay></video>
-                                </div>
-                        </span> -->
+                        <span class="qr-code-icon" title="QR Scan" ng-click="toggleScanning()" />
+                        <video id="video" autoplay muted playsinline></video>
+                        <span class="face-identify-wrapper" ng-if="::enabledFaceRecognition">
+                            <span class="face-identify-controls">
+                                <span class="photo-container face-identify-photo" title="{{ ::'REGISTRATION_LABEL_IDENTIFY_BY_FACE' | translate}}">
+                                    <div id="faceIdentify" ng-model="faceCaptureImage" capture-photo="onFaceImageCaptured" class="capture-photo-btn"></div>
+                                </span>
+                                <span class="face-service-status" ng-if="!faceRecognitionOnline">{{ ::'REGISTRATION_FACE_SERVICE_OFFLINE' | translate}}</span>
+                            </span>
+                        </span>
                     </span>
-                </div>
+                </span>
             </form>
         </article>
         <article class="search-seperator-r">

@@ -15,6 +15,7 @@
       width: 30.5%;
       margin: 0 1.04167%;
       float: left;
+      position: relative;
       @media (max-width: 767px) {
         @include column(12);
         border-right : 0;
@@ -24,31 +25,56 @@
       }
       .search-patient-id{
         width: 100%;
-        .reg-srch-btn{
-          margin-top: 4px;
-        }
-      }
-      .face-identify-wrapper{
-        margin-top: 12px;
-        clear: both;
         label{
           display: block;
-          margin-bottom: 6px;
         }
-        .face-identify-controls{
+        .search-id-controls{
           display: flex;
           align-items: center;
           flex-wrap: wrap;
-          gap: 8px;
-        }
-        .face-identify-photo{
-          .capture-photo-btn .upload-btn{
-            display: none;
+          gap: 4px;
+          input[type="text"]{
+            flex: 1 1 120px;
+            min-width: 0;
+            margin-right: 0;
           }
-        }
-        .face-service-status{
-          font-size: 0.75rem;
-          color: $darkGray;
+          .reg-srch-btn{
+            margin-top: 0;
+          }
+          #video{
+            position: absolute;
+            width: 0;
+            height: 0;
+            margin-top: 70px;
+          }
+          .qr-code-icon{
+            width: 40px;
+            height: 40px;
+            background: url(../images/qr-scan.png) no-repeat center center;
+            background-size: contain;
+            cursor: pointer;
+          }
+          .face-identify-wrapper{
+            flex-shrink: 0;
+            .face-identify-controls{
+              display: inline-flex;
+              align-items: center;
+              margin-left: 0;
+            }
+            .face-identify-photo{
+              .capture-photo-btn{
+                margin-top: 0;
+                margin-right: 2px;
+              }
+              .capture-photo-btn .upload-btn{
+                display: none;
+              }
+            }
+            .face-service-status{
+              font-size: 0.75rem;
+              color: $darkGray;
+            }
+          }
         }
       }
       input[type="text"]{

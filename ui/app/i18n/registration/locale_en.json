@@ -124,7 +124,7 @@
     "PATIENT_ATTRIBUTE_MIDDLE_NAME_LOCAL": "Middle Name in Arabic",
     "RELATED_PATIENT_IDENTIFIER_LABEL": "Patient",
     "REGISTRATION_LABEL_SAVE_REDIRECTION": "Saved and Visit Started Successfully",
-    "REGISTRATION_LABEL_IDENTIFY_BY_FACE": "Identify Face",
+    "REGISTRATION_LABEL_IDENTIFY_BY_FACE": "Face ID",
     "REGISTRATION_FACE_NO_MATCH": "No matching bahmni patient found! Please create a new patient record",
     "REGISTRATION_FACE_SERVICE_OFFLINE": "Face recognition service is offline",
     "REGISTRATION_FACE_LOW_CONFIDENCE": "Low confidence match: {{name}} ({{similarity}}%)",

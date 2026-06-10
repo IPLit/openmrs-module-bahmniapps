@@ -279,7 +279,7 @@ angular.module('bahmni.registration')
 
             initialize();
 
-            /* $scope.qrData = '';
+            $scope.qrData = '';
             $scope.patientId = '';
             $scope.isScanning = false;
             var stream = null;
@@ -293,8 +293,8 @@ angular.module('bahmni.registration')
 
             function startScanning () {
                 $scope.video = document.getElementById('video');
-                $scope.video.style.height = "100%";
-                $scope.video.style.width = "100%";
+                $scope.video.style.height = "200px";
+                $scope.video.style.width = "200px";
 
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
                     .then(function (mediaStream) {
@@ -306,7 +306,7 @@ angular.module('bahmni.registration')
                         scan();
                     }).catch(function (err) {
                         console.error('Error accessing the camera: ', err);
-                    // Handle error: display message to the user, prompt for retry, etc.
+                        // Handle error: display message to the user, prompt for retry, etc.
                     });
             }
 
@@ -383,7 +383,7 @@ angular.module('bahmni.registration')
                 if ($scope.isScanning) {
                     requestAnimationFrame(scan);
                 }
-            } */
+            }
 
             $scope.disableSearchButton = function () {
                 return !$scope.searchParameters.name && !$scope.searchParameters.addressFieldValue && !$scope.searchParameters.customAttribute && !$scope.searchParameters.programAttributeFieldValue;
