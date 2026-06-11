@@ -293,8 +293,8 @@ angular.module('bahmni.registration')
 
             function startScanning () {
                 $scope.video = document.getElementById('video');
-                $scope.video.style.height = "200px";
-                $scope.video.style.width = "200px";
+                $scope.video.style.height = "250px";
+                $scope.video.style.width = "250px";
 
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
                     .then(function (mediaStream) {

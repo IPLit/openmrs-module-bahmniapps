@@ -26,7 +26,8 @@
         background-repeat: no-repeat;
     }
     .camera-btn.btn {
-        background-image: image-url("photo.png");
+        background: url("../images/photo.png") no-repeat center center;
+        background-size: contain;
     }
     .upload-btn.btn {
         text-align: center;

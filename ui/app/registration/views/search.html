@@ -15,9 +15,9 @@
                         <video id="video" autoplay muted playsinline></video>
                         <span class="face-identify-wrapper" ng-if="::enabledFaceRecognition">
                             <span class="face-identify-controls">
-                                <span class="photo-container face-identify-photo" title="{{ ::'REGISTRATION_LABEL_IDENTIFY_BY_FACE' | translate}}">
+                                <div class="photo-container face-identify-photo" title="{{ ::'REGISTRATION_LABEL_IDENTIFY_BY_FACE' | translate}}" style="padding-top: 10px;">
                                     <div id="faceIdentify" ng-model="faceCaptureImage" capture-photo="onFaceImageCaptured" class="capture-photo-btn"></div>
-                                </span>
+                                </div>
                                 <span class="face-service-status" ng-if="!faceRecognitionOnline">{{ ::'REGISTRATION_FACE_SERVICE_OFFLINE' | translate}}</span>
                             </span>
                         </span>
