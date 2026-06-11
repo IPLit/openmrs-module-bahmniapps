@@ -587,37 +587,37 @@ angular.module('bahmni.registration')
                         return;
                     }
                     return faceRecognitionService.identify(imageDataUrl).then(function (response) {
-                    var data = response.data;
-                    if (response.status === 200 && data && data.found && data.patient) {
-                        var similarityPercent = Math.round((data.patient.similarity || 0) * 100);
-                        if (!data.confident) {
-                            messagingService.showMessage('alert', $translate.instant('REGISTRATION_FACE_LOW_CONFIDENCE', {
-                                name: data.patient.name,
-                                similarity: similarityPercent
-                            }));
-                        }
-                        if (data.patient.uuid && data.patient.uuid.length > 0) {
-                            return verifyPatientExistsInBahmni(data.patient.uuid, data.patient.name).then(function () {
+                        var data = response.data;
+                        if (response.status === 200 && data && data.found && data.patient) {
+                            var similarityPercent = Math.round((data.patient.similarity || 0) * 100);
+                            if (!data.confident) {
+                                messagingService.showMessage('alert', $translate.instant('REGISTRATION_FACE_LOW_CONFIDENCE', {
+                                    name: data.patient.name,
+                                    similarity: similarityPercent
+                                }));
+                            }
+                            if (data.patient.uuid && data.patient.uuid.length > 0) {
+                                return verifyPatientExistsInBahmni(data.patient.uuid, data.patient.name).then(function () {
+                                    finish();
+                                });
+                            } else {
+                                $rootScope.imageDataUrl = imageDataUrl;
+                                messagingService.showMessage('info', $translate.instant('REGISTRATION_FACE_NO_MATCH'));
+                                $location.url('/patient/new');
                                 finish();
-                            });
-                        } else {
+                                return;
+                            }
+                        } else if (response.status === 200 && data && !data.found) {
                             $rootScope.imageDataUrl = imageDataUrl;
                             messagingService.showMessage('info', $translate.instant('REGISTRATION_FACE_NO_MATCH'));
                             $location.url('/patient/new');
                             finish();
                             return;
+                        } else {
+                            messagingService.showMessage('info', $translate.instant('REGISTRATION_FACE_NO_MATCH'));
+                            finish();
+                            return;
                         }
-                    } else if (response.status === 200 && data && !data.found) {
-                        $rootScope.imageDataUrl = imageDataUrl;
-                        messagingService.showMessage('info', $translate.instant('REGISTRATION_FACE_NO_MATCH'));
-                        $location.url('/patient/new');
-                        finish();
-                        return;
-                    } else {
-                        messagingService.showMessage('info', $translate.instant('REGISTRATION_FACE_NO_MATCH'));
-                        finish();
-                        return;
-                    }
                     }, function (error) {
                         var errorMessage = (error.data && error.data.error) ? error.data.error : $translate.instant('REGISTRATION_FACE_SERVICE_OFFLINE');
                         if (error.data && error.data.hint) {
