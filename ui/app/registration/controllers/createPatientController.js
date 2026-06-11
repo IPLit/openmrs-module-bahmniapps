@@ -195,6 +195,15 @@ angular.module('bahmni.registration')
                                 name: $scope.patient.name
                             }));
                         }
+                    }, function (error) {
+                        $rootScope.imageDataUrl = null;
+                        var errorMessage = (error.data && error.data.error) ? error.data.error : $translate.instant('REGISTRATION_FACE_FAILED', {
+                            name: $scope.patient.name
+                        });
+                        if (error.data && error.data.hint) {
+                            errorMessage += '. ' + error.data.hint;
+                        }
+                        messagingService.showMessage('error', errorMessage);
                     });
                 }
             };

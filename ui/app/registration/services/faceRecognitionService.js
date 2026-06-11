@@ -14,7 +14,7 @@ angular.module('bahmni.registration')
         };
 
         this.health = function () {
-            return $http.get(getServerUrl() + '/health', { timeout: 5000 });
+            return $http.get(getServerUrl() + '/health', { timeout: 7000 });
         };
 
         this.identify = function (imageDataUrlOrBase64) {
