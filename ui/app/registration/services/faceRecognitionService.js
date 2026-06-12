@@ -18,17 +18,19 @@ angular.module('bahmni.registration')
         };
 
         this.identify = function (imageDataUrlOrBase64) {
-            return $http.post(getServerUrl() + '/identify', {
-                image: toBase64Payload(imageDataUrlOrBase64)
+            return $http.post(getServerUrl() + '/process_frame', {
+                image: toBase64Payload(imageDataUrlOrBase64),
+                action: 'identify'
             }, { timeout: 60000 });
         };
 
         this.register = function (name, location, uuid, imageDataUrlOrBase64) {
-            return $http.post(getServerUrl() + '/register', {
+            return $http.post(getServerUrl() + '/process_frame', {
                 name: name,
                 location: location || 'Unknown',
                 uuid: uuid,
-                image: toBase64Payload(imageDataUrlOrBase64)
+                image: toBase64Payload(imageDataUrlOrBase64),
+                action: 'register'
             }, { timeout: 60000 });
         };
     }]);
