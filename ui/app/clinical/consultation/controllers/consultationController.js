@@ -5,12 +5,12 @@ angular.module('bahmni.clinical').controller('ConsultationController',
         'spinner', 'encounterService', 'messagingService', 'sessionService', 'retrospectiveEntryService', 'patientContext', '$q',
         'patientVisitHistoryService', '$stateParams', '$window', 'visitHistory', 'clinicalDashboardConfig', 'appService',
         'ngDialog', '$filter', 'configurations', 'visitConfig', 'conditionsService', 'configurationService', 'auditLogService', 'confirmBox',
-        'virtualConsultService', 'adhocTeleconsultationService',
+        'virtualConsultService', 'adhocTeleconsultationService', 'treatmentConfig',
         function ($scope, $rootScope, $state, $location, $translate, clinicalAppConfigService, diagnosisService, urlHelper, contextChangeHandler,
                   spinner, encounterService, messagingService, sessionService, retrospectiveEntryService, patientContext, $q,
                   patientVisitHistoryService, $stateParams, $window, visitHistory, clinicalDashboardConfig, appService,
                   ngDialog, $filter, configurations, visitConfig, conditionsService, configurationService, auditLogService, confirmBox,
-                  virtualConsultService, adhocTeleconsultationService) {
+                  virtualConsultService, adhocTeleconsultationService, treatmentConfig) {
             var ERROR = 1;
             var DateUtil = Bahmni.Common.Util.DateUtil;
             var getPreviousActiveCondition = Bahmni.Common.Domain.Conditions.getPreviousActiveCondition;
@@ -598,6 +598,54 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                     return spinner.forPromise(Promise.resolve(displayErrors(error)));
                 }
             };
+
+            $scope.$on('aiEncounterGenerated', function (e, encounter) {
+                populateConsultation(encounter);
+            });
+
+            function populateConsultation (encounter) {
+                populateDiagnosis(encounter);
+                populateDrugOrders(encounter);
+                populateOrders(encounter);
+                populateObservations(encounter);
+            }
+
+            function populateDiagnosis (encounter) {
+                if (!encounter.bahmniDiagnoses) {
+                    return;
+                }
+                encounter.bahmniDiagnoses.forEach(function (d) {
+                    var diagnosis = new Bahmni.Common.Domain.Diagnosis(d.codedAnswer, d.order, d.certainty, d.existingObs);
+                    $scope.consultation.newlyAddedDiagnoses.push(diagnosis);
+                });
+            }
+            function populateDrugOrders (encounter) {
+                if (!encounter.drugOrders) {
+                    return;
+                }
+                var treatments = $scope.consultation.newlyAddedTabTreatments.allMedicationTabConfig.treatments;
+                encounter.drugOrders.forEach(function (order) {
+                    var vm = Bahmni.Clinical.DrugOrderViewModel.createFromContract(order, treatmentConfig);
+                    treatments.push(vm);
+                });
+                $scope.$applyAsync();
+            }
+            function populateOrders (encounter) {
+                if (!encounter.orders) {
+                    return;
+                }
+                encounter.orders.forEach(function (o) {
+                    $scope.consultation.orders.push(angular.copy(o));
+                });
+            }
+            function populateObservations (encounter) {
+                if (!encounter.observations) {
+                    return;
+                }
+                encounter.observations.forEach(function (obs) {
+                    $rootScope.$emit('pushObservation', obs);
+                });
+            }
 
             $scope.$on("patientContext:goToPatientDashboard", function () {
                 $scope.gotoPatientDashboard();

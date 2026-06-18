@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bahmni.common.domain')
-    .service('visitDocumentService', ['$http', 'auditLogService', 'configurations', '$q', 'messagingService', '$translate', function ($http, auditLogService, configurations, $q, messagingService, $translate) {
+    .service('visitDocumentService', ['$http', 'auditLogService', 'configurations', '$q', 'messagingService', '$translate', '$rootScope', function ($http, auditLogService, configurations, $q, messagingService, $translate, $rootScope) {
         var removeVoidedDocuments = function (documents) {
             documents.forEach(function (document) {
                 if (document.voided && document.image) {
@@ -49,7 +49,7 @@ angular.module('bahmni.common.domain')
 
             var url = Bahmni.Common.Constants.aiScribbleApi + "/upload";
             return $http.post(url, body).then(function (response) {
-                console.log("Clinical Result", response.data);
+                $rootScope.$broadcast('aiEncounterGenerated', response.data);
             }, function (error) {
                 console.error("Upload Failed", error);
             });
