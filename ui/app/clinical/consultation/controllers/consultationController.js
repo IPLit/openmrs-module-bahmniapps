@@ -623,6 +623,9 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                 if (!encounter.drugOrders) {
                     return;
                 }
+                if ($scope.consultation.newlyAddedTabTreatments === undefined) {
+                    $scope.consultation.newlyAddedTabTreatments = { "allMedicationTabConfig" : { "treatments" : [] }};
+                }
                 var treatments = $scope.consultation.newlyAddedTabTreatments.allMedicationTabConfig.treatments;
                 encounter.drugOrders.forEach(function (order) {
                     var vm = Bahmni.Clinical.DrugOrderViewModel.createFromContract(order, treatmentConfig);
