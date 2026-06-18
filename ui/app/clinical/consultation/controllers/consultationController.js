@@ -624,7 +624,7 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                     return;
                 }
                 if ($scope.consultation.newlyAddedTabTreatments === undefined) {
-                    $scope.consultation.newlyAddedTabTreatments = { "allMedicationTabConfig" : { "treatments" : [] }};
+                    $scope.consultation.newlyAddedTabTreatments = { "allMedicationTabConfig": { "treatments": [] }};
                 }
                 var treatments = $scope.consultation.newlyAddedTabTreatments.allMedicationTabConfig.treatments;
                 encounter.drugOrders.forEach(function (order) {
