@@ -633,6 +633,7 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                 });
                 $scope.$applyAsync();
             }
+
             function populateOrders (encounter) {
                 if (!encounter.orders) {
                     return;
@@ -640,13 +641,14 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                 encounter.orders.forEach(function (o) {
                     $scope.consultation.orders.push(angular.copy(o));
                 });
+                $scope.$broadcast('aiOrdersAdded');
             }
             function populateObservations (encounter) {
                 if (!encounter.observations) {
                     return;
                 }
                 encounter.observations.forEach(function (obs) {
-                    $rootScope.$emit('pushObservation', obs);
+                    $scope.consultation.observations.push(angular.copy(obs));
                 });
             }
 

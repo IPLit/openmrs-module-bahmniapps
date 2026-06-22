@@ -123,6 +123,10 @@ angular.module('bahmni.clinical')
                 }
             };
 
+            $scope.$on('aiOrdersAdded', function () {
+                $scope.updateSelectedOrdersForActiveTab();
+            });
+
             $scope.updateSelectedOrdersForActiveTab = function () {
                 if (!$scope.activeTab) {
                     return;
