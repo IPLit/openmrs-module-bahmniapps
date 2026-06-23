@@ -50,6 +50,7 @@ angular.module('bahmni.common.domain')
             var url = Bahmni.Common.Constants.aiScribbleApi + "/upload";
             return $http.post(url, body).then(function (response) {
                 $rootScope.$broadcast('aiEncounterGenerated', response.data);
+                messagingService.showMessage("info", "The Scribble Notes is processed. Please review before Saving");
             }, function (error) {
                 console.error("Upload Failed", error);
             });
