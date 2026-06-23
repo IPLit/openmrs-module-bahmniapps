@@ -650,6 +650,16 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                 encounter.observations.forEach(function (obs) {
                     $scope.consultation.observations.push(angular.copy(obs));
                 });
+
+                $scope.consultation.observationForms.forEach(function (f) {
+                    f.observations = [];
+                    $scope.consultation.observations.forEach(function (o) {
+                        var formVersionAndName = Bahmni.Common.Util.FormFieldPathUtil.getFormNameAndVersion(o.formFieldPath);
+                        if (formVersionAndName && formVersionAndName.formName === f.formName && formVersionAndName.formVersion == f.formVersion) {
+                            f.observations.push(o);
+                        }
+                    });
+                });
             }
 
             $scope.$on("patientContext:goToPatientDashboard", function () {
