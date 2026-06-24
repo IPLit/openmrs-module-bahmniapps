@@ -658,7 +658,7 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                         if (obs.formFieldPath !== undefined) {
                             var formVersionAndName = Bahmni.Common.Util.FormFieldPathUtil.getFormNameAndVersion(obs.formFieldPath);
                             if (formVersionAndName && formVersionAndName.formName === f.formName && formVersionAndName.formVersion == f.formVersion) {
-                                f.observations.push(o);
+                                f.observations.push(obs);
                             }
                         }
                     });
