@@ -631,6 +631,7 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                     var vm = Bahmni.Clinical.DrugOrderViewModel.createFromContract(order, treatmentConfig);
                     treatments.push(vm);
                 });
+                $scope.consultation.newlyAddedTreatments = treatments;
                 $scope.$applyAsync();
             }
 
