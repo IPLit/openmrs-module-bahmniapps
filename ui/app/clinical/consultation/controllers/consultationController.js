@@ -654,10 +654,12 @@ angular.module('bahmni.clinical').controller('ConsultationController',
 
                 $scope.consultation.observationForms.forEach(function (f) {
                     f.observations = [];
-                    $scope.consultation.observations.forEach(function (o) {
-                        var formVersionAndName = Bahmni.Common.Util.FormFieldPathUtil.getFormNameAndVersion(o.formFieldPath);
-                        if (formVersionAndName && formVersionAndName.formName === f.formName && formVersionAndName.formVersion == f.formVersion) {
-                            f.observations.push(o);
+                    $scope.consultation.observations.forEach(function (obs) {
+                        if (obs.formFieldPath !== undefined) {
+                        var formVersionAndName = Bahmni.Common.Util.FormFieldPathUtil.getFormNameAndVersion(obs.formFieldPath);
+                            if (formVersionAndName && formVersionAndName.formName === f.formName && formVersionAndName.formVersion == f.formVersion) {
+                                f.observations.push(o);
+                            }
                         }
                     });
                 });
