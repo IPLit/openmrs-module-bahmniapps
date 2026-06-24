@@ -285,6 +285,7 @@ module.exports = function (grunt) {
                             'common/**/*.html',
                             'orders/**/*.html',
                             'bedmanagement/**/*.html',
+                            'handnotes/**/*.html',
                             'home/**/*.html',
                             'ot/**/*.html',
                             'admin/**/*.html',
