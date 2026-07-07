@@ -20,6 +20,23 @@
     </div>
 
     <form class="simple-form-ui">
+        <div class="info-row">
+            <label>Select Visit</label>
+
+            <select class="form-control visit-select"
+                    ng-model="selectedVisitUuid"
+                    ng-options="visit.uuid as (
+                            (visit.visitType.display || 'Visit') +
+                            ' - ' +
+                            (visit.startDatetime | date:'dd MMM yyyy, hh:mm a')
+                        ) for visit in visits">
+
+                <option value="">
+                    Select Visit
+                </option>
+            </select>
+        </div>
+
         <section class="form-section">
             <div class="section-title">
                 <h3>Estimated Billing Items</h3>

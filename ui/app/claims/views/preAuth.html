@@ -55,18 +55,6 @@
                     ng-disabled="!selectedVisitUuid">
                 Submit Pre-Auth Request
             </button>
-
-            <button class="btn bahmni-btn secondary"
-                    ng-click="submitPredetermination()"
-                    ng-disabled="!selectedVisitUuid">
-                Submit Predetermination
-            </button>
-
-            <button class="btn bahmni-btn"
-                    ng-click="submitClaim()"
-                    ng-disabled="!selectedVisitUuid">
-                Submit Claim
-            </button>
         </div>
     </div>
     <ng-include src="'views/claimsHistory.html'">
