@@ -69,47 +69,37 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
             });
             $httpProvider.defaults.headers.common['Disable-WWW-Authenticate'] = true;
             $bahmniTranslateProvider.init({app: 'home', shouldMerge: true});
-        }]).run(['$rootScope', '$state', '$templateCache', '$window', 'expiryService', 'messagingService', function ($rootScope, $state, $templateCache, $window, expiryService, messagingService) {
+        }]).run(['$rootScope', '$state', '$templateCache', '$window', 'expiryService', 'messagingService', '$q', function ($rootScope, $state, $templateCache, $window, expiryService, messagingService, $q) {
             moment.locale($window.localStorage["NG_TRANSLATE_LANG_KEY"] || "en");
             const EXPIRED_PAGE = '/expired.html';
-            $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-                if (toState.name === 'login' || toState.name === 'expired') {
-                    return true;
+            $rootScope.$on('$stateChangeStart', function (event, toState) {
+                if (toState.name === "login" || toState.name === "expired") {
+                    return;
                 }
                 expiryService.fetchLicenseCheckType().then(function (response) {
-                    if (response.data === "Check" || response.data === "CheckAndAllow") {
-                        const expiry = expiryService.getStoredExpiry();
-                        if (expiry && !expiryService.isExpired(expiry)) {
-                            showExpiryWarning(expiry);
-                            return true;
-                        }
-                        if (expiryService.isExpired(expiry)) {
-                            expiryService.fetchImplementationDetails().then(function (implementationResponse) {
-                                expiryService.fetchLicenseServerUrl().then(function (serverUrlResponse) {
-                                    var serverUrl = Bahmni.Common.Constants.hostURL;
-                                    if (serverUrlResponse !== undefined) {
-                                        serverUrl = serverUrlResponse.data;
-                                    }
-                                    return expiryService.fetchAndStoreExpiry(implementationResponse.name, implementationResponse.implementationId, serverUrl).then(function (fetchedExpiry) {
-                                        if (expiryService.isExpired(fetchedExpiry)) {
-                                            if (response.data === "Check") {
-                                                $state.go('expired');
-                                                return false;
-                                            } else {
-                                                messagingService.showMessage("info", "MESSAGE_LICENSE_EXPIRED");
-                                                return true;
-                                            }
-                                        }
-                                        showExpiryWarning(fetchedExpiry);
-                                        return true;
-                                    }).catch(function () {
-                                        $state.go('expired');
-                                        return false;
-                                    });
-                                });
-                            });
-                        }
+                    var checkType = response.data;
+                    if (checkType !== "Check" && checkType !== "CheckAndAllow") {
+                        return;
+                }
+                    var promise;
+                    if (expiryService.hasFetchedExpiry()) {
+                        promise = $q.resolve(expiryService.getStoredExpiry());
+                    } else {
+                        promise = expiryService.fetchLatestExpiry();
                     }
+                    promise.then(function (expiry) {
+                        if (expiryService.isExpired(expiry)) {
+                            if (checkType === "Check") {
+                                $state.go("expired");
+                            } else {
+                                messagingService.showMessage("info", "MESSAGE_LICENSE_EXPIRED");
+                            }
+                            return;
+                        }
+                        showExpiryWarning(expiry);
+                    }).catch(function () {
+                        $state.go("expired");
+                    });
                 });
             });
 
@@ -117,10 +107,14 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
                 if (!expiryService.isExpiringSoon(expiry)) {
                     return;
                 }
+                if (sessionStorage.getItem("licenseWarningShown")) {
+                    return;
+                }
                 var days = expiryService.getDaysRemaining(expiry);
                 messagingService.showMessage("alert",
-                    "License will expire in " + days + " day" + (days === 1 ? "" : "s") + ". Please renew it."
+                    "License will expire in " + days + " day" + (days === 1 ? "" : "s") + ". Please renew your license."
                 );
+                sessionStorage.setItem("licenseWarningShown", "true");
             }
 
             $rootScope.$on('$viewContentLoaded', function () {

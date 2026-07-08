@@ -3,6 +3,7 @@
 angular.module('authentication')
     .service('expiryService', ['$bahmniCookieStore', '$http', '$q', function ($bahmniCookieStore, $http, $q) {
         const COOKIE_KEY = 'expiryDate';
+        var self = this;
         var expiryFetchPromise = null;
         var licenseCheckTypePromise = null;
         this.fetchLicenseCheckType = function () {
@@ -64,33 +65,24 @@ angular.module('authentication')
         };
         
         this.fetchLatestExpiry = function () {
-        
             if (expiryFetchPromise) {
                 return expiryFetchPromise;
             }
-        
-            var this = this;
-        
             expiryFetchPromise = this.fetchImplementationDetails()
                 .then(function (implementation) {
-        
-                    return this.fetchLicenseServerUrl()
+                    return self.fetchLicenseServerUrl()
                         .then(function (serverUrlResponse) {
-        
                             var serverUrl = Bahmni.Common.Constants.hostURL;
-        
                             if (serverUrlResponse) {
                                 serverUrl = serverUrlResponse.data;
-                              }
-        
-                                    return this.fetchAndStoreExpiry(
+                            }
+                            return self.fetchAndStoreExpiry(
                                 implementation.name,
                                 implementation.implementationId,
                                 serverUrl
                             );
                         });
                 });
-        
             return expiryFetchPromise;
         };
         
