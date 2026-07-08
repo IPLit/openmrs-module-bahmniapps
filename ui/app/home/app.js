@@ -79,6 +79,10 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
                 expiryService.fetchLicenseCheckType().then(function (response) {
                     if (response.data === "Check" || response.data === "CheckAndAllow") {
                         const expiry = expiryService.getStoredExpiry();
+                        if (expiry && !expiryService.isExpired(expiry)) {
+                            showExpiryWarning(expiry);
+                            return true;
+                        }
                         if (expiryService.isExpired(expiry)) {
                             expiryService.fetchImplementationDetails().then(function (implementationResponse) {
                                 expiryService.fetchLicenseServerUrl().then(function (serverUrlResponse) {
@@ -96,6 +100,7 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
                                                 return true;
                                             }
                                         }
+                                        showExpiryWarning(fetchedExpiry);
                                         return true;
                                     }).catch(function () {
                                         $state.go('expired');
@@ -107,7 +112,17 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
                     }
                 });
             });
-        // Disable caching view template partials
+
+            function showExpiryWarning (expiry) {
+                if (!expiryService.isExpiringSoon(expiry)) {
+                    return;
+                }
+                var days = expiryService.getDaysRemaining(expiry);
+                messagingService.showMessage("alert",
+                    "License will expire in " + days + " day" + (days === 1 ? "" : "s") + ". Please renew it."
+                );
+            }
+
             $rootScope.$on('$viewContentLoaded', function () {
                 $templateCache.removeAll();
             });

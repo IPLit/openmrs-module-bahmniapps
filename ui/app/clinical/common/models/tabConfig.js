@@ -71,6 +71,10 @@ Bahmni.Clinical.TabConfig = function (tabs) {
         return !_.isEmpty(this.currentTab.printing);
     };
 
+    this.showShare = function () {
+        return !_.isEmpty(this.currentTab.share);
+    };
+
     this.getPrintConfigForCurrentTab = function () {
         return this.currentTab.printing;
     };

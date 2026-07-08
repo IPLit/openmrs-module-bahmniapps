@@ -1,0 +1,26 @@
+<div class="share-dialog">
+    <h3>Share</h3>
+    <label>
+        <input type="checkbox" ng-model="share.whatsapp">
+        WhatsApp
+    </label>
+    <label>
+        <input type="checkbox" ng-model="share.email">
+        Email
+    </label>
+    <br/>
+    <label>Mobile</label>
+    <input type="text" ng-model="mobile"/>
+    <label>Email</label>
+    <input type="email" ng-model="email"/>
+    <div class="dialog-footer">
+        <button ng-click="closeThisDialog()">
+            Cancel
+        </button>
+        <button class="btn btn-success"
+                ng-click="send()">
+            Share
+        </button>
+    </div>
+
+</div>

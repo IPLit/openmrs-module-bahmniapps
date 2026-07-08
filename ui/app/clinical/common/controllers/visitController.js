@@ -114,36 +114,52 @@ angular.module('bahmni.clinical')
                 return moment(date).format("DD-MMM-YYYY");
             };
 
+            $scope.$on("event:shareVisitTab", function () {
+                ngDialog.open({
+                    template: '../views/shareVisitTabDialog.html',
+                    controller: 'SharePrescriptionController',
+                    className: 'ngdialog-theme-default',
+                    data: {
+                        patient: $scope.patient,
+                        visitUuid: $scope.visitHistory.activeVisit.uuid
+                    }
+                });
+            });
             $scope.$on("event:printVisitTab", function () {
                 $scope.isBeingPrinted = true;
-                var mediaType = 'application/pdf';
-                var a = document.createElement("a");
-                document.body.appendChild(a);
-                a.style = "display: none";
-                var orderTypeUuid = orderTypeService.getOrderTypeUuid("Radiology Order");
-                var labOrderTypeUuid = orderTypeService.getOrderTypeUuid("Lab Order");
-                visitService.print({
-                    "visitUuid": $scope.visitUuid,
-                    "patientUuid": $scope.patientUuid,
-                    "obsConcepts": $scope.visitTabConfig.currentTab.printing.vitals,
-                    "obsIgnoreList": $scope.visitTabConfig.currentTab.printing.obsIgnoreList,
-                    "orderTypeUuid": orderTypeUuid,
-                    "labOrderTypeUuid": labOrderTypeUuid,
-                    "formName": $scope.visitTabConfig.currentTab.printing.forms,
-                    "headerUri": $location.protocol() + "://" + $location.host() + $scope.visitTabConfig.currentTab.printing.headerUri,
-                    "showResults": $scope.visitTabConfig.currentTab.printing.showLabResults,
-                    "handNotesConceptName": $scope.visitTabConfig.currentTab.printing.imageNoteName,
-                    "showFormName": $scope.visitTabConfig.currentTab.printing.showFormName,
-                    "attachDietPlan": $scope.visitTabConfig.currentTab.printing.attachDietPlan,
-                    "dietChartConceptName": $scope.visitTabConfig.currentTab.printing.dietChartConceptName
-                }).then(function (response) {
-                    var blob = new Blob([response.data], { type: mediaType });
-                    var fileURL = window.URL.createObjectURL(blob);
-                    a.href = fileURL;
+                getVisitPdf().then(function(response) {
+                    var blob = new Blob([response.data], {
+                        type: "application/pdf"
+                    });
+                    var a = document.createElement("a");
+                    document.body.appendChild(a);
+                    a.style = "display: none";
+                    a.href = URL.createObjectURL(blob);
                     a.download = "visitReport.pdf";
+
                     a.click();
                 });
             });
+
+            function getVisitPdf() {
+                var orderTypeUuid = orderTypeService.getOrderTypeUuid("Radiology Order");
+                var labOrderTypeUuid = orderTypeService.getOrderTypeUuid("Lab Order");
+                return visitService.print({
+                    visitUuid: $scope.visitUuid,
+                    patientUuid: $scope.patientUuid,
+                    obsConcepts: $scope.visitTabConfig.currentTab.printing.vitals,
+                    obsIgnoreList: $scope.visitTabConfig.currentTab.printing.obsIgnoreList,
+                    orderTypeUuid: orderTypeUuid,
+                    labOrderTypeUuid: labOrderTypeUuid,
+                    formName: $scope.visitTabConfig.currentTab.printing.forms,
+                    headerUri: $location.protocol() + "://" + $location.host() + $scope.visitTabConfig.currentTab.printing.headerUri,
+                    showResults: $scope.visitTabConfig.currentTab.printing.showLabResults,
+                    handNotesConceptName: $scope.visitTabConfig.currentTab.printing.imageNoteName,
+                    showFormName: $scope.visitTabConfig.currentTab.printing.showFormName,
+                    attachDietPlan: $scope.visitTabConfig.currentTab.printing.attachDietPlan,
+                    dietChartConceptName: $scope.visitTabConfig.currentTab.printing.dietChartConceptName
+                });
+            }
 
             $scope.$on("event:clearVisitBoard", function () {
                 $scope.clearBoard = true;

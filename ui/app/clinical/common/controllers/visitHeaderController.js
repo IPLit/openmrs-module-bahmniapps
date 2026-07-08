@@ -65,7 +65,15 @@ angular.module('bahmni.clinical')
                 $rootScope.$broadcast("event:printVisitTab", $scope.visitTabConfig.currentTab);
             };
 
+            $scope.share = function () {
+                $rootScope.$broadcast("event:shareVisitTab", $scope.visitTabConfig.currentTab);
+            };
+
             $scope.showPrint = function () {
                 return $scope.visitTabConfig.showPrint();
+            };
+
+            $scope.showShare = function () {
+                return $scope.visitTabConfig.showShare();
             };
         }]);
