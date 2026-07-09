@@ -11,7 +11,7 @@ angular.module('authentication')
                 return licenseCheckTypePromise;
             }
 
-            licenseCheckTypePromise = $http.get(Bahmni.Common.Constants.globalPropertyUrl,{
+            licenseCheckTypePromise = $http.get(Bahmni.Common.Constants.globalPropertyUrl, {
                 params: {
                     property: "admin.licExpType"
                 },
@@ -40,52 +40,48 @@ angular.module('authentication')
                 return response.data;
             });
         };
-        
+
         this.getDaysRemaining = function (expiry) {
             if (!expiry) {
                 return -1;
             }
-        
             var today = new Date();
             today.setHours(0, 0, 0, 0);
-        
             var expiryDate = new Date(expiry);
             expiryDate.setHours(0, 0, 0, 0);
-        
             return Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
         };
-        
+
         this.isExpiringSoon = function (expiry) {
             var days = this.getDaysRemaining(expiry);
             return days >= 0 && days <= 10;
         };
-        
+
         this.hasFetchedExpiry = function () {
             return expiryFetchPromise !== null;
         };
-        
+
         this.fetchLatestExpiry = function () {
             if (expiryFetchPromise) {
                 return expiryFetchPromise;
             }
-            expiryFetchPromise = this.fetchImplementationDetails()
-                .then(function (implementation) {
-                    return self.fetchLicenseServerUrl()
-                        .then(function (serverUrlResponse) {
-                            var serverUrl = Bahmni.Common.Constants.hostURL;
-                            if (serverUrlResponse) {
-                                serverUrl = serverUrlResponse.data;
-                            }
-                            return self.fetchAndStoreExpiry(
-                                implementation.name,
-                                implementation.implementationId,
-                                serverUrl
-                            );
-                        });
-                });
+            expiryFetchPromise = this.fetchImplementationDetails().then(function (implementation) {
+                return self.fetchLicenseServerUrl()
+                    .then(function (serverUrlResponse) {
+                        var serverUrl = Bahmni.Common.Constants.hostURL;
+                        if (serverUrlResponse) {
+                            serverUrl = serverUrlResponse.data;
+                        }
+                        return self.fetchAndStoreExpiry(
+                            implementation.name,
+                            implementation.implementationId,
+                            serverUrl
+                        );
+                    });
+            });
             return expiryFetchPromise;
         };
-        
+
         this.fetchAndStoreExpiry = function (name, implementationId, serverUrl) {
             return $http.get(serverUrl + Bahmni.Common.Constants.fetchExpiryDate,
                 { params: {

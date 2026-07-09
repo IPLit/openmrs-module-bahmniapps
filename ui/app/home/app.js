@@ -80,7 +80,7 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
                     var checkType = response.data;
                     if (checkType !== "Check" && checkType !== "CheckAndAllow") {
                         return;
-                }
+                    }
                     var promise;
                     if (expiryService.hasFetchedExpiry()) {
                         promise = $q.resolve(expiryService.getStoredExpiry());

@@ -127,7 +127,7 @@ angular.module('bahmni.clinical')
             });
             $scope.$on("event:printVisitTab", function () {
                 $scope.isBeingPrinted = true;
-                getVisitPdf().then(function(response) {
+                getVisitPdf().then(function (response) {
                     var blob = new Blob([response.data], {
                         type: "application/pdf"
                     });
@@ -141,7 +141,7 @@ angular.module('bahmni.clinical')
                 });
             });
 
-            function getVisitPdf() {
+            function getVisitPdf () {
                 var orderTypeUuid = orderTypeService.getOrderTypeUuid("Radiology Order");
                 var labOrderTypeUuid = orderTypeService.getOrderTypeUuid("Lab Order");
                 return visitService.print({
