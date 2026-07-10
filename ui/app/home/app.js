@@ -111,7 +111,7 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
                     return;
                 }
                 var days = expiryService.getDaysRemaining(expiry);
-                messagingService.showMessage("alert",
+                messagingService.showMessage("error",
                     "License will expire in " + days + " day" + (days === 1 ? "" : "s") + ". Please renew your license."
                 );
                 sessionStorage.setItem("licenseWarningShown", "true");
