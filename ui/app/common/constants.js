@@ -310,6 +310,7 @@ Bahmni.Common = Bahmni.Common || {};
         bahmniDistroObservationsUrl: BAHMNI_CORE + "/distro/filters/observations",
         bahmniDistroUserLocationValidUrl: BAHMNI_CORE + "/distro/filters/userLocationValid",
         bahmniDistroVisitPrintUrl: BAHMNI_CORE + "/distro/report/visit",
+        bahmniDistroSendMailUrl: BAHMNI_CORE + "/distro/communication/mail",
         bahmniDistroDispositionByPatientUrl: BAHMNI_CORE + "/distro/filters/disposition/patientWithLocale",
         fetchExpiryDate: "/license/api/license/getExpiryDate",
         implementationId: RESTWS_V1 + "/implementationid",

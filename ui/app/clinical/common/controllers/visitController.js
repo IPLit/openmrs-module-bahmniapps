@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('bahmni.clinical')
-    .controller('VisitController', ['$scope', '$state', '$rootScope', '$q', 'encounterService', '$window', 'clinicalAppConfigService', 'configurations', 'visitSummary', '$timeout', 'printer', 'visitConfig', 'visitHistory', '$stateParams', 'locationService', 'visitService', 'appService', 'diagnosisService', 'observationsService', 'allergyService', 'auditLogService', 'sessionService', '$location', 'orderTypeService',
-        function ($scope, $state, $rootScope, $q, encounterService, $window, clinicalAppConfigService, configurations, visitSummary, $timeout, printer, visitConfig, visitHistory, $stateParams, locationService, visitService, appService, diagnosisService, observationsService, allergyService, auditLogService, sessionService, $location, orderTypeService) {
+    .controller('VisitController', ['$scope', '$state', '$rootScope', '$q', 'encounterService', '$window', 'clinicalAppConfigService', 'configurations', 'visitSummary', '$timeout', 'printer', 'visitConfig', 'visitHistory', '$stateParams', 'locationService', 'visitService', 'appService', 'diagnosisService', 'observationsService', 'allergyService', 'auditLogService', 'sessionService', '$location', 'orderTypeService', 'ngDialog', 'messagingService',
+        function ($scope, $state, $rootScope, $q, encounterService, $window, clinicalAppConfigService, configurations, visitSummary, $timeout, printer, visitConfig, visitHistory, $stateParams, locationService, visitService, appService, diagnosisService, observationsService, allergyService, auditLogService, sessionService, $location, orderTypeService, ngDialog, messagingService) {
             function handleLogoutShortcut (event) {
                 if ((event.metaKey || event.ctrlKey) && event.key === $rootScope.quickLogoutComboKey) {
                     $scope.ipdDashboard.hostApi.onLogOut();
@@ -115,16 +115,38 @@ angular.module('bahmni.clinical')
             };
 
             $scope.$on("event:shareVisitTab", function () {
-                ngDialog.open({
-                    template: '../views/shareVisitTabDialog.html',
-                    controller: 'SharePrescriptionController',
-                    className: 'ngdialog-theme-default',
-                    data: {
-                        patient: $scope.patient,
-                        visitUuid: $scope.visitHistory.activeVisit.uuid
-                    }
+                getVisitPdf().then(function (response) {
+                    var reader = new FileReader();
+                    reader.onloadend = function () {
+                        var base64 = reader.result.split(",")[1];
+                        if ($scope.patient.email) {
+                            var mailRequest = {
+                                subject: "Visit Summary",
+                                body: "Please find the attached visit summary.",
+                                recipient: {
+                                    email: $scope.patient.email.value
+                                },
+                                mailAttachments: [{
+                                    contentType: "application/pdf",
+                                    name: "VisitSummary.pdf",
+                                    data: base64
+                                }]
+                            };
+                            visitService.sendMail(mailRequest)
+                                .then(function () {
+                                    messagingService.showMessage("info", "Mail sent successfully");
+                                }, function () {
+                                    messagingService.showMessage("error", "Failed to send mail");
+                                });
+                        }
+                    };
+
+                    reader.readAsDataURL(new Blob([response.data], {
+                        type: "application/pdf"
+                    }));
                 });
             });
+
             $scope.$on("event:printVisitTab", function () {
                 $scope.isBeingPrinted = true;
                 getVisitPdf().then(function (response) {

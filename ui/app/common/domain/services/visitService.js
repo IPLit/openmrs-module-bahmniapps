@@ -88,4 +88,10 @@ angular.module('bahmni.common.domain')
                 withCredentials: true
             });
         };
+
+        this.sendMail = function (mailRequest) {
+            return $http.post(Bahmni.Common.Constants.bahmniDistroSendMailUrl, mailRequest, {
+                withCredentials: true
+            });
+        };
     }]);
