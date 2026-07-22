@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('bahmni.clinical')
-    .controller('VisitHeaderController', ['$rootScope', '$scope', '$state', 'clinicalAppConfigService', 'configurations', 'encounterService', 'patientContext', 'visitHistory', 'visitConfig', 'contextChangeHandler', '$location', '$stateParams', 'urlHelper',
-        function ($rootScope, $scope, $state, clinicalAppConfigService, configurations, encounterService, patientContext, visitHistory, visitConfig, contextChangeHandler, $location, $stateParams, urlHelper) {
+    .controller('VisitHeaderController', ['$rootScope', '$scope', '$state', 'clinicalAppConfigService', 'configurations', 'encounterService', 'patientContext', 'visitHistory', 'visitConfig', 'contextChangeHandler', '$location', '$stateParams', 'urlHelper', 'ngDialog',
+        function ($rootScope, $scope, $state, clinicalAppConfigService, configurations, encounterService, patientContext, visitHistory, visitConfig, contextChangeHandler, $location, $stateParams, urlHelper, ngDialog) {
             $scope.patient = patientContext.patient;
             $scope.visitHistory = visitHistory;
             $scope.consultationBoardLink = clinicalAppConfigService.getConsultationBoardLink();
@@ -66,7 +66,17 @@ angular.module('bahmni.clinical')
             };
 
             $scope.share = function () {
-                $rootScope.$broadcast("event:shareVisitTab", $scope.visitTabConfig.currentTab);
+                ngDialog.open({
+                    template: "common/views/shareVisitTabDialog.html",
+                    controller: "ShareDialogController",
+                    className: "ngdialog-theme-default",
+                    data: {
+                        mobile: $scope.patient.phoneNumber ?
+                            $scope.patient.phoneNumber.value : "",
+                        email: $scope.patient.email ?
+                            $scope.patient.email.value : ""
+                    }
+                });
             };
 
             $scope.showPrint = function () {

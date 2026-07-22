@@ -114,37 +114,8 @@ angular.module('bahmni.clinical')
                 return moment(date).format("DD-MMM-YYYY");
             };
 
-            $scope.$on("event:shareVisitTab", function () {
-                getVisitPdf().then(function (response) {
-                    var reader = new FileReader();
-                    reader.onloadend = function () {
-                        var base64 = reader.result.split(",")[1];
-                        if ($scope.patient.email) {
-                            var mailRequest = {
-                                subject: "Visit Summary",
-                                body: "Please find the attached visit summary.",
-                                recipient: {
-                                    email: $scope.patient.email.value
-                                },
-                                mailAttachments: [{
-                                    contentType: "application/pdf",
-                                    name: "VisitSummary.pdf",
-                                    data: base64
-                                }]
-                            };
-                            visitService.sendMail(mailRequest)
-                                .then(function () {
-                                    messagingService.showMessage("info", "Mail sent successfully");
-                                }, function () {
-                                    messagingService.showMessage("error", "Failed to send mail");
-                                });
-                        }
-                    };
-
-                    reader.readAsDataURL(new Blob([response.data], {
-                        type: "application/pdf"
-                    }));
-                });
+            $scope.$on("event:shareVisitTab", function (event, shareOptions) {
+                shareVisit(shareOptions);
             });
 
             $scope.$on("event:printVisitTab", function () {
@@ -164,9 +135,35 @@ angular.module('bahmni.clinical')
             });
 
             function getVisitPdf () {
+                return visitService.print(getPrintRequest());
+            }
+
+            function shareVisit (shareOptions) {
+                var request = {
+                    patientUuid: $scope.patientUuid,
+                    visitUuid: $scope.visitUuid,
+                    patientName: $scope.patient.name,
+                    phoneNumber: shareOptions.phoneNumber,
+                    email: shareOptions.email,
+                    shareByEmail: shareOptions.shareByEmail,
+                    shareByWhatsapp: shareOptions.shareByWhatsapp,
+                    whatsappTemplateId: "visit_summary",
+                    printRequest: getPrintRequest()
+                };
+
+                visitService.share(request)
+                    .then(function () {
+                        messagingService.showMessage("info", "Visit summary shared successfully");
+                    })
+                    .catch(function () {
+                        messagingService.showMessage("error", "Failed to share visit summary");
+                    });
+            }
+
+            function getPrintRequest () {
                 var orderTypeUuid = orderTypeService.getOrderTypeUuid("Radiology Order");
                 var labOrderTypeUuid = orderTypeService.getOrderTypeUuid("Lab Order");
-                return visitService.print({
+                return {
                     visitUuid: $scope.visitUuid,
                     patientUuid: $scope.patientUuid,
                     obsConcepts: $scope.visitTabConfig.currentTab.printing.vitals,
@@ -180,7 +177,7 @@ angular.module('bahmni.clinical')
                     showFormName: $scope.visitTabConfig.currentTab.printing.showFormName,
                     attachDietPlan: $scope.visitTabConfig.currentTab.printing.attachDietPlan,
                     dietChartConceptName: $scope.visitTabConfig.currentTab.printing.dietChartConceptName
-                });
+                };
             }
 
             $scope.$on("event:clearVisitBoard", function () {

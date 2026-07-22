@@ -10,17 +10,17 @@
     </label>
     <br/>
     <label>Mobile</label>
-    <input type="text" ng-model="mobile"/>
+    <input type="text" ng-model="mobile" ng-disabled="!share.whatsapp"/>
     <label>Email</label>
-    <input type="email" ng-model="email"/>
+    <input type="email" ng-model="email" ng-disabled="!share.email"/>
     <div class="dialog-footer">
         <button ng-click="closeThisDialog()">
             Cancel
         </button>
         <button class="btn btn-success"
-                ng-click="send()">
+                ng-click="send()"
+                ng-disabled="!share.email && !share.whatsapp">
             Share
         </button>
     </div>
-
 </div>
