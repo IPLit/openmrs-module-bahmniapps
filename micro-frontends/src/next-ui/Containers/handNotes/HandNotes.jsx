@@ -6,7 +6,7 @@ import {I18nProvider} from "../../Components/i18n/I18nProvider";
 export function HandNotes(props) {
   const [showScribblePad, setShowScribblePad] = useState(false);
   const {hostData} = props;
-  const {patient, imageNoteConceptName, handnoteConceptName, locationUuid, encounterTypeUuid, observationMapper, onSaveSuccess} = hostData;
+  const {patient, imageNoteConceptName, handnoteConceptName, locationUuid, encounterTypeUuid, observationMapper, onSaveSuccess, saveObs} = hostData;
   const openScribblePad = async () => {
     setShowScribblePad(true);
   }
@@ -17,13 +17,14 @@ export function HandNotes(props) {
     return (
         <I18nProvider>
             <div class="button-wrapper">
-                <button type="button" onClick={()=>{openScribblePad()}}>Create New</button>
+                <button type="button" onClick={()=>{openScribblePad()}}>S</button>
             </div>
             {showScribblePad ? (
                 <ScribblePad
                     closeScribblePad={closeScribblePad}
                     patient={patient}
                     handnoteConceptName={handnoteConceptName}
+                    saveObs={saveObs}
                     imageNoteConceptName={imageNoteConceptName}
                     locationUuid={locationUuid}
                     encounterTypeUuid={encounterTypeUuid}

@@ -36,7 +36,10 @@
                     <i class="fa fa-save"></i>
                     <span class="text" ng-bind-html="'CLINICAL_SAVE_TRANSLATION_KEY'| translate"></span>
                 </button>
-                <button ng-show="availableBoards" style="margin-top: 6px; float: right;" ng-click="openScribble()" class="dialog-button-group start-tele-consultation"><h1>S</h1></button>
+                <span id="mfe-scribble-pad" ng-show="availableBoards">
+                    <mfe-next-ui-hand-notes host-data="hostData"/>
+                </span>
+<!--                <button ng-show="availableBoards" style="margin-top: 6px; float: right;" ng-click="openScribble()" class="dialog-button-group start-tele-consultation"><h1>S</h1></button>-->
             </div>
         </div>
         <ng-include src="'common/views/mobileHeader.html'"></ng-include>

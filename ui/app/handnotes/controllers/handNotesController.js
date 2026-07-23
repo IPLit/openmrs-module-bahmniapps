@@ -136,6 +136,7 @@ angular.module('bahmni.handnotes')
                     locationUuid: locationUuid,
                     encounterTypeUuid: encounterTypeUuid,
                     observationMapper: new Bahmni.ConceptSet.ObservationMapper(),
+                    saveObs: true,
                     handnoteConceptName: "Hand Note",
                     imageNoteConceptName: "Image Note",
                     onSaveSuccess: function () {

@@ -5,12 +5,12 @@ angular.module('bahmni.clinical').controller('ConsultationController',
         'spinner', 'encounterService', 'messagingService', 'sessionService', 'retrospectiveEntryService', 'patientContext', '$q',
         'patientVisitHistoryService', '$stateParams', '$window', 'visitHistory', 'clinicalDashboardConfig', 'appService',
         'ngDialog', '$filter', 'configurations', 'visitConfig', 'conditionsService', 'configurationService', 'auditLogService', 'confirmBox',
-        'virtualConsultService', 'adhocTeleconsultationService', 'treatmentConfig',
+        'virtualConsultService', 'adhocTeleconsultationService', 'treatmentConfig', 'conceptSetService',
         function ($scope, $rootScope, $state, $location, $translate, clinicalAppConfigService, diagnosisService, urlHelper, contextChangeHandler,
                   spinner, encounterService, messagingService, sessionService, retrospectiveEntryService, patientContext, $q,
                   patientVisitHistoryService, $stateParams, $window, visitHistory, clinicalDashboardConfig, appService,
                   ngDialog, $filter, configurations, visitConfig, conditionsService, configurationService, auditLogService, confirmBox,
-                  virtualConsultService, adhocTeleconsultationService, treatmentConfig) {
+                  virtualConsultService, adhocTeleconsultationService, treatmentConfig, conceptSetService) {
             var ERROR = 1;
             var DateUtil = Bahmni.Common.Util.DateUtil;
             var getPreviousActiveCondition = Bahmni.Common.Domain.Conditions.getPreviousActiveCondition;
@@ -664,12 +664,47 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                     });
                 });
             }
+            var stripExtraConceptInfo = function (obs) {
+                obs.concept = {uuid: obs.concept.uuid, name: obs.concept.name, dataType: obs.concept.dataType};
+                obs.groupMembers = obs.groupMembers || [];
+                obs.groupMembers.forEach(function (groupMember) {
+                    stripExtraConceptInfo(groupMember);
+                });
+            };
 
             $scope.$on("patientContext:goToPatientDashboard", function () {
                 $scope.gotoPatientDashboard();
             });
-
+            var observationMapper = new Bahmni.ConceptSet.ObservationMapper();
             initialize();
+            $scope.hostData = {
+                patient: $scope.patient,
+                locationUuid: sessionService.getLoginLocationUuid(),
+                encounterTypeUuid: configurations.encounterConfig().getConsultationEncounterTypeUuid(),
+                observationMapper: observationMapper,
+                handnoteConceptName: "Hand Note",
+                imageNoteConceptName: "Image Note",
+                saveObs: false,
+                onSaveSuccess: function (imageName) {
+                    conceptSetService.getConcept({
+                        name: "Hand Note",
+                        v: "bahmni"
+                    }).then(function (response) {
+                        var handNotes = observationMapper.map(imageName, response.data.results[0], {});
+                        handNotes.groupMembers.map(gm => {
+                            if (gm.concept.name === "Image Note") {
+                                gm.value = imageName;
+                                gm.valueAsString = imageName;
+                            }
+                            return gm;
+                        });
+                        handNotes.value = imageName;
+                        handNotes.valueAsString = imageName;
+                        stripExtraConceptInfo(handNotes);
+                        $scope.consultation.scribble = [handNotes];
+                    });
+                }
+            };
 
             $scope.openScribble = function () {
                 ngDialog.open({

@@ -47,8 +47,7 @@ angular.module('signature').directive('signaturePad', ['$interval', '$timeout', 
                 //var savedFile = visit.addFile(fileUrl); 
                 var imagename = response.data.url;
                 spinner.forPromise(observationsService.fetch(patientUuid, $scope.handNoteConceptName,
-                  'latest', 1, visit["uuid"],
-                  null, null))
+                  'latest', 1, visit["uuid"], null, null))
                   .then(function (result) {
                       var obsArray = [];
                       if(result.data.length > 0) {

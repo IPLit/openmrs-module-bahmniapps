@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SAVE_DOCUMENT_URL, DELETE_DOCUMENT_URL, CONCEPT_SET_URL, BAHMNI_DISTRO_ENCOUNTER_URL, OBSERVATIONS_URL } from "../../constants";
+import { SAVE_DOCUMENT_URL, DELETE_DOCUMENT_URL, CONCEPT_SET_URL, BAHMNI_ENCOUNTER_URL, BAHMNI_DISTRO_ENCOUNTER_URL, OBSERVATIONS_URL } from "../../constants";
 
 export const saveDocument = async (payload) => {
     try {
@@ -27,7 +27,7 @@ export const saveEncounter = async (imageUrl, handNoteConceptName, imageNoteConc
     stripExtraConceptInfo(handNotes);
     encounter.observations = [handNotes];
     try {
-        return await axios.post(BAHMNI_DISTRO_ENCOUNTER_URL, encounter, {
+        return await axios.post(BAHMNI_ENCOUNTER_URL, encounter, {
             withCredentials: true,
             headers: { Accept: "application/json", "Content-Type": "application/json" }
         });
@@ -49,7 +49,7 @@ export const editEncounter = async (obsToEdit, imageNoteConceptName, newImageUrl
 
     encounter.observations = observationFilter.filter([obsToEdit]);
     try {
-        return await axios.post(BAHMNI_DISTRO_ENCOUNTER_URL, encounter, {
+        return await axios.post(BAHMNI_ENCOUNTER_URL, encounter, {
             withCredentials: true,
             headers: { Accept: "application/json", "Content-Type": "application/json" }
         });

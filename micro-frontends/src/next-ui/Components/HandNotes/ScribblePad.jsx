@@ -24,7 +24,7 @@ export function ScribblePad(props) {
   const [canvasHeight, setCanvasHeight] = useState(0);
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
-  const {patient, imageNoteConceptName, handnoteConceptName, locationUuid, encounterTypeUuid, observationMapper, closeScribblePad, onSaveSuccess} = props;
+  const {patient, imageNoteConceptName, handnoteConceptName, locationUuid, encounterTypeUuid, observationMapper, closeScribblePad, onSaveSuccess, saveObs} = props;
 //   useEffect(() => {
 //     const handleResize = () => {
 //       setCanvasWidth(window.innerWidth - 40); // Adjusted for some padding
@@ -231,14 +231,19 @@ export function ScribblePad(props) {
     let file = dataURL.substring(dataURL.indexOf(searchStr) + searchStr.length, dataURL.length);
     const response = await saveDocument({content: file, fileType: "image", format: format, encounterTypeName: "Consultation", patientUuid: patient.uuid});
     const imageName = response.data.url;
-    const saveResponse = await saveEncounter(imageName,
+    if (saveObs) {
+      const saveResponse = await saveEncounter(imageName,
                             handnoteConceptName,
                             imageNoteConceptName,
                             observationMapper,
                             {patientUuid: patient.uuid, locationUuid: locationUuid, encounterTypeUuid: encounterTypeUuid, visitType: "OPD"});
-    if (saveResponse.status === 200) {
-      onSaveSuccess();
-      closeScribblePad();
+      if (saveResponse.status === 200) {
+        onSaveSuccess();
+        closeScribblePad();
+      }
+    } else {
+        onSaveSuccess(imageName);
+        closeScribblePad();
     }
   };
 
@@ -358,6 +363,7 @@ ScribblePad.propTypes = {
     imageNoteConceptName: PropTypes.string.isRequired,
     locationUuid: PropTypes.string.isRequired,
     encounterTypeUuid: PropTypes.string.isRequired,
-    observationMapper: PropTypes.object.isRequired
+    observationMapper: PropTypes.object.isRequired,
+    saveObs: PropTypes.bool.isRequired
 }
 
