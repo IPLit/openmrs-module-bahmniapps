@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from "prop-types";
 import {ScribblePad} from "../../Components/HandNotes/ScribblePad";
 import {I18nProvider} from "../../Components/i18n/I18nProvider";
+import { createPortal } from "react-dom";
 
 export function HandNotes(props) {
   const [showScribblePad, setShowScribblePad] = useState(false);
@@ -19,7 +20,7 @@ export function HandNotes(props) {
             <div class="button-wrapper">
                 <button type="button" onClick={()=>{openScribblePad()}}>S</button>
             </div>
-            {showScribblePad ? (
+            {showScribblePad ? createPortal(
                 <ScribblePad
                     closeScribblePad={closeScribblePad}
                     patient={patient}
@@ -30,7 +31,7 @@ export function HandNotes(props) {
                     encounterTypeUuid={encounterTypeUuid}
                     observationMapper={observationMapper}
                     onSaveSuccess={onSaveSuccess}
-                />
+                />, document.body
               ) : null}
 
         </I18nProvider>
