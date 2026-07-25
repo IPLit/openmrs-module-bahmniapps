@@ -147,7 +147,7 @@ angular.module('bahmni.clinical')
                     email: shareOptions.email,
                     shareByEmail: shareOptions.shareByEmail,
                     shareByWhatsapp: shareOptions.shareByWhatsapp,
-                    whatsappTemplateId: "visit_summary",
+                    whatsappTemplateId: "messagewithattachment",
                     printRequest: getPrintRequest()
                 };
 
