@@ -34,7 +34,7 @@
             <button class="dialog-button-group" ng-if="showPrint()" ng-click="print()" accesskey="{{'CLINICAL_PRINT_ACCESS_KEY'| translate}}" ng-bind-html="'CLINICAL_PRINT_TRANSLATION_KEY'|translate">
                 <i class="fa fa-print"></i>
             </button>
-            <button class="dialog-button-group" ng-if="showShare()" ng-click="share()" accesskey="{{'CLINICAL_SHARE_ACCESS_KEY'| translate}}" ng-bind-html="'CLINICAL_SHARE_TRANSLATION_KEY'|translate">
+            <button class="share-button" ng-if="showShare()" ng-click="share()" accesskey="{{'CLINICAL_SHARE_ACCESS_KEY'| translate}}" ng-bind-html="'CLINICAL_SHARE_TRANSLATION_KEY'|translate">
                 <i class="fa fa-share"></i>
             </button>
             <span class="grouped-buttons" ng-if="visitHistory.activeVisit || retrospectiveEntry">
