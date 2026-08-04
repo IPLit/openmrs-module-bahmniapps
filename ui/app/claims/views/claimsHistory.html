@@ -27,11 +27,11 @@
             <td>
                 <span class="claim-status"
                       ng-class="{
-                        'pending': claim.status === 'PENDING',
-                        'approved': claim.status === 'APPROVED',
-                        'rejected': claim.status === 'REJECTED'
+                        'pending': claim.claimState === 'PENDING',
+                        'approved': claim.claimState === 'APPROVED',
+                        'rejected': claim.claimState === 'REJECTED'
                       }">
-                    {{ claim.status || 'UNKNOWN' }}
+                    {{ claim.claimState || 'UNKNOWN' }}
                 </span>
             </td>
             <td>
@@ -39,13 +39,13 @@
             </td>
             <td>
                 <button class="btn bahmni-btn secondary"
-                        ng-if="claim.status === 'PENDING'"
+                        ng-if="claim.claimState === 'PENDING'"
                         ng-click="checkClaimStatus(claim)"
                         ng-disabled="claim.checkingStatus">
 
                     {{ claim.checkingStatus ? 'Checking...' : 'Check Status' }}
                 </button>
-                <span ng-if="claim.status !== 'PENDING'">
+                <span ng-if="claim.claimState !== 'PENDING'">
                     —
                 </span>
             </td>
