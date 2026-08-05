@@ -296,27 +296,20 @@ angular.module('bahmni.clinical').controller('ConsultationController',
             };
 
             $scope.startRecording = function () {
-
                 navigator.mediaDevices.getUserMedia({ audio: true })
                     .then(function (stream) {
-
                         mediaStream = stream;
                         chunks = [];
-
                         mediaRecorder = new MediaRecorder(stream);
-
                         mediaRecorder.ondataavailable = function (e) {
                             if (e.data.size > 0) {
                                 chunks.push(e.data);
                             }
                         };
-
                         mediaRecorder.onstop = function () {
-
                             $scope.audioBlob = new Blob(chunks, {
                                 type: mediaRecorder.mimeType || "audio/webm"
                             });
-
                             var player = document.getElementById("voicePlayer");
                             player.src = URL.createObjectURL($scope.audioBlob);
                             player.style.display = "block";
@@ -326,58 +319,43 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                                 console.log("Base64 length:", base64.length);
                                 $scope.$apply();
                             });
-
-                            mediaStream.getTracks().forEach(function(track){
+                            mediaStream.getTracks().forEach(function (track) {
                                 track.stop();
                             });
-
                         };
 
                         mediaRecorder.start();
-
                         $scope.isRecording = true;
                         $scope.$apply();
-
                     })
-                    .catch(function(err){
+                    .catch(function (err) {
                         console.error(err);
                         alert("Microphone permission denied.");
                     });
-
             };
 
             $scope.stopRecording = function () {
-
                 if (mediaRecorder && mediaRecorder.state === "recording") {
                     mediaRecorder.stop();
                 }
-
                 $scope.isRecording = false;
-
             };
+
             $scope.playRecording = function () {
-
                 var player = document.getElementById("voicePlayer");
-
                 if (player.src) {
                     player.play();
                 }
-
             };
-            function blobToBase64(blob) {
 
-                return new Promise(function(resolve) {
-
+            function blobToBase64 (blob) {
+                return new Promise(function (resolve) {
                     var reader = new FileReader();
-
                     reader.onloadend = function () {
                         resolve(reader.result.split(",")[1]);
                     };
-
                     reader.readAsDataURL(blob);
-
                 });
-
             }
 
             var getUrl = function (board) {
@@ -769,7 +747,7 @@ angular.module('bahmni.clinical').controller('ConsultationController',
             });
             var observationMapper = new Bahmni.ConceptSet.ObservationMapper();
             var locationUuid = sessionService.getLoginLocationUuid();
-            var providerUuid =  $rootScope.currentProvider.uuid;
+            var providerUuid = $rootScope.currentProvider.uuid;
 
             var encounterTypeUuid = configurations.encounterConfig().getConsultationEncounterTypeUuid();
             initialize();
@@ -807,7 +785,6 @@ angular.module('bahmni.clinical').controller('ConsultationController',
             };
 
             $scope.openVoiceRecorder = function () {
-
                 ngDialog.open({
                     template: "./consultation/views/voiceNoteDialog.html",
                     className: "ngdialog-theme-default voice-note-dialog",
@@ -815,7 +792,6 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                     width: 500,
                     showClose: true
                 });
-
             };
 
             $scope.attachVoiceNote = function () {
@@ -836,25 +812,21 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                 voiceNotesService.transcribe(body);
                 ngDialog.close();
             };
+
             $scope.deleteRecording = function () {
-
                 var player = document.getElementById("voicePlayer");
-
                 if (player) {
                     player.pause();
                     player.removeAttribute("src");
                     player.load();
                 }
-
                 if ($scope.audioUrl) {
                     URL.revokeObjectURL($scope.audioUrl);
                 }
-
                 $scope.audioBlob = null;
                 $scope.audioBase64 = null;
                 $scope.audioUrl = null;
                 $scope.recordingTime = 0;
-
             };
 
             $scope.openScribble = function () {
