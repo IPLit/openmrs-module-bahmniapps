@@ -725,7 +725,7 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                 $scope.consultation.observationForms.forEach(function (f) {
                     f.observations = [];
                     $scope.consultation.observations.forEach(function (obs) {
-                        if (obs.formFieldPath !== undefined) {
+                        if (obs.formFieldPath !== undefined && obs.formFieldPath !== null) {
                             var formVersionAndName = Bahmni.Common.Util.FormFieldPathUtil.getFormNameAndVersion(obs.formFieldPath);
                             if (formVersionAndName && formVersionAndName.formName === f.formName && formVersionAndName.formVersion == f.formVersion) {
                                 f.observations.push(obs);

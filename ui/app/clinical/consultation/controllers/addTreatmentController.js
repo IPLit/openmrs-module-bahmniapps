@@ -702,10 +702,12 @@ angular.module('bahmni.clinical')
                 var orderSetTreatmentsAcrossTabs = _.flatten(_.map(tabNames, function (tabName) {
                     return $scope.consultation.newlyAddedTabTreatments[tabName].orderSetTreatments;
                 }));
-                var includedOrderSetTreatments = _.filter(orderSetTreatmentsAcrossTabs, function (treatment) {
-                    return treatment.orderSetUuid ? treatment.include : true;
-                });
-                $scope.consultation.newlyAddedTreatments = allTreatmentsAcrossTabs.concat(includedOrderSetTreatments);
+                if (orderSetTreatmentsAcrossTabs.length > 0 && orderSetTreatmentsAcrossTabs[0] !== undefined) {
+                    var includedOrderSetTreatments = _.filter(orderSetTreatmentsAcrossTabs, function (treatment) {
+                        return treatment.orderSetUuid ? treatment.include : true;
+                    });
+                    $scope.consultation.newlyAddedTreatments = allTreatmentsAcrossTabs.concat(includedOrderSetTreatments);
+                }
                 if ($scope.consultation.discontinuedDrugs) {
                     $scope.consultation.discontinuedDrugs.forEach(function (discontinuedDrug) {
                         var removableOrder = _.find(activeDrugOrders, { uuid: discontinuedDrug.uuid });
