@@ -242,7 +242,7 @@ export function ScribblePad(props) {
         closeScribblePad();
       }
     } else {
-        onSaveSuccess(imageName);
+        onSaveSuccess(imageName, dataURL);
         closeScribblePad();
     }
   };

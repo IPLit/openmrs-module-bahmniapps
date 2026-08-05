@@ -321,7 +321,8 @@ Bahmni.Common = Bahmni.Common || {};
         fetchExpiryDate: "/license/api/license/getExpiryDate",
         implementationId: RESTWS_V1 + "/implementationid",
         bahmniDistroEncounterUrl: BAHMNI_CORE + "/distro/bahmniencounter",
-        aiScribbleApi: hostUrl + "/bahmni-ai-service/api/scribble"
+        aiScribbleApi: hostUrl + "/bahmni-ai-service/api/scribble",
+        aiVoiceNotesApi: hostUrl + "/bahmni-ai-service/api/voice-notes"
     };
 })();
 

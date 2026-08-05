@@ -5,12 +5,12 @@ angular.module('bahmni.clinical').controller('ConsultationController',
         'spinner', 'encounterService', 'messagingService', 'sessionService', 'retrospectiveEntryService', 'patientContext', '$q',
         'patientVisitHistoryService', '$stateParams', '$window', 'visitHistory', 'clinicalDashboardConfig', 'appService',
         'ngDialog', '$filter', 'configurations', 'visitConfig', 'conditionsService', 'configurationService', 'auditLogService', 'confirmBox',
-        'virtualConsultService', 'adhocTeleconsultationService', 'treatmentConfig', 'conceptSetService',
+        'virtualConsultService', 'adhocTeleconsultationService', 'treatmentConfig', 'conceptSetService', 'voiceNotesService', 'visitDocumentService',
         function ($scope, $rootScope, $state, $location, $translate, clinicalAppConfigService, diagnosisService, urlHelper, contextChangeHandler,
                   spinner, encounterService, messagingService, sessionService, retrospectiveEntryService, patientContext, $q,
                   patientVisitHistoryService, $stateParams, $window, visitHistory, clinicalDashboardConfig, appService,
                   ngDialog, $filter, configurations, visitConfig, conditionsService, configurationService, auditLogService, confirmBox,
-                  virtualConsultService, adhocTeleconsultationService, treatmentConfig, conceptSetService) {
+                  virtualConsultService, adhocTeleconsultationService, treatmentConfig, conceptSetService, voiceNotesService, visitDocumentService) {
             var ERROR = 1;
             var DateUtil = Bahmni.Common.Util.DateUtil;
             var getPreviousActiveCondition = Bahmni.Common.Domain.Conditions.getPreviousActiveCondition;
@@ -30,6 +30,13 @@ angular.module('bahmni.clinical').controller('ConsultationController',
             $scope.clinicalDashboardConfig = clinicalDashboardConfig;
             $scope.lastvisited = null;
 
+            $scope.isRecording = false;
+            $scope.audioBlob = null;
+            $scope.audioBase64 = null;
+
+            var mediaRecorder;
+            var chunks = [];
+            var mediaStream;
             $scope.openConsultationInNewTab = function () {
                 $window.open('#' + $scope.consultationBoardLink, '_blank');
             };
@@ -287,6 +294,91 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                 $state.go($scope.toStateConfig.toState, $scope.toStateConfig.toParams);
                 ngDialog.close();
             };
+
+            $scope.startRecording = function () {
+
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(function (stream) {
+
+                        mediaStream = stream;
+                        chunks = [];
+
+                        mediaRecorder = new MediaRecorder(stream);
+
+                        mediaRecorder.ondataavailable = function (e) {
+                            if (e.data.size > 0) {
+                                chunks.push(e.data);
+                            }
+                        };
+
+                        mediaRecorder.onstop = function () {
+
+                            $scope.audioBlob = new Blob(chunks, {
+                                type: mediaRecorder.mimeType || "audio/webm"
+                            });
+
+                            var player = document.getElementById("voicePlayer");
+                            player.src = URL.createObjectURL($scope.audioBlob);
+                            player.style.display = "block";
+
+                            blobToBase64($scope.audioBlob).then(function (base64) {
+                                $scope.audioBase64 = base64;
+                                console.log("Base64 length:", base64.length);
+                                $scope.$apply();
+                            });
+
+                            mediaStream.getTracks().forEach(function(track){
+                                track.stop();
+                            });
+
+                        };
+
+                        mediaRecorder.start();
+
+                        $scope.isRecording = true;
+                        $scope.$apply();
+
+                    })
+                    .catch(function(err){
+                        console.error(err);
+                        alert("Microphone permission denied.");
+                    });
+
+            };
+
+            $scope.stopRecording = function () {
+
+                if (mediaRecorder && mediaRecorder.state === "recording") {
+                    mediaRecorder.stop();
+                }
+
+                $scope.isRecording = false;
+
+            };
+            $scope.playRecording = function () {
+
+                var player = document.getElementById("voicePlayer");
+
+                if (player.src) {
+                    player.play();
+                }
+
+            };
+            function blobToBase64(blob) {
+
+                return new Promise(function(resolve) {
+
+                    var reader = new FileReader();
+
+                    reader.onloadend = function () {
+                        resolve(reader.result.split(",")[1]);
+                    };
+
+                    reader.readAsDataURL(blob);
+
+                });
+
+            }
 
             var getUrl = function (board) {
                 var urlPrefix = urlHelper.getPatientUrl();
@@ -676,16 +768,21 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                 $scope.gotoPatientDashboard();
             });
             var observationMapper = new Bahmni.ConceptSet.ObservationMapper();
+            var locationUuid = sessionService.getLoginLocationUuid();
+            var providerUuid =  $rootScope.currentProvider.uuid;
+
+            var encounterTypeUuid = configurations.encounterConfig().getConsultationEncounterTypeUuid();
             initialize();
+            var isAiProcessingEnabled = appService.getAppDescriptor().getConfigValue('enableAiProcessing');
             $scope.hostData = {
                 patient: $scope.patient,
-                locationUuid: sessionService.getLoginLocationUuid(),
-                encounterTypeUuid: configurations.encounterConfig().getConsultationEncounterTypeUuid(),
+                locationUuid: locationUuid,
+                encounterTypeUuid: encounterTypeUuid,
                 observationMapper: observationMapper,
                 handnoteConceptName: "Hand Note",
                 imageNoteConceptName: "Image Note",
                 saveObs: false,
-                onSaveSuccess: function (imageName) {
+                onSaveSuccess: function (imageName, file) {
                     conceptSetService.getConcept({
                         name: "Hand Note",
                         v: "bahmni"
@@ -703,7 +800,61 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                         stripExtraConceptInfo(handNotes);
                         $scope.consultation.scribble = [handNotes];
                     });
+                    visitDocumentService.processNotes(file, $scope.patient.uuid, locationUuid, encounterTypeUuid, providerUuid)
+                        .then(function (response) {
+                        });
                 }
+            };
+
+            $scope.openVoiceRecorder = function () {
+
+                ngDialog.open({
+                    template: "./consultation/views/voiceNoteDialog.html",
+                    className: "ngdialog-theme-default voice-note-dialog",
+                    scope: $scope,
+                    width: 500,
+                    showClose: true
+                });
+
+            };
+
+            $scope.attachVoiceNote = function () {
+                $scope.consultation.voiceNote = {
+                    mimeType: "audio/webm",
+                    base64: $scope.audioBase64
+                };
+                var body = {
+                    patientUuid: $scope.patient.uuid,
+//                    visitUuid: $scope.consultation.visitUuid,
+                    encounterTypeUuid: configurations.encounterConfig().getConsultationEncounterTypeUuid(),
+                    providerUuid: $rootScope.currentProvider.uuid,
+                    locationUuid: sessionService.getLoginLocationUuid(),
+                    content: $scope.audioBase64,
+                    format: "mp4",
+                    fileName: "voice.mp4"
+                };
+                voiceNotesService.transcribe(body);
+                ngDialog.close();
+            };
+            $scope.deleteRecording = function () {
+
+                var player = document.getElementById("voicePlayer");
+
+                if (player) {
+                    player.pause();
+                    player.removeAttribute("src");
+                    player.load();
+                }
+
+                if ($scope.audioUrl) {
+                    URL.revokeObjectURL($scope.audioUrl);
+                }
+
+                $scope.audioBlob = null;
+                $scope.audioBase64 = null;
+                $scope.audioUrl = null;
+                $scope.recordingTime = 0;
+
             };
 
             $scope.openScribble = function () {

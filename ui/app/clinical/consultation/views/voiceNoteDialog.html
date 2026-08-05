@@ -1,0 +1,50 @@
+<div class="voice-note-dialog">
+
+    <h3>Voice Note</h3>
+
+    <div class="timer">
+        {{recordingTime}}
+    </div>
+
+    <button ng-click="startRecording()"
+            ng-disabled="isRecording">
+
+        Start Recording
+
+    </button>
+
+    <button ng-click="stopRecording()"
+            ng-disabled="!isRecording">
+
+        Stop Recording
+
+    </button>
+
+    <button ng-click="playRecording()"
+            ng-disabled="!audioBlob">
+
+        Play
+
+    </button>
+
+    <button class="danger"
+            ng-click="deleteRecording()"
+            ng-disabled="!audioBlob">
+
+        Delete
+
+    </button>
+
+    <hr>
+
+    <button class="confirm"
+            ng-click="attachVoiceNote()"
+            ng-disabled="!audioBlob">
+
+        Attach to Consultation
+
+    </button>
+
+    <audio id="voicePlayer" controls></audio>
+
+</div>
