@@ -778,9 +778,11 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                         stripExtraConceptInfo(handNotes);
                         $scope.consultation.scribble = [handNotes];
                     });
-                    visitDocumentService.processNotes(file, $scope.patient.uuid, locationUuid, encounterTypeUuid, providerUuid)
-                        .then(function (response) {
-                        });
+                    if (isAiProcessingEnabled) {
+                        visitDocumentService.processNotes(file, $scope.patient.uuid, locationUuid, encounterTypeUuid, providerUuid)
+                            .then(function (response) {
+                            });
+                    }
                 }
             };
 
