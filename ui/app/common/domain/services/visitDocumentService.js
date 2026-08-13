@@ -98,11 +98,10 @@ angular.module('bahmni.common.domain')
                     img.onload = function () {
                         try {
                             var canvas = document.createElement("canvas");
-                            canvas.style.display = "none";
-                            canvas.width = img.width;
-                            canvas.height = img.height;
+                            canvas.width = img.naturalWidth;
+                            canvas.height = img.naturalHeight;
                             var ctx = canvas.getContext("2d");
-                            ctx.drawImage(img, img.x || 0, img.y || 0, img.width, img.height);
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                             var normalizedBase64 = canvas.toDataURL("image/jpeg", 0.92);
                             resolve(normalizedBase64);
                         } catch (err) {
