@@ -58,34 +58,65 @@ angular.module('bahmni.common.domain')
 
         this.saveFile = function (file, patientUuid, encounterTypeName, fileName, fileType) {
             var searchStr = ";base64";
+            var executePost = function (base64Content, format) {
+                var url = Bahmni.Common.Constants.RESTWS_V1 + "/bahmnicore/distro/visitDocument/mt/uploadDocument";
+                return $http.post(url, {
+                    content: base64Content.substring(base64Content.indexOf(searchStr) + searchStr.length, base64Content.length),
+                    format: format,
+                    patientUuid: patientUuid,
+                    encounterTypeName: encounterTypeName,
+                    fileType: fileType || "file",
+                    fileName: fileName.substring(0, fileName.lastIndexOf('.'))
+                }, {
+                    withCredentials: true,
+                    headers: {"Accept": "application/json", "Content-Type": "application/json"}
+                }).then(function (response) {
+                    return response;
+                }, function (error) {
+                    if (error.status === 413) {
+                        if (!isNaN(error.data.maxDocumentSizeMB)) {
+                            var maxAllowedSize = roundToNearestHalf(error.data.maxDocumentSizeMB * 0.70);
+                            messagingService.showMessage("error", $translate.instant("FILE_SIZE_LIMIT_EXCEEDED_MESSAGE", { maxAllowedSize: maxAllowedSize }));
+                        } else {
+                            messagingService.showMessage("error", $translate.instant("SIZE_LIMIT_EXCEEDED_MESSAGE"));
+                        }
+                    }
+                    return $q.reject(error);
+                });
+            };
+
             var format = file.split(searchStr)[0].split("/")[1];
             if (fileType === "video") {
                 format = _.last(_.split(fileName, "."));
+                return executePost(file, format);
             }
-            var url = Bahmni.Common.Constants.RESTWS_V1 + "/bahmnicore/distro/visitDocument/mt/uploadDocument";
-            return $http.post(url, {
-                content: file.substring(file.indexOf(searchStr) + searchStr.length, file.length),
-                format: format,
-                patientUuid: patientUuid,
-                encounterTypeName: encounterTypeName,
-                fileType: fileType || "file",
-                fileName: fileName.substring(0, fileName.lastIndexOf('.'))
-            }, {
-                withCredentials: true,
-                headers: {"Accept": "application/json", "Content-Type": "application/json"}
-            }).then(function (response) {
-                return response;
-            }, function (error) {
-                if (error.status === 413) {
-                    if (!isNaN(error.data.maxDocumentSizeMB)) {
-                        var maxAllowedSize = roundToNearestHalf(error.data.maxDocumentSizeMB * 0.70);
-                        messagingService.showMessage("error", $translate.instant("FILE_SIZE_LIMIT_EXCEEDED_MESSAGE", { maxAllowedSize: maxAllowedSize }));
-                    } else {
-                        messagingService.showMessage("error", $translate.instant("SIZE_LIMIT_EXCEEDED_MESSAGE"));
-                    }
-                }
-                return $q.reject(error);
-            });
+
+            // Process image file to fix orientation using Canvas
+            if (file.indexOf("data:image/") === 0) {
+                return $q(function (resolve) {
+                    var img = new Image();
+                    img.onload = function () {
+                        try {
+                            var canvas = document.createElement("canvas");
+                            canvas.width = img.naturalWidth;
+                            canvas.height = img.naturalHeight;
+                            var ctx = canvas.getContext("2d");
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                            var normalizedBase64 = canvas.toDataURL("image/jpeg", 0.92);
+                            resolve(normalizedBase64);
+                        } catch (err) {
+                            resolve(file);
+                        }
+                    };
+                    img.onerror = function () {
+                        resolve(file);
+                    };
+                    img.src = file;
+                }).then(function (correctedBase64) {
+                    return executePost(correctedBase64, format);
+                });
+            }
+            return executePost(file, format);
         };
 
         var roundToNearestHalf = function (value) {
