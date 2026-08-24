@@ -377,7 +377,7 @@ angular.module('bahmni.claims')
             $scope.preauth = function (patient) {
                 $state.go("claims.preauth", {patient: patient, patientUuid: patient.uuid});
             };
-            $scope.predetermination = function (patient) {
+            $scope.coverageEligibility = function (patient) {
                 $state.go("claims.coverageEligibility", {patient: patient, patientUuid: patient.uuid});
             };
             $scope.submit = function (patient) {

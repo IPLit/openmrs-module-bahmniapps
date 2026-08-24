@@ -90,10 +90,10 @@ angular.module('bahmni.claims')
             return total.toFixed(2);
         };
 
-        $scope.submitPredetermination = function () {
+        $scope.submitCoverageEligibility = function () {
             $scope.claimRequest.patientUuid = $scope.patientUuid;
             $scope.claimRequest.visitUuid = $scope.selectedVisitUuid;
-            nhcxService.submitPredetermination($scope.claimRequest).then(function (response) {
+            nhcxService.submitCoverageEligibility($scope.claimRequest).then(function (response) {
 //                Bahmni.Common.UI.Notification.success('Predetermination submitted successfully');
                 $scope.response = response.data;
                 $scope.loadClaims();

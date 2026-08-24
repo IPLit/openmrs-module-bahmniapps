@@ -30,8 +30,8 @@ angular.module('bahmni.claims')
             return post('/preauth', params);
         },
 
-        submitPredetermination: function (params) {
-            return post('/predetermination', params);
+        submitCoverageEligibility: function (params) {
+            return post('/coverage_eligibility', params);
         },
         submitClaim: function (params) {
             return post('/claim', params);
