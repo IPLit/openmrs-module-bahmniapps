@@ -211,3 +211,128 @@
         font-size: 16px;
     }
 }
+
+.scribble-pad-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scribble-pad-content {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-grow: 1;
+  max-width: 100%;
+}
+
+.scribble-page-sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scribble-upload-button {
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  color: #fff;
+  background: #008cba;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.scribble-page-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scribble-page-item {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.scribble-page-button {
+  position: relative;
+  padding: 8px 16px;
+  color: #000;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.scribble-page-button.active {
+  color: #fff;
+  background: #008cba;
+}
+
+.scribble-remove-button {
+  position: absolute;
+  z-index: 2;
+  top: -10px;
+  right: -10px;
+  display: flex;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: #da1e28;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.scribble-page-thumbnail {
+  display: block;
+  max-width: 150px;
+  margin-top: 10px;
+  border: 1px solid #000;
+}
+
+.scribble-canvas {
+  display: block;
+  flex: 0 0 auto;
+  background: #fff;
+  border: 1px solid #000;
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  overscroll-behavior: contain;
+}
+
+.scribble-controls {
+  display: flex;
+  width: 100%;
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.scribble-controls button {
+  padding: 8px 16px;
+  color: #000;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .scribble-page-sidebar {
+    margin-right: 8px;
+  }
+
+  .scribble-controls {
+    flex-wrap: wrap;
+  }
+}
