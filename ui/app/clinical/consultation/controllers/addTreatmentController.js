@@ -702,6 +702,7 @@ angular.module('bahmni.clinical')
                 var orderSetTreatmentsAcrossTabs = _.flatten(_.map(tabNames, function (tabName) {
                     return $scope.consultation.newlyAddedTabTreatments[tabName].orderSetTreatments;
                 }));
+                $scope.consultation.newlyAddedTreatments = allTreatmentsAcrossTabs;
                 if (orderSetTreatmentsAcrossTabs.length > 0 && orderSetTreatmentsAcrossTabs[0] !== undefined) {
                     var includedOrderSetTreatments = _.filter(orderSetTreatmentsAcrossTabs, function (treatment) {
                         return treatment.orderSetUuid ? treatment.include : true;
