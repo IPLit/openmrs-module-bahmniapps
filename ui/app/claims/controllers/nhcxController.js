@@ -107,7 +107,7 @@ angular.module('bahmni.claims')
 
             claim.checkingStatus = true;
             nhcxService.getStatus(claim.correlationId).then(function (response) {
-                var status = response.data && response.data.status;
+                var status = response.data && response.data.claimState;
                 if (status) {
                     claim.status = status.toUpperCase();
                 }
