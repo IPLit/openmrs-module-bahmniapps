@@ -48,7 +48,7 @@ angular.module('bahmni.clinical')
 
             $scope.test.showNotes = $scope.hasNotes();
             $scope.test.showDetailsButton = $scope.params.showDetailsButton;
-            $scope.test.labReportUrl = $scope.test.uploadedFileName ? urlFrom($scope.test.uploadedFileName) : null;
+            $scope.test.labReportUrl = $scope.test.labReportUrl ? urlFrom($scope.test.labReportUrl) : null;
 
             $scope.toggle = function () {
                 $scope.test.showDetails = !$scope.test.showDetails;
