@@ -95,3 +95,130 @@
     color: #c0392b;
     font-weight: 600;
 }
+.claim-actions {
+    white-space: nowrap;
+}
+
+.claim-actions .btn {
+    margin: 2px;
+}
+
+.communication-table-cell {
+    padding: 0 !important;
+    background: #f5f7f8;
+}
+
+.communication-panel {
+    padding: 16px;
+}
+
+.communication-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.communication-header h4 {
+    margin: 0;
+}
+
+.communication-message {
+    margin-bottom: 14px;
+    padding: 14px;
+    border: 1px solid #d8dfe3;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.communication-message.inbound {
+    border-left: 4px solid #f0a000;
+}
+
+.communication-message.outbound {
+    margin-left: 40px;
+    border-left: 4px solid #4b9e63;
+    background: #f4fbf6;
+}
+
+.message-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.communication-direction,
+.communication-status,
+.document-status,
+.required-label {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    background: #e9eef1;
+    font-size: 11px;
+}
+
+.required-label {
+    color: #fff;
+    background: #c0392b;
+}
+
+.message-topic {
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.message-body {
+    margin-top: 8px;
+    white-space: pre-wrap;
+}
+
+.requested-documents,
+.communication-reply {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #ddd;
+}
+
+.requested-document {
+    margin-bottom: 10px;
+    padding: 10px;
+    background: #f7f8f9;
+    border-radius: 3px;
+}
+
+.document-upload {
+    margin-top: 8px;
+}
+
+.document-upload input {
+    display: inline-block;
+    max-width: 300px;
+}
+
+.document-selection {
+    display: block;
+    margin-top: 8px;
+}
+
+.communication-reply .form-control {
+    margin-bottom: 10px;
+}
+
+.communication-error {
+    margin: 8px 0;
+    color: #b3261e;
+}
+
+.communication-success {
+    margin: 8px 0;
+    color: #287d3c;
+}
+
+.communication-empty,
+.communication-loading {
+    padding: 15px;
+    text-align: center;
+    color: #666;
+}

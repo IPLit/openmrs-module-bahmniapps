@@ -9,6 +9,8 @@ angular.module('bahmni.claims')
         };
         $scope.claims = [];
         $scope.loadingClaims = false;
+        $scope.openCommunicationClaimId = null;
+        $scope.communicationError = null;
         var getPatient = function () {
             return patientService.getPatient($stateParams.patientUuid).then(function (patientResponse) {
                 $scope.patient = patientResponse.data;
@@ -21,18 +23,191 @@ angular.module('bahmni.claims')
                 });
         };
 
+        $scope.toggleCommunications = function (claim) {
+            if (!claim || !claim.id) {
+                $scope.communicationError = 'Claim tracking ID is missing.';
+                return;
+            }
+
+            if ($scope.openCommunicationClaimId === claim.id) {
+                $scope.openCommunicationClaimId = null;
+                return;
+            }
+
+            $scope.openCommunicationClaimId = claim.id;
+            if (!claim.communicationsLoaded) {
+                $scope.loadCommunications(claim);
+            }
+        };
+
+        $scope.loadCommunications = function (claim) {
+            if (!claim || !claim.id) {
+                return;
+            }
+
+            claim.loadingCommunications = true;
+            claim.communicationError = null;
+
+            nhcxService.getClaimCommunications(claim.id)
+                .then(function (response) {
+                    claim.communications = response.data || [];
+                    claim.communicationsLoaded = true;
+                    angular.forEach(claim.communications, initialiseCommunication);
+                }).catch(function (error) {
+                    claim.communicationError = getErrorMessage(error, 'Unable to load payer communications.');
+                }).finally(function () {
+                    claim.loadingCommunications = false;
+                });
+        };
+
+        function initialiseCommunication (communication) {
+            communication.reply = communication.reply || {
+                categoryCode: communication.categoryCode || 'additional-information',
+                topic: getReplyTopic(communication.topic),
+                message: '',
+                documentIds: []
+            };
+
+            communication.selectedFiles = communication.selectedFiles || {};
+        }
+
+        function getReplyTopic (topic) {
+            if (!topic) {
+                return 'Response to payer communication';
+            }
+
+            if (topic.toLowerCase().indexOf('re:') === 0) {
+                return topic;
+            }
+
+            return 'Re: ' + topic;
+        }
+
+        $scope.selectCommunicationFile = function (file, communication, document) {
+            if (!file || !communication) {
+                return;
+            }
+
+            communication.selectedFiles = communication.selectedFiles || {};
+            var key = document && document.id ? document.id : 'new';
+            communication.selectedFiles[key] = file;
+            if (document) {
+                document.selectedFileName = file.name;
+                document.uploadError = null;
+            }
+        };
+
+        $scope.uploadCommunicationDocument = function (communication, document) {
+            if (!communication) {
+                return;
+            }
+
+            var key = document && document.id ? document.id : 'new';
+            var file = communication.selectedFiles && communication.selectedFiles[key];
+
+            if (!file) {
+                if (document) {
+                    document.uploadError = 'Please select a file first.';
+                }
+                return;
+            }
+
+            document.uploading = true;
+            document.uploadError = null;
+
+            nhcxService.uploadCommunicationDocument(communication.id, document.id, file)
+            .then(function (response) {
+                var uploadedDocument = response.data;
+                angular.extend(document, uploadedDocument);
+                document.selectedForReply = true;
+                document.selectedFileName = null;
+                delete communication.selectedFiles[key];
+            }).catch(function (error) {
+                document.uploadError = getErrorMessage(error, 'Unable to upload the document.');
+            }).finally(function () {
+                document.uploading = false;
+            });
+        };
+
+        $scope.canRespondToCommunication = function (communication) {
+            if (!communication || communication.direction !== 'INBOUND' || communication.responding) {
+                return false;
+            }
+
+            var hasMessage = communication.reply && communication.reply.message && communication.reply.message.trim() !== '';
+            var hasDocuments = getSelectedDocumentIds(communication).length > 0;
+            return hasMessage || hasDocuments;
+        };
+
+        function getSelectedDocumentIds (communication) {
+            var documentIds = [];
+
+            angular.forEach(communication.documents || [], function (document) {
+                if (document.selectedForReply && (document.status === 'AVAILABLE' || document.status === 'ATTACHED')) {
+                    documentIds.push(document.id);
+                }
+            });
+
+            return documentIds;
+        }
+
+        $scope.respondToCommunication = function (claim, communication) {
+            if (!$scope.canRespondToCommunication(communication)) {
+                return;
+            }
+
+            communication.responding = true;
+            communication.replyError = null;
+            communication.replySuccess = null;
+
+            var request = {
+                categoryCode: communication.reply.categoryCode,
+                topic: communication.reply.topic,
+                message: communication.reply.message,
+                documentIds: getSelectedDocumentIds(communication)
+            };
+
+            nhcxService.respondToCommunication(communication.id, request)
+            .then(function () {
+                communication.replySuccess = 'Response submitted successfully.';
+                communication.reply.message = '';
+                angular.forEach(communication.documents || [], function (document) {
+                    document.selectedForReply = false;
+                });
+
+                return $scope.loadCommunications(claim);
+            }).catch(function (error) {
+                communication.replyError = getErrorMessage(error, 'Unable to send the response.');
+            }).finally(function () {
+                communication.responding = false;
+            });
+        };
+
+        function getErrorMessage (error, defaultMessage) {
+            if (!error || !error.data) {
+                return defaultMessage;
+            }
+
+            if (angular.isString(error.data)) {
+                return error.data;
+            }
+
+            return error.data.message ||
+                error.data.errorMessage ||
+                error.data.error ||
+                defaultMessage;
+        }
+
         $scope.loadClaims = function () {
             if (!$scope.patientUuid) {
                 return;
             }
 
             $scope.loadingClaims = true;
-
             nhcxService.getPatientClaims($scope.patientUuid)
                 .then(function (response) {
                     $scope.claims = response.data || [];
-                })
-                .finally(function () {
+                }).finally(function () {
                     $scope.loadingClaims = false;
                 });
         };

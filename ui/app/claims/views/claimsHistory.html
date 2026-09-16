@@ -10,19 +10,19 @@
             <th>Correlation ID</th>
             <th>Status</th>
             <th>Created</th>
-            <th>Action</th>
+            <th>Actions</th>
         </tr>
         </thead>
-        <tbody>
-        <tr ng-repeat="claim in claims">
+        <tbody ng-repeat="claim in claims track by claim.id">
+        <tr>
             <td>
                 {{ claim.requestType || '-' }}
             </td>
             <td>
-                {{ claim.visitUuid }}
+                {{ claim.visitUuid || '-' }}
             </td>
             <td>
-                {{ claim.correlationId }}
+                {{ claim.correlationId || '-' }}
             </td>
             <td>
                 <span class="claim-status"
@@ -37,7 +37,7 @@
             <td>
                 {{ claim.submittedAt | date:'dd MMM yyyy hh:mm a' }}
             </td>
-            <td>
+            <td class="claim-actions">
                 <button class="btn bahmni-btn secondary"
                         ng-if="claim.claimState === 'PENDING'"
                         ng-click="checkClaimStatus(claim)"
@@ -45,9 +45,162 @@
 
                     {{ claim.checkingStatus ? 'Checking...' : 'Check Status' }}
                 </button>
-                <span ng-if="claim.claimState !== 'PENDING'">
-                    —
-                </span>
+                <button class="btn bahmni-btn"
+                        ng-click="toggleCommunications(claim)"
+                        ng-disabled="!claim.id">
+
+                    {{ openCommunicationClaimId === claim.id ? 'Hide Messages' : 'Messages' }}
+                </button>
+            </td>
+        </tr>
+
+        <tr ng-if="openCommunicationClaimId === claim.id">
+            <td colspan="6"
+                class="communication-table-cell">
+                <div class="communication-panel">
+                    <div class="communication-header">
+                        <h4>
+                            Payer Communications
+                        </h4>
+
+                        <button type="button" class="btn bahmni-btn secondary"
+                                ng-click="loadCommunications(claim)"
+                                ng-disabled="claim.loadingCommunications">
+                            Refresh
+                        </button>
+                    </div>
+
+                    <div class="communication-loading" ng-if="claim.loadingCommunications">
+                        Loading communications...
+                    </div>
+
+                    <div class="communication-error" ng-if="claim.communicationError">
+                        {{ claim.communicationError }}
+                    </div>
+
+                    <div class="communication-empty"
+                         ng-if="!claim.loadingCommunications && claim.communicationsLoaded &&!claim.communications.length">
+                        No payer communications received.
+                    </div>
+
+                    <div class="communication-message"
+                         ng-repeat="communication in claim.communications track by communication.id"
+                         ng-class="{
+                            'inbound': communication.direction === 'INBOUND',
+                            'outbound': communication.direction === 'OUTBOUND'
+                         }">
+
+                        <div class="message-heading">
+                            <div>
+                                <strong>
+                                    {{ communication.direction === 'INBOUND' ? 'Payer' : 'Hospital' }}
+                                </strong>
+
+                                <span class="communication-direction">
+                                    {{ communication.direction }}
+                                </span>
+
+                                <span class="communication-status">
+                                    {{ communication.status }}
+                                </span>
+                            </div>
+
+                            <span class="message-date">
+                                {{ (communication.receivedAt || communication.submittedAt) | date:'dd MMM yyyy hh:mm a' }}
+                            </span>
+                        </div>
+
+                        <div class="message-topic" ng-if="communication.topic">
+                            {{ communication.topic }}
+                        </div>
+
+                        <div class="message-body" ng-if="communication.message">
+                            {{ communication.message }}
+                        </div>
+
+                        <div class="requested-documents" ng-if="communication.documents && communication.documents.length">
+                            <h5>Documents</h5>
+                            <div class="requested-document" ng-repeat="document in communication.documents track by document.id">
+                                <div class="document-details">
+                                    <strong>
+                                        {{ document.documentName || document.fileName || 'Requested document' }}
+                                    </strong>
+
+                                    <span ng-if="document.required" class="required-label">
+                                        Required
+                                    </span>
+
+                                    <span class="document-status">
+                                        {{ document.status }}
+                                    </span>
+                                </div>
+
+                                <div class="document-upload" ng-if="communication.direction === 'INBOUND' && document.status !== 'SUBMITTED'">
+                                    <input type="file"
+                                           accept="application/pdf, image/jpeg, image/png"
+                                           file-change="
+                                               selectCommunicationFile(file, communication, document)">
+
+                                    <span ng-if="document.selectedFileName">
+                                        {{ document.selectedFileName }}
+                                    </span>
+
+                                    <button type="button"
+                                            class="btn bahmni-btn"
+                                            ng-click="uploadCommunicationDocument(communication, document)"
+                                            ng-disabled="document.uploading">
+
+                                        {{ document.uploading ? 'Uploading...' : 'Upload' }}
+                                    </button>
+
+                                    <div class="communication-error" ng-if="document.uploadError">
+                                        {{ document.uploadError }}
+                                    </div>
+                                </div>
+
+                                <label class="document-selection"
+                                       ng-if="
+                                           communication.direction === 'INBOUND' &&
+                                           (document.status === 'AVAILABLE' || document.status === 'ATTACHED')
+                                       ">
+                                    <input type="checkbox" ng-model="document.selectedForReply">
+                                    Include in response
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="communication-reply" ng-if="communication.direction === 'INBOUND' && communication.status !== 'FAILED'">
+                            <h5>Reply to payer</h5>
+                            <input type="text"
+                                   class="form-control"
+                                   placeholder="Response topic"
+                                   ng-model="communication.reply.topic">
+
+                            <textarea class="form-control"
+                                      rows="4"
+                                      placeholder="Enter your response"
+                                      ng-model="communication.reply.message">
+                            </textarea>
+                            <div class="communication-error"
+                                 ng-if="communication.replyError">
+                                {{ communication.replyError }}
+                            </div>
+
+                            <div class="communication-success"
+                                 ng-if="communication.replySuccess">
+                                {{ communication.replySuccess }}
+                            </div>
+
+                            <button type="button"
+                                    class="btn bahmni-btn"
+                                    ng-click="respondToCommunication(claim, communication)"
+                                    ng-disabled="!canRespondToCommunication(communication)">
+
+                                {{ communication.responding ? 'Sending...' : 'Send Response' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </td>
         </tr>
         </tbody>
