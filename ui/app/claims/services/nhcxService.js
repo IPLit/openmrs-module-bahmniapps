@@ -38,7 +38,7 @@ angular.module('bahmni.claims').factory('nhcxService', ['$http', '$q', function 
         });
     }
 
-    function createClaimFormData(request, files) {
+    function createClaimFormData (request, files) {
         var formData = new FormData();
         var requestBlob = new Blob([angular.toJson(request)],
             {

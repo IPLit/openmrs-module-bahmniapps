@@ -91,7 +91,7 @@ angular.module('bahmni.claims')
             resetFileInput('claimDocumentsInput');
         };
 
-        function appendDocuments(target, files, defaultCategoryCode) {
+        function appendDocuments (target, files, defaultCategoryCode) {
             angular.forEach(files || [], function (file) {
                 if (!isAllowedClaimDocument(file)) {
                     return;
@@ -127,7 +127,7 @@ angular.module('bahmni.claims')
             updateFileIndexes(target);
         }
 
-        function isAllowedClaimDocument(file) {
+        function isAllowedClaimDocument (file) {
             var maxSize = 5 * 1024 * 1024;
 
             var allowedTypes = [
@@ -156,7 +156,7 @@ angular.module('bahmni.claims')
             return true;
         }
 
-        function findDocumentCategory(code) {
+        function findDocumentCategory (code) {
             var category = $scope.documentCategories.find(function (item) {
                 return item.code === code;
             });
@@ -185,7 +185,7 @@ angular.module('bahmni.claims')
             updateFileIndexes($scope.claimDocuments);
         };
 
-        function updateFileIndexes(documents) {
+        function updateFileIndexes (documents) {
             angular.forEach(documents, function (document, index) {
                 document.fileIndex = index;
             });
@@ -203,7 +203,7 @@ angular.module('bahmni.claims')
             return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
         };
 
-        function getDocumentMetadata(documents) {
+        function getDocumentMetadata (documents) {
             return (documents || []).map(function (document, index) {
                 return {
                     fileIndex: index,
@@ -216,13 +216,13 @@ angular.module('bahmni.claims')
             });
         }
 
-        function getDocumentFiles(documents) {
+        function getDocumentFiles (documents) {
             return (documents || []).map(function (document) {
                 return document.file;
             });
         }
 
-        function resetFileInput(inputId) {
+        function resetFileInput (inputId) {
             var input = document.getElementById(inputId);
 
             if (input) {
