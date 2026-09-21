@@ -222,3 +222,88 @@
     text-align: center;
     color: #666;
 }
+.claim-documents-section {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.document-help {
+    margin: 5px 0 15px;
+    color: #666;
+    font-size: 13px;
+}
+
+.document-picker {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.document-picker input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    overflow: hidden;
+}
+
+.selected-documents {
+    margin-top: 15px;
+}
+
+.document-row {
+    display: grid;
+    grid-template-columns:
+        minmax(180px, 1.4fr)
+        minmax(170px, 1fr)
+        minmax(180px, 1fr)
+        auto;
+    gap: 12px;
+    align-items: end;
+    margin-bottom: 10px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fafafa;
+}
+
+.document-file {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.document-file strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.document-file small {
+    margin-top: 4px;
+    color: #777;
+}
+
+.document-category label,
+.document-description label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: #555;
+}
+
+.error-message,
+.document-error {
+    margin: 12px 0;
+    padding: 10px;
+    color: #a12622;
+    background: #fbe9e7;
+    border: 1px solid #ef9a9a;
+    border-radius: 3px;
+}
+
+@media (max-width: 900px) {
+    .document-row {
+        grid-template-columns: 1fr;
+    }
+}

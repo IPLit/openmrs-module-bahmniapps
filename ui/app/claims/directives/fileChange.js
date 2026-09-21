@@ -9,14 +9,13 @@ angular.module('bahmni.claims')
             },
             link: function (scope, element) {
                 element.on('change', function (event) {
-                    var file = event.target.files &&
-                        event.target.files.length
-                        ? event.target.files[0]
-                        : null;
+                    var input = event.target;
+                    var files = Array.prototype.slice.call(input.files || []);
 
                     scope.$apply(function () {
                         scope.fileChange({
-                            file: file
+                            file: files.length ? files[0] : null,
+                            files: files
                         });
                     });
                 });

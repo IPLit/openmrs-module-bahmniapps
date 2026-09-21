@@ -49,11 +49,87 @@
             </div>
         </div>
 
+        <div class="claim-documents-section">
+
+            <h3>Supporting Documents</h3>
+
+            <p class="document-help">
+                Attach diagnostic reports, clinical documents, consent forms
+                or other documents required for pre-authorization.
+            </p>
+
+            <label class="document-picker">
+        <span class="btn secondary-btn">
+            Choose Documents
+        </span>
+
+                <input id="preAuthDocumentsInput"
+                       type="file"
+                       multiple
+                       accept=".pdf,.jpg,.jpeg,.png"
+                       file-change="selectPreAuthDocuments(files)">
+            </label>
+
+            <div class="document-error"
+                 ng-if="claimDocumentError">
+                {{ claimDocumentError }}
+            </div>
+
+            <div class="selected-documents"
+                 ng-if="preAuthDocuments.length">
+
+                <div class="document-row"
+                     ng-repeat="document in preAuthDocuments track by $index">
+
+                    <div class="document-file">
+                        <strong>{{ document.fileName }}</strong>
+
+                        <small>
+                            {{ formatFileSize(document.size) }}
+                        </small>
+                    </div>
+
+                    <div class="document-category">
+                        <label>Document type</label>
+
+                        <select class="form-control"
+                                ng-model="document.categoryCode"
+                                ng-change="updateDocumentCategory(document)"
+                                ng-options="category.code as category.display
+                                    for category in documentCategories">
+                        </select>
+                    </div>
+
+                    <div class="document-description">
+                        <label>Description</label>
+
+                        <input type="text"
+                               class="form-control"
+                               ng-model="document.description"
+                               placeholder="Optional description">
+                    </div>
+
+                    <button type="button"
+                            class="danger-btn"
+                            ng-click="removePreAuthDocument($index)">
+                        Remove
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="error-message"
+             ng-if="preAuthError">
+            {{ preAuthError }}
+        </div>
+
         <div class="action-buttons">
             <button class="btn bahmni-btn"
+                    type="button"
                     ng-click="preAuth(patient)"
-                    ng-disabled="!selectedVisitUuid">
-                Submit Pre-Auth Request
+                    ng-disabled="!selectedVisitUuid || submittingPreAuth">
+
+                {{ submittingPreAuth ? 'Submitting...' : 'Submit Pre-Auth Request' }}
             </button>
         </div>
     </div>

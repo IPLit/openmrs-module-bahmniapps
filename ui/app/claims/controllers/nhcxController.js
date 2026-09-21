@@ -9,6 +9,47 @@ angular.module('bahmni.claims')
         };
         $scope.claims = [];
         $scope.loadingClaims = false;
+        $scope.preAuthDocuments = [];
+        $scope.claimDocuments = [];
+        $scope.submittingPreAuth = false;
+        $scope.submittingClaim = false;
+        $scope.preAuthError = null;
+        $scope.claimError = null;
+
+        $scope.documentCategories = [
+            {
+                code: 'DIA',
+                display: 'Diagnostic report'
+            },
+            {
+                code: 'CD',
+                display: 'Clinical document'
+            },
+            {
+                code: 'MB',
+                display: 'Medical bill'
+            },
+            {
+                code: 'HDS',
+                display: 'Hospital discharge summary'
+            },
+            {
+                code: 'PCT',
+                display: 'Patient consent'
+            },
+            {
+                code: 'DCT',
+                display: 'Doctor consent'
+            },
+            {
+                code: 'HCT',
+                display: 'Hospital consent'
+            },
+            {
+                code: 'ATT',
+                display: 'Attachment'
+            }
+        ];
         $scope.openCommunicationClaimId = null;
         $scope.communicationError = null;
         var getPatient = function () {
@@ -39,6 +80,155 @@ angular.module('bahmni.claims')
                 $scope.loadCommunications(claim);
             }
         };
+
+        $scope.selectPreAuthDocuments = function (files) {
+            appendDocuments($scope.preAuthDocuments, files, 'CD');
+            resetFileInput('preAuthDocumentsInput');
+        };
+
+        $scope.selectClaimDocuments = function (files) {
+            appendDocuments($scope.claimDocuments, files, 'MB');
+            resetFileInput('claimDocumentsInput');
+        };
+
+        function appendDocuments(target, files, defaultCategoryCode) {
+            angular.forEach(files || [], function (file) {
+                if (!isAllowedClaimDocument(file)) {
+                    return;
+                }
+
+                var duplicate = target.some(function (document) {
+                    return document.fileName === file.name &&
+                        document.size === file.size &&
+                        document.lastModified === file.lastModified;
+                });
+
+                if (duplicate) {
+                    return;
+                }
+
+                var category = findDocumentCategory(defaultCategoryCode);
+                target.push({
+                    file: file,
+                    fileIndex: target.length,
+                    fileName: file.name,
+                    size: file.size,
+                    lastModified: file.lastModified,
+                    contentType: file.type || 'application/octet-stream',
+                    categoryCode: category.code,
+                    categoryDisplay: category.display,
+                    informationCode: 'AT',
+                    informationDisplay: 'Attachment',
+                    description: '',
+                    validationError: null
+                });
+            });
+
+            updateFileIndexes(target);
+        }
+
+        function isAllowedClaimDocument(file) {
+            var maxSize = 5 * 1024 * 1024;
+
+            var allowedTypes = [
+                'application/pdf',
+                'image/jpeg',
+                'image/png'
+            ];
+
+            if (!file) {
+                return false;
+            }
+
+            if (file.size > maxSize) {
+                $scope.claimDocumentError =
+                    file.name + ' exceeds the maximum size of 5 MB.';
+                return false;
+            }
+
+            if (allowedTypes.indexOf(file.type) === -1) {
+                $scope.claimDocumentError =
+                    file.name + ' is not a supported file type.';
+                return false;
+            }
+
+            $scope.claimDocumentError = null;
+            return true;
+        }
+
+        function findDocumentCategory(code) {
+            var category = $scope.documentCategories.find(function (item) {
+                return item.code === code;
+            });
+
+            return category || {
+                code: 'ATT',
+                display: 'Attachment'
+            };
+        }
+
+        $scope.updateDocumentCategory = function (document) {
+            var category = findDocumentCategory(
+                document.categoryCode
+            );
+
+            document.categoryDisplay = category.display;
+        };
+
+        $scope.removePreAuthDocument = function (index) {
+            $scope.preAuthDocuments.splice(index, 1);
+            updateFileIndexes($scope.preAuthDocuments);
+        };
+
+        $scope.removeClaimDocument = function (index) {
+            $scope.claimDocuments.splice(index, 1);
+            updateFileIndexes($scope.claimDocuments);
+        };
+
+        function updateFileIndexes(documents) {
+            angular.forEach(documents, function (document, index) {
+                document.fileIndex = index;
+            });
+        }
+
+        $scope.formatFileSize = function (bytes) {
+            if (!bytes) {
+                return '0 KB';
+            }
+
+            if (bytes < 1024 * 1024) {
+                return (bytes / 1024).toFixed(1) + ' KB';
+            }
+
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        };
+
+        function getDocumentMetadata(documents) {
+            return (documents || []).map(function (document, index) {
+                return {
+                    fileIndex: index,
+                    categoryCode: document.categoryCode,
+                    categoryDisplay: document.categoryDisplay,
+                    informationCode: document.informationCode,
+                    informationDisplay: document.informationDisplay,
+                    description: document.description
+                };
+            });
+        }
+
+        function getDocumentFiles(documents) {
+            return (documents || []).map(function (document) {
+                return document.file;
+            });
+        }
+
+        function resetFileInput(inputId) {
+            var input = document.getElementById(inputId);
+
+            if (input) {
+                input.value = '';
+            }
+        }
 
         $scope.loadCommunications = function (claim) {
             if (!claim || !claim.id) {
@@ -236,10 +426,30 @@ angular.module('bahmni.claims')
         init();
 
         $scope.preAuth = function (patient) {
-            return nhcxService.submitPreauth({ patientUuid: patient.uuid, visitUuid: $scope.selectedVisitUuid })
-            .then(function (response) {
+            if (!patient || !$scope.selectedVisitUuid) {
+                $scope.preAuthError = 'Please select a visit.';
+                return;
+            }
+
+            $scope.submittingPreAuth = true;
+            $scope.preAuthError = null;
+
+            var request = {
+                patientUuid: patient.uuid,
+                visitUuid: $scope.selectedVisitUuid,
+                abhaId: null,
+                documentMetadata: getDocumentMetadata($scope.preAuthDocuments)
+            };
+
+            return nhcxService.submitPreauth(request, getDocumentFiles($scope.preAuthDocuments)).then(function (response) {
                 $scope.response = response.data;
+                $scope.preAuthDocuments = [];
+                resetFileInput('preAuthDocumentsInput');
                 $scope.loadClaims();
+            }).catch(function (error) {
+                $scope.preAuthError = getErrorMessage(error, 'Unable to submit the pre-authorization request.');
+            }).finally(function () {
+                $scope.submittingPreAuth = false;
             });
         };
 
@@ -294,22 +504,36 @@ angular.module('bahmni.claims')
                 claim.checkingStatus = false;
             });
         };
+
         $scope.submitClaim = function () {
-            $scope.claimRequest.patientUuid = $scope.patientUuid;
-            $scope.claimRequest.visitUuid = $scope.selectedVisitUuid;
-            nhcxService.submitClaim($scope.claimRequest).then(function (response) {
-//                Bahmni.Common.UI.Notification.success('Claim submitted successfully');
+            if (!$scope.selectedVisitUuid) {
+                $scope.claimError = 'Please select a visit.';
+                return;
+            }
+
+            $scope.submittingClaim = true;
+            $scope.claimError = null;
+            var request = angular.copy($scope.claimRequest);
+            request.patientUuid = $scope.patientUuid;
+            request.visitUuid = $scope.selectedVisitUuid;
+            request.documentMetadata = getDocumentMetadata($scope.claimDocuments);
+
+            return nhcxService.submitClaim(request, getDocumentFiles($scope.claimDocuments)).then(function (response) {
                 $scope.response = response.data;
+                $scope.claimDocuments = [];
+                resetFileInput('claimDocumentsInput');
                 $scope.loadClaims();
+            }).catch(function (error) {
+                $scope.claimError = getErrorMessage(error, 'Unable to submit the final claim.');
+            }).finally(function () {
+                $scope.submittingClaim = false;
             });
         };
 
         $scope.getPatientAttribute = function (attributeName, defaultValue) {
             defaultValue = defaultValue || '-';
 
-            if (!$scope.patient ||
-                !$scope.patient.person ||
-                !$scope.patient.person.attributes) {
+            if (!$scope.patient || !$scope.patient.person || !$scope.patient.person.attributes) {
                 return defaultValue;
             }
 

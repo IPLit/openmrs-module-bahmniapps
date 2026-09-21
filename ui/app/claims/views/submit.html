@@ -98,23 +98,92 @@
             </table>
         </section>
 
+        <section class="form-section claim-documents-section">
+
+            <div class="section-title">
+                <div>
+                    <h3>Supporting Documents</h3>
+                    <p class="document-help">
+                        Attach the final bill, discharge summary,
+                        diagnostic reports and supporting claim documents.
+                    </p>
+                </div>
+                <label class="document-picker">
+            <span class="secondary-btn">
+                Choose Documents
+            </span>
+
+                    <input id="claimDocumentsInput"
+                           type="file"
+                           multiple
+                           accept=".pdf,.jpg,.jpeg,.png"
+                           file-change="selectClaimDocuments(files)">
+                </label>
+            </div>
+
+            <div class="document-error" ng-if="claimDocumentError">
+                {{ claimDocumentError }}
+            </div>
+
+            <div class="selected-documents" ng-if="claimDocuments.length">
+                <div class="document-row" ng-repeat="document in claimDocuments track by $index">
+
+                    <div class="document-file">
+                        <strong>{{ document.fileName }}</strong>
+
+                        <small>
+                            {{ formatFileSize(document.size) }}
+                        </small>
+                    </div>
+
+                    <div class="document-category">
+                        <label>Document type</label>
+
+                        <select class="form-control"
+                                ng-model="document.categoryCode"
+                                ng-change="updateDocumentCategory(document)"
+                                ng-options="category.code as category.display
+                                    for category in documentCategories">
+                        </select>
+                    </div>
+
+                    <div class="document-description">
+                        <label>Description</label>
+
+                        <input type="text"
+                               class="form-control"
+                               ng-model="document.description"
+                               placeholder="Optional description">
+                    </div>
+
+                    <button type="button"
+                            class="danger-btn"
+                            ng-click="removeClaimDocument($index)">
+                        Remove
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="error-message" ng-if="claimError">
+            {{ claimError }}
+        </div>
+
         <div class="claim-total">
             Total Claim Amount:
             <strong>
                 ₹ {{getTotalAmount()}}
             </strong>
-
         </div>
 
         <div class="action-container">
-
             <button type="button"
                     class="success-btn"
-                    ng-click="submitClaim()">
+                    ng-click="submitClaim()"
+                    ng-disabled="!selectedVisitUuid || submittingClaim">
 
-                Submit Final Claim
+                {{ submittingClaim ? 'Submitting...' : 'Submit Final Claim' }}
             </button>
-
         </div>
     </form>
     <ng-include src="'views/claimsHistory.html'">

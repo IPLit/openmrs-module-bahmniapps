@@ -24,7 +24,7 @@ angular.module('bahmni.claims').factory('nhcxService', ['$http', '$q', function 
 
     function upload (path, file, params) {
         var formData = new FormData();
-        formData.append('file', file);
+        formData.append('file', file, file.name);
         return $http.post(BASE_URL + path, formData,
             {
                 params: params || {},
@@ -38,17 +38,50 @@ angular.module('bahmni.claims').factory('nhcxService', ['$http', '$q', function 
         });
     }
 
+    function createClaimFormData(request, files) {
+        var formData = new FormData();
+        var requestBlob = new Blob([angular.toJson(request)],
+            {
+                type: 'application/json'
+            }
+        );
+
+        formData.append('request', requestBlob);
+        angular.forEach(files || [],
+            function (file) {
+                if (file) {
+                    formData.append('documents', file, file.name);
+                }
+            }
+        );
+
+        return formData;
+    }
+
+    function postClaimRequest (path, request, files) {
+        var formData = createClaimFormData(request, files);
+
+        return $http.post(BASE_URL + path, formData,
+            {
+                transformRequest: angular.identity,
+                headers: { 'Content-Type': undefined }
+            }
+        ).catch(function (error) {
+            return handleError('MULTIPART POST', path, error);
+        });
+    }
+
     return {
-        submitPreauth: function (params) {
-            return post('/preauth', params);
+        submitPreauth: function (request, files) {
+            return postClaimRequest('/preauth', request, files);
         },
 
         submitCoverageEligibility: function (params) {
             return post('/coverage_eligibility', params);
         },
 
-        submitClaim: function (params) {
-            return post('/claim', params);
+        submitClaim: function (request, files) {
+            return postClaimRequest('/claim', request, files);
         },
 
         getStatus: function (correlationId) {
