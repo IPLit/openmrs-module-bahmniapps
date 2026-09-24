@@ -52,6 +52,123 @@ angular.module('bahmni.claims')
         ];
         $scope.openCommunicationClaimId = null;
         $scope.communicationError = null;
+
+        $scope.insurancePlan = {
+            submitting: false,
+            loading: false,
+            message: null,
+            error: null,
+            selectedRequest: null,
+            requests: []
+        };
+
+        $scope.fetchInsurancePlans = function () {
+            if (!$stateParams.patientUuid) {
+                $scope.insurancePlan.error = 'Patient UUID is not available.';
+                return;
+            }
+            $scope.insurancePlan.submitting = true;
+            $scope.insurancePlan.message = null;
+            $scope.insurancePlan.error = null;
+
+            nhcxService.fetchInsurancePlans($stateParams.patientUuid)
+                .then(function (response) {
+                    var result = response.data || {};
+                    $scope.insurancePlan.message = result.message || 'Insurance plan request submitted successfully.';
+                    $scope.insurancePlan.selectedRequest = result;
+                    return $scope.loadInsurancePlanRequests();
+                }).catch(function (error) {
+                    $scope.insurancePlan.error = getInsurancePlanErrorMessage(error);
+                }).finally(function () {
+                    $scope.insurancePlan.submitting = false;
+                });
+        };
+
+        $scope.loadInsurancePlanRequests = function () {
+            if (!$stateParams.patientUuid) {
+                return;
+            }
+            $scope.insurancePlan.loading = true;
+            $scope.insurancePlan.error = null;
+            return nhcxService.getInsurancePlanRequestsForPatient($stateParams.patientUuid).then(function (response) {
+                $scope.insurancePlan.requests = angular.isArray(response.data) ? response.data : [];
+            }).catch(function (error) {
+                $scope.insurancePlan.error = getInsurancePlanErrorMessage(error);
+            }).finally(function () {
+                $scope.insurancePlan.loading = false;
+            });
+        };
+
+        $scope.refreshInsurancePlanRequest = function (request) {
+            if (!request || !request.correlationId) {
+                return;
+            }
+
+            request.refreshing = true;
+            $scope.insurancePlan.error = null;
+            nhcxService.getInsurancePlanRequest(request.correlationId)
+                .then(function (response) {
+                    angular.extend(request, response.data);
+                }).catch(function (error) {
+                    $scope.insurancePlan.error = getInsurancePlanErrorMessage(error);
+                }).finally(function () {
+                    request.refreshing = false;
+                });
+        };
+
+        $scope.getInsurancePlanStateLabel = function (request) {
+            if (!request) {
+                return 'Unknown';
+            }
+
+            if (request.responseStatus >= 200 && request.responseStatus < 300 && request.callbackPayload) {
+                return 'Plan received';
+            }
+
+            switch (request.requestState) {
+            case 'INITIATED':
+                return 'Initiated';
+            case 'SUBMITTED':
+                return 'Submitted';
+            case 'ACKNOWLEDGED':
+                return 'Acknowledged';
+            case 'COMPLETED':
+                return 'Completed';
+            case 'FAILED':
+                return 'Failed';
+            default:
+                return request.requestState || 'Pending';
+            }
+        };
+
+        $scope.getInsurancePlanStateClass = function (request) {
+            var state = request && request.requestState;
+            switch (state) {
+            case 'COMPLETED':
+                return 'label-success';
+            case 'FAILED':
+                return 'label-danger';
+            case 'ACKNOWLEDGED':
+                return 'label-info';
+            case 'SUBMITTED':
+                return 'label-primary';
+            default:
+                return 'label-warning';
+            }
+        };
+
+        function getInsurancePlanErrorMessage (error) {
+            if (!error) {
+                return 'Unable to process the insurance plan request.';
+            }
+
+            if (error.data) {
+                return error.data.message || error.data.errorMessage ||
+                    error.data.error || 'Unable to process the insurance plan request.';
+            }
+            return 'Unable to connect to the NHCX service.';
+        }
+
         var getPatient = function () {
             return patientService.getPatient($stateParams.patientUuid).then(function (patientResponse) {
                 $scope.patient = patientResponse.data;
@@ -408,6 +525,7 @@ angular.module('bahmni.claims')
                 $scope.patient = $stateParams.patient;
                 getVisits();
                 $scope.loadClaims();
+                $scope.loadInsurancePlanRequests();
             }
 
             var urlParams = $location.$$search;
@@ -419,6 +537,7 @@ angular.module('bahmni.claims')
                 getPatient().then(function () {
                     getVisits();
                     $scope.loadClaims();
+                    $scope.loadInsurancePlanRequests();
                 });
             }
         };

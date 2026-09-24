@@ -133,6 +133,106 @@
             </button>
         </div>
     </div>
+    <section class="nhcx-insurance-plan-section">
+        <div class="nhcx-section-header">
+            <div>
+                <h3>Insurance Plans</h3>
+                <p class="text-muted">
+                    Fetch insurance plan details for this patient from NHCX.
+                </p>
+            </div>
+
+            <button type="button"
+                    class="button confirm"
+                    ng-click="fetchInsurancePlans()"
+                    ng-disabled="insurancePlan.submitting || insurancePlan.loading">
+                <i class="fa fa-spinner fa-spin" ng-if="insurancePlan.submitting"></i>
+
+                <i class="fa fa-shield" ng-if="!insurancePlan.submitting"></i>
+
+                <span ng-if="!insurancePlan.submitting">
+                    Get Insurance Plans
+                </span>
+
+                <span ng-if="insurancePlan.submitting">
+                    Submitting...
+                </span>
+            </button>
+        </div>
+
+        <div class="alert alert-success" ng-if="insurancePlan.message">
+            {{ insurancePlan.message }}
+        </div>
+
+        <div class="alert alert-danger" ng-if="insurancePlan.error">
+            {{ insurancePlan.error }}
+        </div>
+
+        <div class="nhcx-loading" ng-if="insurancePlan.loading">
+            <i class="fa fa-spinner fa-spin"></i>
+            Loading insurance plan requests...
+        </div>
+
+        <div class="table-responsive" ng-if="!insurancePlan.loading && insurancePlan.requests.length > 0">
+
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>Policy Number</th>
+                    <th>Provider ID</th>
+                    <th>Payer</th>
+                    <th>Correlation ID</th>
+                    <th>Status</th>
+                    <th>Submitted At</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr ng-repeat="request in insurancePlan.requests track by request.correlationId">
+                    <td>
+                        {{ request.policyNumber || '-' }}
+                    </td>
+                    <td>
+                        {{ request.providerId || '-' }}
+                    </td>
+                    <td>
+                        {{ request.payerName || request.payerCode || '-' }}
+                    </td>
+                    <td class="nhcx-correlation-id">
+                        {{ request.correlationId }}
+                    </td>
+                    <td>
+                        <span class="label" ng-class="getInsurancePlanStateClass(request)">
+                            {{ getInsurancePlanStateLabel(request) }}
+                        </span>
+                        <div class="text-danger" ng-if="request.errorMessage">
+                            {{ request.errorMessage }}
+                        </div>
+                    </td>
+                    <td>
+                        {{ request.submittedAt | date:'dd-MMM-yyyy HH:mm' }}
+                    </td>
+                    <td>
+                        <button type="button"
+                                class="button"
+                                ng-click="refreshInsurancePlanRequest(request)"
+                                ng-disabled="request.refreshing">
+                            <i class="fa fa-refresh"
+                               ng-class="{ 'fa-spin': request.refreshing }">
+                            </i>
+                            Refresh
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty-state" ng-if="!insurancePlan.loading && insurancePlan.requests.length === 0">
+            No insurance plan requests have been submitted for this patient.
+        </div>
+    </section>
     <ng-include src="'views/claimsHistory.html'">
     </ng-include>
 

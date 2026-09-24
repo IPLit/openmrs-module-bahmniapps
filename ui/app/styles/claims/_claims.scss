@@ -307,3 +307,56 @@
         grid-template-columns: 1fr;
     }
 }
+.nhcx-insurance-plan-section {
+    margin-top: 20px;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+
+    .nhcx-section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 15px;
+
+        h3 {
+            margin: 0 0 4px;
+        }
+
+        p {
+            margin: 0;
+        }
+    }
+
+    .nhcx-loading,
+    .empty-state {
+        padding: 20px;
+        text-align: center;
+        color: #777;
+    }
+
+    .nhcx-correlation-id {
+        max-width: 220px;
+        word-break: break-all;
+        font-family: monospace;
+    }
+
+    .label {
+        display: inline-block;
+        padding: 5px 8px;
+    }
+
+    .text-danger {
+        margin-top: 5px;
+        font-size: 12px;
+    }
+
+    @media (max-width: 768px) {
+        .nhcx-section-header {
+            align-items: stretch;
+            flex-direction: column;
+        }
+    }
+}

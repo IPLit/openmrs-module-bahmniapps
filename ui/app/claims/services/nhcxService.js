@@ -118,6 +118,25 @@ angular.module('bahmni.claims').factory('nhcxService', ['$http', '$q', function 
 
         sendCommunication: function (request) {
             return post('/communication', request);
+        },
+
+        fetchInsurancePlans: function (patientUuid) {
+            return post('/insurance-plans/request',
+                {
+                    patientUuid: patientUuid
+                }
+            );
+        },
+        getInsurancePlanRequestsForPatient: function (patientUuid) {
+            return get('/insurance-plans',
+                {
+                    patientUuid: patientUuid
+                }
+            );
+        },
+
+        getInsurancePlanRequest: function (correlationId) {
+            return get('/insurance-plans/' + encodeURIComponent(correlationId));
         }
     };
 }]);
