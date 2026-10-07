@@ -188,7 +188,8 @@ Bahmni.Clinical.FhirLabOrderResultsMapper = (function () {
                 abnormal: result.abnormal,
                 result: result.result,
                 accessionDateTime: result.accessionDateTime,
-                uploadedFileName: result.uploadedFileName
+                uploadedFileName: result.uploadedFileName,
+                labReportUrl: result.labReportUrl
             });
         });
 

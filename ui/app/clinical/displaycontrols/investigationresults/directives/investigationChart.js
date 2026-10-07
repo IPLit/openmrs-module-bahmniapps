@@ -15,8 +15,8 @@ angular.module('bahmni.clinical')
                 $scope.showChart = !$scope.showChart;
             };
 
-            $scope.getUploadedFileUrl = function (uploadedFileName) {
-                return Bahmni.Common.Constants.labResultUploadedFileNameUrl + uploadedFileName;
+            $scope.getUploadedFileUrl = function (result) {
+                return Bahmni.Common.Constants.labResultUploadedFileNameUrl + result.labReportUrl;
             };
         };
         return {
