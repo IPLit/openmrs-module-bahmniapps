@@ -158,11 +158,14 @@ angular.module('bahmni.common.uicontrols.programmanagment')
             };
 
             var isProgramStateChanged = function (patientProgram, activePatientProgramState) {
-                if (_.isEmpty(activePatientProgramState) && patientProgram.selectedState != undefined) {
+                // if (_.isEmpty(activePatientProgramState) && patientProgram.selectedState != undefined) {
+                //     return true;
+                // }
+                if (!activePatientProgramState && patientProgram.selectedState) {
                     return true;
                 }
-                return patientProgram.selectedState
-                    && (patientProgram.selectedState.uuid != activePatientProgramState.state.uuid);
+                return patientProgram && patientProgram.selectedState && activePatientProgramState
+                    && patientProgram.selectedState.uuid !== activePatientProgramState.state.uuid;
             };
 
             var isOutcomeSelected = function (patientProgram) {
@@ -188,12 +191,15 @@ angular.module('bahmni.common.uicontrols.programmanagment')
                             + " (" + DateUtil.formatDateWithoutTime(activeStateDate) + ")");
                         return;
                     }
+                    patientProgram.states = [];
                     patientProgram.states.push({
                         state: {
                             uuid: patientProgram.selectedState.uuid
                         },
-                        startDate: startDate
+                        startDate: new Date($scope.today + ".00:00:00")
                     });
+                } else {
+                    patientProgram.states = [];
                 }
                 if (isOutcomeSelected(patientProgram)) {
                     dateCompleted = DateUtil.getDateWithoutTime(getCurrentDate());
