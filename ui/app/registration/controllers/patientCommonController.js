@@ -19,6 +19,7 @@ angular.module('bahmni.registration')
             $scope.showSaveConfirmDialogConfig = appService.getAppDescriptor().getConfigValue("showSaveConfirmDialog");
             $scope.showSaveAndContinueButton = false;
             $scope.regExtPoints = appService.getAppDescriptor().getExtensions("org.bahmni.registration.identifier", "link");
+            var linkToCurrentPatient = appService.getAppDescriptor().getConfigValue("linkToCurrentPatient");
 
             $scope.showExtIframe = false;
             var identifierExtnMap = new Map();
@@ -34,7 +35,14 @@ angular.module('bahmni.registration')
 
             $scope.openIdentifierPopup = function (identifierType, action) {
                 var iframe = $document[0].getElementById("extension-popup");
-                iframe.src = getExtensionPoint(identifierType).src + "?action=" + action;
+                var extensionUrl = getExtensionPoint(identifierType).src + "?action=" + action;
+                if ($scope.patient && $scope.patient.uuid) {
+                    extensionUrl += "&patientUuid=" + encodeURIComponent($scope.patient.uuid);
+                }
+                if (linkToCurrentPatient === true || linkToCurrentPatient === "true") {
+                    extensionUrl += "&linkToCurrentPatient=true";
+                }
+                iframe.src = extensionUrl;
                 $scope.showExtIframe = true;
                 $window.addEventListener("message", function (popupWindowData) {
                     if (popupWindowData.data.patient !== undefined) {
