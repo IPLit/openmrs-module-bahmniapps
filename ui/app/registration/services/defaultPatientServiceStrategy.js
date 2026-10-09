@@ -5,7 +5,42 @@ angular.module('bahmni.registration')
         var openmrsUrl = Bahmni.Registration.Constants.openmrsUrl;
         var baseOpenMRSRESTURL = Bahmni.Registration.Constants.baseOpenMRSRESTURL;
 
+        var searchByQueryId = function (config) {
+            var defer = $q.defer();
+            var params = {};
+            var patientSearchUrl = Bahmni.Common.Constants.sqlUrl + "?q=emrapi.sqlSearch.patientsByIdentifierSource";
+            if (config && config.params.identifier) {
+                params.identifier = config.params.identifier;
+            }
+            if (config && config.params.q) {
+                params.name = config.params.q;
+            }
+            if (config && config.params.customAttribute) {
+                params.customAttribute = config.params.customAttribute;
+            }
+            if (config && config.params.loginLocationUuid) {
+                params.identifiersourcelocation = config.params.loginLocationUuid;
+                params.location_uuid = config.params.loginLocationUuid;
+            }
+            if (config && config.params.startIndex !== undefined) {
+                params.offset = config.params.startIndex;
+            }
+            var onResults = function (response) {
+                var data = {};
+                data.pageOfResults = response || [];
+                defer.resolve(data);
+            };
+            $http.get(patientSearchUrl, {withCredentials: true, params: params}).success(onResults)
+                .error(function (error) {
+                    defer.reject(error);
+                });
+            return defer.promise;
+        };
+
         var search = function (config) {
+            if (config && config.params.regSearchByGPSql) {
+                return searchByQueryId(config);
+            }
             var defer = $q.defer();
             var patientSearchUrl = Bahmni.Common.Constants.bahmniCommonsSearchUrl + "/patient";
             if (config && config.params.identifier) {
@@ -38,6 +73,7 @@ angular.module('bahmni.registration')
 
         var create = function (patient, jumpAccepted) {
             var data = new Bahmni.Registration.CreatePatientRequestMapper(moment()).mapFromPatient($rootScope.patientConfiguration.attributeTypes, patient);
+            data.patient.identifiers[0].location = $rootScope.loggedInLocation.uuid; // IPLit
             var url = baseOpenMRSRESTURL + "/bahmnicore/patientprofile";
             return $http.post(url, data, {
                 withCredentials: true,
@@ -76,6 +112,7 @@ angular.module('bahmni.registration')
             get: getByUuid,
             create: create,
             update: update,
-            generateIdentifier: generateIdentifier
+            generateIdentifier: generateIdentifier,
+            searchByQueryId: searchByQueryId
         };
     }]);

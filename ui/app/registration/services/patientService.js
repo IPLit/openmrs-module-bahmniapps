@@ -7,7 +7,7 @@ angular.module('bahmni.registration')
 
         var search = function (query, identifier, addressFieldName, addressFieldValue, customAttributeValue,
                                offset, customAttributeFields, programAttributeFieldName, programAttributeFieldValue, addressSearchResultsConfig,
-                               patientSearchResultsConfig, filterOnAllIdentifiers) {
+                               patientSearchResultsConfig, filterOnAllIdentifiers, regSearchByGPSql) {
             var config = {
                 params: {
                     q: query,
@@ -23,7 +23,8 @@ angular.module('bahmni.registration')
                     addressSearchResultsConfig: addressSearchResultsConfig,
                     patientSearchResultsConfig: patientSearchResultsConfig,
                     loginLocationUuid: sessionService.getLoginLocationUuid(),
-                    filterOnAllIdentifiers: filterOnAllIdentifiers
+                    filterOnAllIdentifiers: filterOnAllIdentifiers,
+                    regSearchByGPSql: regSearchByGPSql
                 },
                 withCredentials: true
             };

@@ -19,7 +19,7 @@ angular.module('bahmni.registration')
             $scope.showSaveConfirmDialogConfig = appService.getAppDescriptor().getConfigValue("showSaveConfirmDialog");
             $scope.showSaveAndContinueButton = false;
             $scope.regExtPoints = appService.getAppDescriptor().getExtensions("org.bahmni.registration.identifier", "link");
-            var linkToCurrentPatient = appService.getAppDescriptor().getConfigValue("linkToCurrentPatient");
+            var linkToCurrentPatient = appService.getAppDescriptor().getConfigValue("linkAbhaToCurrentPatient") || false;
 
             $scope.showExtIframe = false;
             var identifierExtnMap = new Map();
