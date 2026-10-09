@@ -11,16 +11,17 @@ angular.module('bahmni.registration')
             var patientSearchUrl = Bahmni.Common.Constants.sqlUrl + "?q=emrapi.sqlSearch.patientsByIdentifierSource";
             if (config && config.params.identifier) {
                 params.identifier = config.params.identifier;
+                params.name = '';
+            }
+            if (config && config.params.customAttribute) {
+                params.name = '';
+                params.customAttribute = config.params.customAttribute;
             }
             if (config && config.params.q) {
                 params.name = config.params.q;
             }
-            if (config && config.params.customAttribute) {
-                params.customAttribute = config.params.customAttribute;
-            }
             if (config && config.params.loginLocationUuid) {
                 params.identifiersourcelocation = config.params.loginLocationUuid;
-                params.location_uuid = config.params.loginLocationUuid;
             }
             if (config && config.params.startIndex !== undefined) {
                 params.offset = config.params.startIndex;

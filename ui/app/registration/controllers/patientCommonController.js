@@ -36,10 +36,10 @@ angular.module('bahmni.registration')
             $scope.openIdentifierPopup = function (identifierType, action) {
                 var iframe = $document[0].getElementById("extension-popup");
                 var extensionUrl = getExtensionPoint(identifierType).src + "?action=" + action;
-                if ($scope.patient && $scope.patient.uuid) {
-                    extensionUrl += "&patientUuid=" + encodeURIComponent($scope.patient.uuid);
-                }
                 if (linkToCurrentPatient === true || linkToCurrentPatient === "true") {
+                    if ($scope.patient && $scope.patient.uuid) {
+                        extensionUrl += "&patientUuid=" + encodeURIComponent($scope.patient.uuid);
+                    }
                     extensionUrl += "&linkToCurrentPatient=true";
                 }
                 iframe.src = extensionUrl;

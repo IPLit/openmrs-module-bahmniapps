@@ -97,7 +97,7 @@ angular.module('bahmni.registration')
 
             var mapExtraIdentifiers = function (data) {
                 if (data !== "Searching") {
-                    _.each(data.pageOfResults || data, function (result) {
+                    _.each(data.pageOfResults, function (result) {
                         result.extraIdentifiers = result.extraIdentifiers && JSON.parse(result.extraIdentifiers);
                     });
                 }
@@ -105,7 +105,7 @@ angular.module('bahmni.registration')
 
             var mapCustomAttributesSearchResults = function (data) {
                 if (($scope.personSearchResultsConfig.fields) && data !== "Searching") {
-                    _.map(data.pageOfResults || data, function (result) {
+                    _.map(data.pageOfResults, function (result) {
                         result.customAttribute = result.customAttribute && JSON.parse(result.customAttribute);
                     });
                 }
@@ -147,7 +147,7 @@ angular.module('bahmni.registration')
                 $scope.noMoreResultsPresent = false;
                 if (searchPromise) {
                     searchPromise.then(function (data) {
-                        $scope.results = data.pageOfResults || data || [];
+                        $scope.results = data.pageOfResults || [];
                         $scope.noResultsMessage = $scope.results.length === 0 ? 'REGISTRATION_NO_RESULTS_FOUND' : null;
                     });
                 }
@@ -275,7 +275,6 @@ angular.module('bahmni.registration')
 
             var initialize = function () {
                 $scope.searchParameters = {};
-                $scope.searchParameters.regSearchByGPSql = regSearchByGPSql;
                 $scope.searchActions = appService.getAppDescriptor().getExtensions("org.bahmni.registration.patient.search.result.action");
                 setPatientIdentifierSearchConfig();
                 setAddressSearchConfig();
@@ -501,9 +500,6 @@ angular.module('bahmni.registration')
                 if ($scope.searchParameters.programAttributeFieldValue && $scope.programAttributesSearchConfig.show) {
                     queryParams.programAttributeFieldName = $scope.programAttributesSearchConfig.field;
                     queryParams.programAttributeFieldValue = $scope.searchParameters.programAttributeFieldValue;
-                }
-                if ($scope.searchParameters.regSearchByGPSql) {
-                    queryParams.regSearchByGPSql = $scope.searchParameters.regSearchByGPSql;
                 }
                 $location.search(queryParams);
             };
