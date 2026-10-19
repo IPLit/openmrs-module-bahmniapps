@@ -23,11 +23,14 @@ angular.module('bahmni.registration')
                     addressSearchResultsConfig: addressSearchResultsConfig,
                     patientSearchResultsConfig: patientSearchResultsConfig,
                     loginLocationUuid: sessionService.getLoginLocationUuid(),
-                    filterOnAllIdentifiers: filterOnAllIdentifiers,
-                    regSearchByGPSql: regSearchByGPSql
+                    filterOnAllIdentifiers: filterOnAllIdentifiers
                 },
                 withCredentials: true
             };
+            var regSearchByGPSql = appService.getAppDescriptor().getConfigValue("regSearchByGPSql") || false;
+            if (regSearchByGPSql) {
+                return patientServiceStrategy.searchByQueryId(config);
+            }
             return patientServiceStrategy.search(config);
         };
 

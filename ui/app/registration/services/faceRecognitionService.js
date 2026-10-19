@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bahmni.registration')
-    .service('faceRecognitionService', ['$http', 'appService', function ($http, appService) {
+    .service('faceRecognitionService', ['$http', function ($http) {
         var getServerUrl = function () {
             return Bahmni.Registration.Constants.faceRecognitionServerUrl;
         };

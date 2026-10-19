@@ -13,7 +13,7 @@
                         </span>
                         <span class="qr-code-icon" title="QR Scan" ng-click="toggleScanning()" />
                         <video id="video" autoplay muted playsinline></video>
-                        <span class="face-identify-wrapper" ng-if="::enabledFaceRecognition">
+                        <span class="face-identify-wrapper" ng-if="::(enabledFaceRecognition && hasFaceSearchPrivilege())">
                             <span class="face-identify-controls">
                                 <div class="photo-container face-identify-photo" title="{{ ::'REGISTRATION_LABEL_IDENTIFY_BY_FACE' | translate}}" style="padding-top: 10px;">
                                     <div id="faceIdentify" ng-model="faceCaptureImage" capture-photo="onFaceImageCaptured" class="capture-photo-btn"></div>

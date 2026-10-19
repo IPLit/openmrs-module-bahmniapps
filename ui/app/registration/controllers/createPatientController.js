@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('bahmni.registration')
-    .controller('CreatePatientController', ['$scope', '$rootScope', '$state', 'patientService', 'patient', 'spinner', 'appService', 'messagingService', 'ngDialog', '$q', '$translate', 'sessionService', '$http', 'faceRecognitionService',
-        function ($scope, $rootScope, $state, patientService, patient, spinner, appService, messagingService, ngDialog, $q, $translate, sessionService, $http, faceRecognitionService) {
+    .controller('CreatePatientController', ['$scope', '$rootScope', '$state', 'patientService', 'patient', 'spinner', 'appService', 'messagingService', 'ngDialog', '$q', '$translate', 'sessionService', '$bahmniCookieStore', 'faceRecognitionService',
+        function ($scope, $rootScope, $state, patientService, patient, spinner, appService, messagingService, ngDialog, $q, $translate, sessionService, $bahmniCookieStore, faceRecognitionService) {
             var dateUtil = Bahmni.Common.Util.DateUtil;
             $scope.actions = {};
             var errorMessage;
@@ -185,7 +185,8 @@ angular.module('bahmni.registration')
                 patientId = patientProfileData.patient.identifiers[0].identifier;
 
                 if (enabledFaceRecognition && $rootScope.imageDataUrl) {
-                    faceRecognitionService.register($scope.patient.name, null, $scope.patient.uuid, $rootScope.imageDataUrl).then(function (response) {
+                    var locationCurrent = $bahmniCookieStore.get(Bahmni.Common.Constants.locationCookieName) ? $bahmniCookieStore.get(Bahmni.Common.Constants.locationCookieName).name : null;
+                    faceRecognitionService.register($scope.patient.name, locationCurrent, $scope.patient.uuid, $rootScope.imageDataUrl).then(function (response) {
                         var data = response.data;
                         $rootScope.imageDataUrl = null;
                         if (response.status === 201 && data.success) {

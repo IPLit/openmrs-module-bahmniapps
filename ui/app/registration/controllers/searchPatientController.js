@@ -18,7 +18,6 @@ angular.module('bahmni.registration')
             $scope.enabledFaceRecognition = appService.getAppDescriptor().getConfigValue('enableFaceRecognition') || false;
             var patientSearchResultConfigs = appService.getAppDescriptor().getConfigValue("patientSearchResults") || {};
             maxAttributesFromConfig = !_.isEmpty(allSearchConfigs.programAttributes) ? maxAttributesFromConfig - 1 : maxAttributesFromConfig;
-            var regSearchByGPSql = appService.getAppDescriptor().getConfigValue("regSearchByGPSql") || false;
 
             $scope.getAddressColumnName = function (column) {
                 var columnName = "";
@@ -65,8 +64,7 @@ angular.module('bahmni.registration')
                         $scope.searchParameters.programAttributeFieldValue,
                         $scope.addressSearchResultsConfig.fields,
                         $scope.personSearchResultsConfig.fields,
-                        undefined,
-                        regSearchByGPSql
+                        undefined
                     ).then(function (response) {
                         mapExtraIdentifiers(response);
                         mapCustomAttributesSearchResults(response);
@@ -381,7 +379,7 @@ angular.module('bahmni.registration')
                                     undefined, undefined, undefined, $scope.customAttributesSearchConfig.fields,
                                     $scope.programAttributesSearchConfig.field, $scope.searchParameters.programAttributeFieldValue,
                                     $scope.addressSearchResultsConfig.fields, $scope.personSearchResultsConfig.fields,
-                                    $scope.isExtraIdentifierConfigured(), regSearchByGPSql)
+                                    $scope.isExtraIdentifierConfigured())
                                     .then(function (data) {
                                         if (data.pageOfResults.length > 0) {
                                             var patient = data.pageOfResults[0];
@@ -440,7 +438,7 @@ angular.module('bahmni.registration')
                     undefined, undefined, undefined, $scope.customAttributesSearchConfig.fields,
                     $scope.programAttributesSearchConfig.field, $scope.searchParameters.programAttributeFieldValue,
                     $scope.addressSearchResultsConfig.fields, $scope.personSearchResultsConfig.fields,
-                    $scope.isExtraIdentifierConfigured(), regSearchByGPSql)
+                    $scope.isExtraIdentifierConfigured())
                     .then(function (data) {
                         mapExtraIdentifiers(data);
                         mapCustomAttributesSearchResults(data);
@@ -460,6 +458,18 @@ angular.module('bahmni.registration')
                     });
                 spinner.forPromise(searchPromise);
             };
+
+            $scope.hasFaceSearchPrivilege = function () {
+                var applicablePrivs = [Bahmni.Common.Constants.faceSearchPrivilege];
+                var userPrivs = _.map($rootScope.currentUser.privileges, function (privilege) {
+                    return privilege.name;
+                });
+                var result = _.some(userPrivs, function (privName) {
+                    return _.includes(applicablePrivs, privName);
+                });
+                return result;
+            };
+
             var isUserPrivilegedForSearch = function () {
                 var applicablePrivs = [Bahmni.Common.Constants.viewPatientsPrivilege, Bahmni.Common.Constants.editPatientsPrivilege,
                     Bahmni.Common.Constants.addVisitsPrivilege, Bahmni.Common.Constants.deleteVisitsPrivilege];
@@ -576,7 +586,7 @@ angular.module('bahmni.registration')
                     $scope.faceIdentifyInProgress = false;
                     deferred.resolve();
                 };
-                if (!isUserPrivilegedForSearch()) {
+                if (!$scope.hasFaceSearchPrivilege()) {
                     showInsufficientPrivMessage();
                     finish();
                     return deferred.promise;

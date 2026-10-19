@@ -39,9 +39,6 @@ angular.module('bahmni.registration')
         };
 
         var search = function (config) {
-            if (config && config.params.regSearchByGPSql) {
-                return searchByQueryId(config);
-            }
             var defer = $q.defer();
             var patientSearchUrl = Bahmni.Common.Constants.bahmniCommonsSearchUrl + "/patient";
             if (config && config.params.identifier) {
