@@ -71,5 +71,18 @@ angular.module('httpErrorInterceptor', [])
                 responseError: error
             };
         }];
+
+        var interceptorHttpHeader = [function () {
+            return {
+                request: function (config) {
+                    var hospitalTag = localStorage.getItem(Bahmni.Common.Constants.multiHospitalTag);
+                    if (hospitalTag && hospitalTag !== null) {
+                        config.headers['X-Hospital'] = hospitalTag;
+                    }
+                    return config;
+                }
+            };
+        }];
         $httpProvider.interceptors.push(interceptor);
+        $httpProvider.interceptors.push(interceptorHttpHeader);
     }]);

@@ -14,6 +14,9 @@ Bahmni.Common = Bahmni.Common || {};
     var BACTERIOLOGY = RESTWS_V1;
     var BASE_URL = hostUrl + "/bahmni_config/openmrs/apps/";
     var CUSTOM_URL = hostUrl + "/implementation_config/openmrs/apps/";
+    if (localStorage.getItem('hospital') !== null) {
+        CUSTOM_URL = hostUrl + "/bahmni_config/openmrs/hospitals/" + localStorage.getItem('hospital') + "/apps/";
+    }
     var IE_APPS_API = RESTWS_V1 + "/bahmniie";
     var IPD = RESTWS_V1 + "/ipd";
     var FHIR_BASE_URL = hostUrl + "/openmrs/ws/fhir2/R4";
@@ -214,6 +217,7 @@ Bahmni.Common = Bahmni.Common || {};
         editPatientsPrivilege: 'Edit Patients',
         addVisitsPrivilege: 'Add Visits',
         deleteVisitsPrivilege: 'Delete Visits',
+        faceSearchPrivilege: 'Face Search',
         grantProviderAccess: "app:clinical:grantProviderAccess",
         grantProviderAccessDataCookieName: "app.clinical.grantProviderAccessData",
         globalPropertyUrl: BAHMNI_CORE + "/sql/globalproperty",
@@ -322,7 +326,8 @@ Bahmni.Common = Bahmni.Common || {};
         implementationId: RESTWS_V1 + "/implementationid",
         bahmniDistroEncounterUrl: BAHMNI_CORE + "/distro/bahmniencounter",
         aiScribbleApi: hostUrl + "/bahmni-ai-service/api/scribble",
-        aiVoiceNotesApi: hostUrl + "/bahmni-ai-service/api/voice-notes"
+        aiVoiceNotesApi: hostUrl + "/bahmni-ai-service/api/voice-notes",
+        multiHospitalTag: "hospital"
     };
 })();
 

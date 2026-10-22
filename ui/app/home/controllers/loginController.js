@@ -46,7 +46,14 @@ angular.module('bahmni.home')
             });
 
             localeService.getLoginText().then(function (response) {
-                $scope.logo = response.data.loginPage.logo;
+                var logoName = window.location.pathname;
+                logoName = logoName.split("/").length > 4 ? logoName.split("/")[1] : "bahmniLogoFull";
+                if (logoName !== "bahmniLogoFull") {
+                    localStorage.setItem("hospital", logoName);
+                } else {
+                    localStorage.removeItem("hospital");
+                }
+                $scope.logo = response.data.loginPage.logo.replace("bahmniLogoFull", logoName);
                 $scope.bottomLogos = response.data.loginPage.bottomLogos;
                 $scope.headerText = response.data.loginPage.showHeaderText;
                 $scope.titleText = response.data.loginPage.showTitleText;
