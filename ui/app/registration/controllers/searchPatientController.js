@@ -531,7 +531,9 @@ angular.module('bahmni.registration')
                     return;
                 }
                 $scope.nextPageLoading = true;
-                var promise = searchBasedOnQueryParameters($scope.results.length);
+                var lastOffset = $scope.results.length > 0 ? ($scope.results[$scope.results.length - 1].lastPersonId !== undefined
+                    ? $scope.results[$scope.results.length - 1].lastPersonId + "" : $scope.results.length) : 0;
+                var promise = searchBasedOnQueryParameters(lastOffset);
                 if (promise) {
                     promise.then(function (data) {
                         angular.forEach(data.pageOfResults, function (result) {

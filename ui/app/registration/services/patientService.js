@@ -7,7 +7,7 @@ angular.module('bahmni.registration')
 
         var search = function (query, identifier, addressFieldName, addressFieldValue, customAttributeValue,
                                offset, customAttributeFields, programAttributeFieldName, programAttributeFieldValue, addressSearchResultsConfig,
-                               patientSearchResultsConfig, filterOnAllIdentifiers, regSearchByGPSql) {
+                               patientSearchResultsConfig, filterOnAllIdentifiers) {
             var config = {
                 params: {
                     q: query,
@@ -27,7 +27,7 @@ angular.module('bahmni.registration')
                 },
                 withCredentials: true
             };
-            var regSearchByGPSql = appService.getAppDescriptor().getConfigValue("regSearchByGPSql") || false;
+            var regSearchByGPSql = localStorage.getItem(Bahmni.Common.Constants.multiHospitalTag) !== null || false;
             if (regSearchByGPSql) {
                 return patientServiceStrategy.searchByQueryId(config);
             }
