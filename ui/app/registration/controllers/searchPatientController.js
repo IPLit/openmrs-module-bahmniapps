@@ -217,7 +217,7 @@ angular.module('bahmni.registration')
 
             var initializeFaceRecognition = function () {
                 $scope.faceIdentifyInProgress = false;
-                if (!$scope.enabledFaceRecognition) {
+                if (!$scope.enabledFaceRecognition || !$scope.hasFaceSearchPrivilege()) {
                     setFaceRecognitionOnline(false);
                     return;
                 }
@@ -279,7 +279,7 @@ angular.module('bahmni.registration')
                 setCustomAttributesSearchConfig();
                 setProgramAttributesSearchConfig();
                 setSearchResultsConfig();
-                if ($scope.enabledFaceRecognition) {
+                if ($scope.enabledFaceRecognition && $scope.hasFaceSearchPrivilege()) {
                     $rootScope.imageDataUrl = null;
                     initializeFaceRecognition();
                 }
