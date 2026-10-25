@@ -19,6 +19,17 @@ angular.module('bahmni.registration')
             var patientSearchResultConfigs = appService.getAppDescriptor().getConfigValue("patientSearchResults") || {};
             maxAttributesFromConfig = !_.isEmpty(allSearchConfigs.programAttributes) ? maxAttributesFromConfig - 1 : maxAttributesFromConfig;
 
+            $scope.hasFaceSearchPrivilege = function () {
+                var applicablePrivs = [Bahmni.Common.Constants.faceSearchPrivilege];
+                var userPrivs = _.map($rootScope.currentUser.privileges, function (privilege) {
+                    return privilege.name;
+                });
+                var result = _.some(userPrivs, function (privName) {
+                    return _.includes(applicablePrivs, privName);
+                });
+                return result;
+            };
+
             $scope.getAddressColumnName = function (column) {
                 var columnName = "";
                 var columnCamelCase = column.replace(/([-_][a-z])/g, function ($1) {
@@ -457,17 +468,6 @@ angular.module('bahmni.registration')
                         }
                     });
                 spinner.forPromise(searchPromise);
-            };
-
-            $scope.hasFaceSearchPrivilege = function () {
-                var applicablePrivs = [Bahmni.Common.Constants.faceSearchPrivilege];
-                var userPrivs = _.map($rootScope.currentUser.privileges, function (privilege) {
-                    return privilege.name;
-                });
-                var result = _.some(userPrivs, function (privName) {
-                    return _.includes(applicablePrivs, privName);
-                });
-                return result;
             };
 
             var isUserPrivilegedForSearch = function () {
