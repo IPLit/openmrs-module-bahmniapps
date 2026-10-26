@@ -16,6 +16,10 @@
 
             <div class="info-row">
                 <label>Policy Name</label>
+                <span>{{ getPatientAttribute('ABHA ID') }}</span>
+            </div>
+            <div class="info-row">
+                <label>Policy Name</label>
                 <span>{{ getPatientAttribute('Insurance Number') }}</span>
             </div>
 
@@ -48,6 +52,107 @@
                 </select>
             </div>
         </div>
+
+        <!-- PM-JAY workflow is isolated from the existing NHCX controller state. -->
+        <section class="pmjay-workflow-section" ng-controller="PmjayWorkflowController">
+            <h3>PM-JAY Claim Workflow</h3>
+            <p class="text-muted">PM-JAY eligibility, package selection, beneficiary verification, preauthorization, enhancement and final claim.</p>
+
+            <div class="alert alert-danger" ng-if="error">{{ error }}</div>
+
+            <h4>Beneficiary and Scheme Details</h4>
+            <div class="form-group">
+                <label>Beneficiary ID</label>
+                <input type="text" class="form-control" ng-model="model.beneficiaryId">
+            </div>
+            <div class="form-group">
+                <label>Family ID</label>
+                <input type="text" class="form-control" ng-model="model.familyId">
+            </div>
+            <div class="form-group">
+                <label>PM-JAY Hospital / Empanelment ID</label>
+                <input type="text" class="form-control" ng-model="model.providerEmpanelmentId">
+            </div>
+
+            <hr>
+            <h4>Package Selection</h4>
+            <div class="form-inline">
+                <input type="text" class="form-control" ng-model="packageQuery" placeholder="Package name or code">
+                <button type="button" class="btn btn-default" ng-click="searchPackages()" ng-disabled="busy">Search Packages</button>
+            </div>
+            <div class="alert alert-danger" ng-if="packageError">{{ packageError }}</div>
+            <div class="table-responsive" ng-if="packages.length">
+                <table class="table table-bordered table-striped">
+                    <thead><tr><th>Code</th><th>Package</th><th>Rate</th><th></th></tr></thead>
+                    <tbody>
+                    <tr ng-repeat="p in packages track by p.packageCode">
+                        <td>{{ p.packageCode }}</td><td>{{ p.packageName }}</td><td>{{ p.packageRate }}</td>
+                        <td><button type="button" class="btn btn-link" ng-click="selectPackage(p)">Select</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p ng-if="selectedPackage"><strong>Selected:</strong> {{ selectedPackage.packageCode }} - {{ selectedPackage.packageName }} ({{ selectedPackage.packageRate }})</p>
+
+            <hr>
+            <h4>Beneficiary Presence Verification</h4>
+            <div class="alert alert-danger" ng-if="biometricError">{{ biometricError }}</div>
+            <div class="form-group">
+                <label>Authentication Mode</label>
+                <select class="form-control" ng-model="biometric.authMode">
+                    <option value="FINGERPRINT">Fingerprint</option>
+                    <option value="IRIS">Iris</option>
+                    <option value="FACE_AUTH">Face authentication</option>
+                </select>
+            </div>
+            <button type="button" class="btn btn-primary" ng-click="startBiometric('PREAUTH')" ng-disabled="busy">Authenticate for Preauthorization</button>
+            <button type="button" class="btn btn-success" ng-click="startBiometric('DISCHARGE')" ng-disabled="busy">Authenticate for Discharge</button>
+
+            <div ng-if="faceQrUrl">
+                <p>Scan using the supported sandbox authentication app:</p>
+                <img ng-src="{{ faceQrUrl }}" alt="Face authentication QR code" style="max-width:220px;">
+                <button type="button" class="btn btn-default" ng-click="checkFaceCapture()" ng-disabled="busy">Check Face Capture</button>
+            </div>
+            <div class="form-group" ng-if="biometricResult && biometric.authMode !== 'FACE_AUTH'">
+                <label>Captured PID Data</label>
+                <textarea class="form-control" rows="3" ng-model="biometric.pidData"></textarea>
+            </div>
+            <div ng-if="biometricResult && biometric.authMode === 'FACE_AUTH'">
+                <div class="form-group"><label>Aadhaar Number</label><input type="password" class="form-control" ng-model="biometric.aadhaarNumber" autocomplete="off"></div>
+                <div class="form-group"><label>Aadhaar-linked Mobile Number</label><input type="tel" class="form-control" ng-model="biometric.mobileNumber" autocomplete="off"></div>
+            </div>
+            <button type="button" class="btn btn-primary" ng-if="biometricResult" ng-click="verifyBiometric()" ng-disabled="busy">Verify Beneficiary</button>
+            <p ng-if="biometricResult"><strong>Authentication status:</strong> {{ biometricResult.status }}</p>
+            <p ng-if="biometricProofs.PREAUTH" class="text-success">Preauthorization verification recorded</p>
+            <p ng-if="biometricProofs.DISCHARGE" class="text-success">Discharge verification recorded</p>
+
+            <details>
+                <summary>Use Biometric Exemption</summary>
+                <div class="form-group"><label>Exemption Reason</label><textarea class="form-control" ng-model="exemption.reason"></textarea></div>
+                <div class="checkbox"><label><input type="checkbox" ng-model="exemption.patientSigned"> Patient signed</label></div>
+                <div class="form-group"><label>Hospital Representative</label><input type="text" class="form-control" ng-model="exemption.hospitalRepresentative"></div>
+                <div class="checkbox"><label><input type="checkbox" ng-model="exemption.hospitalSigned"> Hospital representative signed</label></div>
+                <div class="form-group"><label>Exemption Supporting Document</label><input type="file" onchange="angular.element(this).scope().setExemptionFile(this)"></div>
+                <button type="button" class="btn btn-default" ng-click="uploadExemption()" ng-disabled="busy">Submit Exemption</button>
+            </details>
+
+            <hr>
+            <h4>PM-JAY Claim Actions</h4>
+            <div class="form-group"><label>Original Preauthorization Reference</label><input type="text" class="form-control" ng-model="model.preAuthRef"></div>
+            <div class="form-group"><label>Enhancement Reason</label><textarea class="form-control" ng-model="model.enhancementReason"></textarea></div>
+            <div class="form-group"><label>PM-JAY Supporting Documents</label><input type="file" multiple onchange="angular.element(this).scope().addFiles(this)"></div>
+
+            <button type="button" class="btn btn-primary" ng-click="submitPreauth()"
+                    ng-disabled="busy || !$parent.selectedVisitUuid || !selectedPackage || (!biometricProofs.PREAUTH && !biometricProofs.PREAUTH_EXEMPTION)">Submit PM-JAY Preauthorization</button>
+            <button type="button" class="btn btn-warning" ng-click="submitEnhancement()"
+                    ng-disabled="busy || !model.preAuthRef || (!biometricProofs.PREAUTH && !biometricProofs.PREAUTH_EXEMPTION)">Submit Enhancement</button>
+            <button type="button" class="btn btn-success" ng-click="submitClaim()"
+                    ng-disabled="busy || !model.preAuthRef || (!biometricProofs.DISCHARGE && !biometricProofs.DISCHARGE_EXEMPTION)">Submit Final PM-JAY Claim</button>
+
+            <div class="alert alert-danger" ng-if="actionError">{{ actionError }}</div>
+            <div class="alert alert-success" ng-if="actionMessage">{{ actionMessage }}</div>
+            <div ng-if="tracking"><h4>PM-JAY Request Tracking</h4><pre>{{ tracking | json }}</pre></div>
+        </section>
 
         <div class="claim-documents-section">
 
