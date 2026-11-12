@@ -13,8 +13,7 @@ angular.module('bahmni.claims').controller('PmjayWorkflowController',
         $scope.actionError = null;
         $scope.actionMessage = null;
 
-        // The parent NhcxController owns the shared visit selector.
-        function syncContext() {
+        function syncContext () {
             $scope.model.visitUuid = $scope.$parent.selectedVisitUuid;
             $scope.model.patientUuid = $stateParams.patientUuid || $scope.$parent.patientUuid || $scope.model.patientUuid;
         }
@@ -53,21 +52,42 @@ angular.module('bahmni.claims').controller('PmjayWorkflowController',
             return submitWithProof('DISCHARGE', pmjayService.submitClaim);
         };
 
-        $scope.startBiometric = function (process) {
+        $scope.startBiometric = function (process, patient) {
             syncContext();
+
+            var patientUuid = (patient && patient.uuid) || $scope.model.patientUuid;
+            var abhaNumber = $scope.getAbhaNumber(patient);
+            var payerName = $scope.getPatientAttribute('Insurance Company Name');
+
+            if (!patientUuid) {
+                $scope.biometricError = 'Patient information is not available.';
+                return;
+            }
+
+            if (!abhaNumber) {
+                $scope.biometricError = 'Patient ABHA Number is not available.';
+                return;
+            }
+
+            var request = {
+                patientUuid: patientUuid,
+                abhaNumber: abhaNumber,
+                payerName: payerName || null,
+                payerCode: null,
+                process: process,
+                authMode: $scope.biometric.authMode
+            };
+
             $scope.biometric.process = process;
             $scope.biometricResult = null;
             $scope.faceQrUrl = null;
             $scope.biometricError = null;
-            var request = angular.extend({}, $scope.biometric, {
-                patientUuid: $scope.model.patientUuid,
-                visitUuid: $scope.model.visitUuid,
-                abhaNumber: $scope.model.abhaId,
-                payerCode: $scope.model.payerCode
-            });
+
             return pmjayService.biometricInit(request).then(function (response) {
                 $scope.biometricResult = response.data;
-                if (response.data.qrUrl) $scope.faceQrUrl = response.data.qrUrl;
+                if (response.data.qrUrl) {
+                    $scope.faceQrUrl = response.data.qrUrl;
+                }
             }).catch(showBiometricError);
         };
 

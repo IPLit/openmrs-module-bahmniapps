@@ -649,6 +649,21 @@ angular.module('bahmni.claims')
             });
         };
 
+        $scope.getAbhaNumber = function (patient) {
+            if (!patient || !patient.identifiers) {
+                return null;
+            }
+
+            var abhaIdentifier = patient.identifiers.find(function (identifier) {
+                return identifier.identifierType &&
+                    identifier.identifierType.display &&
+                    identifier.identifierType.display.toLowerCase() === 'abha number' &&
+                    !identifier.voided;
+            });
+
+            return abhaIdentifier ? abhaIdentifier.identifier : null;
+        };
+
         $scope.getPatientAttribute = function (attributeName, defaultValue) {
             defaultValue = defaultValue || '-';
 

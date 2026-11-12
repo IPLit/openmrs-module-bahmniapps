@@ -15,8 +15,8 @@
             </div>
 
             <div class="info-row">
-                <label>Policy Name</label>
-                <span>{{ getPatientAttribute('ABHA ID') }}</span>
+                <label>ANHA ID</label>
+                <span>{{ getAbhaNumber(patient) || '-' }}</span>
             </div>
             <div class="info-row">
                 <label>Policy Name</label>
@@ -105,8 +105,8 @@
                     <option value="FACE_AUTH">Face authentication</option>
                 </select>
             </div>
-            <button type="button" class="btn btn-primary" ng-click="startBiometric('PREAUTH')" ng-disabled="busy">Authenticate for Preauthorization</button>
-            <button type="button" class="btn btn-success" ng-click="startBiometric('DISCHARGE')" ng-disabled="busy">Authenticate for Discharge</button>
+            <button type="button" class="btn btn-primary" ng-click="startBiometric('PREAUTH', patient)" ng-disabled="busy">Authenticate for Preauthorization</button>
+            <button type="button" class="btn btn-success" ng-click="startBiometric('DISCHARGE', patient)" ng-disabled="busy">Authenticate for Discharge</button>
 
             <div ng-if="faceQrUrl">
                 <p>Scan using the supported sandbox authentication app:</p>
