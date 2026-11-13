@@ -1,245 +1,453 @@
 .nhcx-container {
-    padding: 20px;
-    background: #f5f5f5;
+    padding: 24px;
+    background: #f3f6f8;
+    min-height: 100vh;
+    color: #344054;
+    font-family: inherit;
+    box-sizing: border-box;
 }
 
-.bahmni-box {
+.nhcx-container *,
+.nhcx-container *:before,
+.nhcx-container *:after {
+    box-sizing: border-box;
+}
+
+.nhcx-container .bahmni-box {
     background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 3px;
+    border: 1px solid #e1e7eb;
+    border-radius: 8px;
+    padding: 26px;
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto 22px;
+    box-shadow: 0 2px 8px rgba(30, 50, 60, 0.05);
+}
+
+.nhcx-container .section-title {
+    margin: 0 0 24px;
+    padding-bottom: 16px;
+    color: #285e60;
+    font-size: 22px;
+    font-weight: 600;
+    border-bottom: 1px solid #e8edef;
+}
+
+
+.nhcx-container .patient-info {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 20px;
+    margin-bottom: 28px;
     padding: 20px;
-    max-width: 900px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    background: #f7fafb;
+    border: 1px solid #e7edef;
+    border-radius: 7px;
 }
 
-.section-title {
-    margin-top: 0;
-    margin-bottom: 20px;
-    color: #555;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-    font-size: 20px;
-}
-
-.patient-info {
-    margin-bottom: 25px;
-}
-
-.info-row {
+.nhcx-container .info-row {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
-}
-
-.info-row label {
-    width: 180px;
-    font-weight: 600;
-    color: #666;
-}
-
-.info-row span {
-    color: #333;
-}
-
-.visit-select {
-    min-width: 350px;
-    padding: 8px 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    background: #fff;
-}
-
-.action-buttons {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.bahmni-btn {
-    background: #669999;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.bahmni-btn:hover:not(:disabled) {
-    opacity: 0.9;
-}
-
-.bahmni-btn.secondary {
-    background: #777;
-}
-
-.bahmni-btn:disabled {
-    background: #cccccc;
-    cursor: not-allowed;
-}
-.claim-history {
-    margin-top: 20px;
-}
-
-.claim-status.pending {
-    color: #f39c12;
-    font-weight: 600;
-}
-
-.claim-status.approved {
-    color: #27ae60;
-    font-weight: 600;
-}
-
-.claim-status.rejected {
-    color: #c0392b;
-    font-weight: 600;
-}
-.claim-actions {
-    white-space: nowrap;
-}
-
-.claim-actions .btn {
-    margin: 2px;
-}
-
-.communication-table-cell {
-    padding: 0 !important;
-    background: #f5f7f8;
-}
-
-.communication-panel {
-    padding: 16px;
-}
-
-.communication-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-}
-
-.communication-header h4 {
+    min-width: 0;
+    min-height: 42px;
     margin: 0;
-}
-
-.communication-message {
-    margin-bottom: 14px;
-    padding: 14px;
-    border: 1px solid #d8dfe3;
-    border-radius: 4px;
+    padding: 8px 12px;
     background: #fff;
+    border: 1px solid #edf0f2;
+    border-radius: 5px;
 }
 
-.communication-message.inbound {
-    border-left: 4px solid #f0a000;
-}
-
-.communication-message.outbound {
-    margin-left: 40px;
-    border-left: 4px solid #4b9e63;
-    background: #f4fbf6;
-}
-
-.message-heading {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-.communication-direction,
-.communication-status,
-.document-status,
-.required-label {
-    display: inline-block;
-    margin-left: 6px;
-    padding: 2px 7px;
-    border-radius: 10px;
-    background: #e9eef1;
-    font-size: 11px;
-}
-
-.required-label {
-    color: #fff;
-    background: #c0392b;
-}
-
-.message-topic {
-    margin-top: 10px;
+.nhcx-container .info-row label {
+    width: 145px;
+    min-width: 145px;
+    margin: 0;
+    color: #667780;
+    font-size: 13px;
     font-weight: 600;
 }
 
-.message-body {
-    margin-top: 8px;
-    white-space: pre-wrap;
+.nhcx-container .info-row span {
+    color: #263b42;
+    font-size: 14px;
+    font-weight: 500;
+    overflow-wrap: anywhere;
 }
 
-.requested-documents,
-.communication-reply {
-    margin-top: 14px;
-    padding-top: 12px;
-    border-top: 1px solid #ddd;
+.nhcx-container .visit-select {
+    min-width: 0;
+    width: 100%;
+    max-width: 400px;
+    padding: 8px 10px;
+    border: 1px solid #ccd6da;
+    border-radius: 5px;
+    background: #fff;
 }
 
-.requested-document {
-    margin-bottom: 10px;
-    padding: 10px;
-    background: #f7f8f9;
-    border-radius: 3px;
+
+/* =========================================
+   COMMON FORM CONTROLS
+========================================= */
+
+.nhcx-container .form-group {
+    margin-bottom: 17px;
 }
 
-.document-upload {
-    margin-top: 8px;
-}
-
-.document-upload input {
-    display: inline-block;
-    max-width: 300px;
-}
-
-.document-selection {
+.nhcx-container .form-group label,
+.nhcx-container .document-category label,
+.nhcx-container .document-description label {
     display: block;
-    margin-top: 8px;
+    margin-bottom: 7px;
+    color: #475b63;
+    font-size: 13px;
+    font-weight: 600;
 }
 
-.communication-reply .form-control {
-    margin-bottom: 10px;
+.nhcx-container .form-control {
+    width: 100%;
+    min-height: 38px;
+    padding: 8px 11px;
+    color: #34454c;
+    font-size: 14px;
+    border: 1px solid #ccd6da;
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.communication-error {
-    margin: 8px 0;
-    color: #b3261e;
+.nhcx-container .form-control:focus {
+    border-color: #669999;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 153, 153, 0.13);
 }
 
-.communication-success {
-    margin: 8px 0;
-    color: #287d3c;
+.nhcx-container textarea.form-control {
+    min-height: 85px;
+    resize: vertical;
 }
 
-.communication-empty,
-.communication-loading {
-    padding: 15px;
-    text-align: center;
-    color: #666;
-}
-.claim-documents-section {
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 1px solid #ddd;
+.nhcx-container input[type="file"] {
+    max-width: 100%;
 }
 
-.document-help {
-    margin: 5px 0 15px;
-    color: #666;
+.nhcx-container .form-inline {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.nhcx-container .form-inline .form-control {
+    width: auto;
+    min-width: 260px;
+}
+
+
+/* =========================================
+   PM-JAY WORKFLOW
+========================================= */
+
+.nhcx-container .pmjay-workflow-section {
+    margin-top: 25px;
+    padding: 22px;
+    background: #fff;
+    border: 1px solid #dce7e8;
+    border-radius: 8px;
+}
+
+.nhcx-container .pmjay-workflow-section > h3 {
+    margin: 0 0 10px;
+    padding-bottom: 15px;
+    color: #285e60;
+    font-size: 19px;
+    font-weight: 600;
+    border-bottom: 1px solid #e6eded;
+}
+
+.nhcx-container .pmjay-workflow-section > p.text-muted {
+    margin-bottom: 22px;
+    line-height: 1.6;
+    color: #718087;
     font-size: 13px;
 }
 
-.document-picker {
+.nhcx-container .pmjay-workflow-section h4 {
+    margin: 22px 0 16px;
+    padding-left: 11px;
+    color: #365e62;
+    font-size: 15px;
+    font-weight: 600;
+    border-left: 3px solid #669999;
+}
+
+.nhcx-container .pmjay-workflow-section hr {
+    margin: 24px 0;
+    border: 0;
+    border-top: 1px solid #e7edef;
+}
+
+.nhcx-container .pmjay-workflow-section details {
+    margin-top: 20px;
+    padding: 14px 16px;
+    background: #f7f9fa;
+    border: 1px solid #e1e8eb;
+    border-radius: 6px;
+}
+
+.nhcx-container .pmjay-workflow-section summary {
+    color: #456d70;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.nhcx-container .pmjay-workflow-section details[open] summary {
+    margin-bottom: 18px;
+}
+
+.nhcx-container .pmjay-workflow-section .checkbox {
+    margin: 12px 0;
+}
+
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.nhcx-container .btn,
+.nhcx-container .bahmni-btn,
+.nhcx-container .danger-btn {
+    min-height: 36px;
+    padding: 9px 16px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, opacity 0.2s;
+}
+
+.nhcx-container .btn-primary,
+.nhcx-container .bahmni-btn {
+    color: #fff;
+    background: #568c8c;
+    border-color: #568c8c;
+}
+
+.nhcx-container .btn-primary:hover:not(:disabled),
+.nhcx-container .bahmni-btn:hover:not(:disabled) {
+    background: #437777;
+    border-color: #437777;
+}
+
+.nhcx-container .btn-success {
+    color: #fff;
+    background: #438b69;
+    border-color: #438b69;
+}
+
+.nhcx-container .btn-success:hover:not(:disabled) {
+    background: #357653;
+}
+
+.nhcx-container .btn-warning {
+    color: #fff;
+    background: #c58b35;
+    border-color: #c58b35;
+}
+
+.nhcx-container .btn-warning:hover:not(:disabled) {
+    background: #ad7528;
+}
+
+.nhcx-container .btn-default,
+.nhcx-container .bahmni-btn.secondary {
+    color: #52636a;
+    background: #fff;
+    border-color: #cbd5d9;
+}
+
+.nhcx-container .btn-default:hover:not(:disabled) {
+    background: #f1f5f6;
+}
+
+.nhcx-container .btn-link {
+    color: #398080;
+    background: transparent;
+    border: none;
+    padding: 5px 8px;
+}
+
+.nhcx-container .danger-btn {
+    color: #b53e3e;
+    background: #fff;
+    border-color: #e6baba;
+}
+
+.nhcx-container .danger-btn:hover {
+    background: #fff2f2;
+}
+
+.nhcx-container .btn:disabled,
+.nhcx-container .bahmni-btn:disabled,
+.nhcx-container button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.nhcx-container .action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid #e8edef;
+}
+
+.nhcx-container .alert {
+    padding: 12px 15px;
+    margin: 14px 0;
+    border-radius: 5px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.nhcx-container .alert-danger,
+.nhcx-container .error-message,
+.nhcx-container .document-error {
+    color: #a33d38;
+    background: #fff3f1;
+    border: 1px solid #f0d0cc;
+}
+
+.nhcx-container .alert-success {
+    color: #31734e;
+    background: #eff8f2;
+    border: 1px solid #cce7d5;
+}
+
+.nhcx-container .text-success {
+    color: #378354;
+    font-weight: 500;
+}
+
+.nhcx-container .text-danger {
+    margin-top: 5px;
+    color: #b53e3e;
+    font-size: 12px;
+}
+
+.nhcx-container .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin: 15px 0;
+    border: 1px solid #e2e8eb;
+    border-radius: 6px;
+}
+
+.nhcx-container .table {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    background: #fff;
+    font-size: 13px;
+}
+
+.nhcx-container .table > thead > tr > th {
+    padding: 13px 12px;
+    color: #47646a;
+    background: #f0f5f5;
+    border-bottom: 1px solid #dce6e8;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.nhcx-container .table > tbody > tr > td {
+    padding: 12px;
+    color: #47565d;
+    vertical-align: middle;
+    border-top: 1px solid #edf0f2;
+}
+
+.nhcx-container .table-striped > tbody > tr:nth-of-type(odd) {
+    background: #fafcfc;
+}
+
+.nhcx-container .table > tbody > tr:hover {
+    background: #f2f8f7;
+}
+
+.nhcx-container .table-bordered {
+    border: 0;
+}
+
+.nhcx-container .table-bordered > thead > tr > th,
+.nhcx-container .table-bordered > tbody > tr > td {
+    border-left: 0;
+    border-right: 0;
+}
+
+.nhcx-container .nhcx-correlation-id {
+    max-width: 220px;
+    word-break: break-all;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+.nhcx-container .label {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.nhcx-container .label-success,
+.nhcx-container .label-approved {
+    color: #286a45;
+    background: #e4f4e9;
+}
+
+.nhcx-container .label-warning,
+.nhcx-container .label-pending {
+    color: #986716;
+    background: #fff3d9;
+}
+
+.nhcx-container .label-danger,
+.nhcx-container .label-rejected {
+    color: #a33d38;
+    background: #fde9e7;
+}
+
+.nhcx-container .claim-documents-section {
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid #e6edef;
+}
+
+.nhcx-container .claim-documents-section h3,
+.nhcx-container .nhcx-insurance-plan-section h3 {
+    margin: 0 0 10px;
+    color: #365f63;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.nhcx-container .document-help {
+    margin: 5px 0 18px;
+    color: #77858a;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.nhcx-container .document-picker {
     display: inline-block;
     cursor: pointer;
 }
 
-.document-picker input[type="file"] {
+.nhcx-container .document-picker input[type="file"] {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -247,116 +455,364 @@
     overflow: hidden;
 }
 
-.selected-documents {
-    margin-top: 15px;
+.nhcx-container .document-picker .btn {
+    display: inline-block;
+    color: #467d7d;
+    background: #f0f7f7;
+    border: 1px dashed #78a6a6;
 }
 
-.document-row {
+.nhcx-container .document-picker .btn:hover {
+    background: #e6f1f1;
+}
+
+.nhcx-container .selected-documents {
+    margin-top: 18px;
+}
+
+.nhcx-container .document-row {
     display: grid;
     grid-template-columns:
         minmax(180px, 1.4fr)
         minmax(170px, 1fr)
         minmax(180px, 1fr)
         auto;
-    gap: 12px;
+    gap: 14px;
     align-items: end;
-    margin-bottom: 10px;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: #fafafa;
+    margin-bottom: 12px;
+    padding: 16px;
+    background: #fafcfc;
+    border: 1px solid #e2e9eb;
+    border-radius: 6px;
 }
 
-.document-file {
+.nhcx-container .document-file {
     display: flex;
     flex-direction: column;
     min-width: 0;
+    padding-bottom: 5px;
 }
 
-.document-file strong {
+.nhcx-container .document-file strong {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: #40565e;
+    font-size: 13px;
 }
 
-.document-file small {
-    margin-top: 4px;
-    color: #777;
+.nhcx-container .document-file small {
+    margin-top: 6px;
+    color: #829096;
+    font-size: 11px;
 }
 
-.document-category label,
-.document-description label {
-    display: block;
-    margin-bottom: 5px;
+.nhcx-container .document-category label,
+.nhcx-container .document-description label {
     font-size: 12px;
-    color: #555;
 }
 
-.error-message,
-.document-error {
-    margin: 12px 0;
-    padding: 10px;
-    color: #a12622;
-    background: #fbe9e7;
-    border: 1px solid #ef9a9a;
-    border-radius: 3px;
+.nhcx-container .document-error,
+.nhcx-container .error-message {
+    margin: 14px 0;
+    padding: 12px 15px;
+    border-radius: 5px;
 }
+
+.nhcx-container .nhcx-insurance-plan-section {
+    width: 100%;
+    max-width: 1180px;
+    margin: 22px auto;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid #e1e7eb;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(30, 50, 60, 0.05);
+}
+
+.nhcx-container .nhcx-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.nhcx-container .nhcx-section-header h3 {
+    margin: 0 0 6px;
+}
+
+.nhcx-container .nhcx-section-header p {
+    margin: 0;
+    color: #77858a;
+    font-size: 13px;
+}
+
+.nhcx-container .nhcx-loading,
+.nhcx-container .empty-state {
+    padding: 28px 20px;
+    color: #77858a;
+    text-align: center;
+    background: #f8fafb;
+    border: 1px dashed #dce4e7;
+    border-radius: 6px;
+}
+
+.nhcx-container .nhcx-loading i {
+    margin-right: 7px;
+}
+
+.nhcx-container .button.confirm {
+    padding: 10px 17px;
+    color: #fff;
+    background: #568c8c;
+    border: 1px solid #568c8c;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.nhcx-container .button.confirm:hover:not(:disabled) {
+    background: #437777;
+}
+
+.nhcx-container .claim-history {
+    margin-top: 24px;
+}
+
+.nhcx-container .claim-status.pending {
+    color: #b47b20;
+    font-weight: 600;
+}
+
+.nhcx-container .claim-status.approved {
+    color: #348052;
+    font-weight: 600;
+}
+
+.nhcx-container .claim-status.rejected {
+    color: #bd4842;
+    font-weight: 600;
+}
+
+.nhcx-container .claim-actions {
+    white-space: nowrap;
+}
+
+.nhcx-container .claim-actions .btn {
+    margin: 2px;
+}
+
+.nhcx-container .communication-table-cell {
+    padding: 0 !important;
+    background: #f6f9fa;
+}
+
+.nhcx-container .communication-panel {
+    padding: 18px;
+}
+
+.nhcx-container .communication-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.nhcx-container .communication-header h4 {
+    margin: 0;
+}
+
+.nhcx-container .communication-message {
+    margin-bottom: 14px;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #dfe6e9;
+    border-radius: 6px;
+}
+
+.nhcx-container .communication-message.inbound {
+    border-left: 4px solid #d9a13e;
+}
+
+.nhcx-container .communication-message.outbound {
+    margin-left: 40px;
+    background: #f3faf5;
+    border-left: 4px solid #59a477;
+}
+
+.nhcx-container .message-heading {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.nhcx-container .communication-direction,
+.nhcx-container .communication-status,
+.nhcx-container .document-status,
+.nhcx-container .required-label {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    background: #e9eff1;
+    font-size: 11px;
+}
+
+.nhcx-container .required-label {
+    color: #fff;
+    background: #bd4842;
+}
+
+.nhcx-container .message-topic {
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.nhcx-container .message-body {
+    margin-top: 8px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.nhcx-container .requested-documents,
+.nhcx-container .communication-reply {
+    margin-top: 15px;
+    padding-top: 14px;
+    border-top: 1px solid #e1e7e9;
+}
+
+.nhcx-container .requested-document {
+    margin-bottom: 10px;
+    padding: 12px;
+    background: #f7f9fa;
+    border: 1px solid #e8edef;
+    border-radius: 5px;
+}
+
+.nhcx-container .document-upload {
+    margin-top: 10px;
+}
+
+.nhcx-container .document-upload input {
+    display: inline-block;
+    max-width: 300px;
+}
+
+.nhcx-container .document-selection {
+    display: block;
+    margin-top: 8px;
+}
+
+.nhcx-container .communication-reply .form-control {
+    margin-bottom: 10px;
+}
+
+.nhcx-container .communication-error {
+    margin: 8px 0;
+    color: #b3261e;
+}
+
+.nhcx-container .communication-success {
+    margin: 8px 0;
+    color: #287d3c;
+}
+
+.nhcx-container .communication-empty,
+.nhcx-container .communication-loading {
+    padding: 18px;
+    color: #718087;
+    text-align: center;
+}
+
+
+/* =========================================
+   RESPONSIVE DESIGN
+========================================= */
 
 @media (max-width: 900px) {
-    .document-row {
-        grid-template-columns: 1fr;
+    .nhcx-container {
+        padding: 14px;
+    }
+
+    .nhcx-container .bahmni-box,
+    .nhcx-container .nhcx-insurance-plan-section {
+        padding: 18px;
+    }
+
+    .nhcx-container .document-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .nhcx-container .patient-info {
+        gap: 10px;
     }
 }
-.nhcx-insurance-plan-section {
-    margin-top: 20px;
-    padding: 16px;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
 
-    .nhcx-section-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        margin-bottom: 15px;
-
-        h3 {
-            margin: 0 0 4px;
-        }
-
-        p {
-            margin: 0;
-        }
+@media (max-width: 600px) {
+    .nhcx-container {
+        padding: 10px;
     }
 
-    .nhcx-loading,
-    .empty-state {
-        padding: 20px;
-        text-align: center;
-        color: #777;
+    .nhcx-container .bahmni-box,
+    .nhcx-container .nhcx-insurance-plan-section,
+    .nhcx-container .pmjay-workflow-section {
+        padding: 14px;
     }
 
-    .nhcx-correlation-id {
-        max-width: 220px;
-        word-break: break-all;
-        font-family: monospace;
+    .nhcx-container .patient-info {
+        grid-template-columns: 1fr;
+        padding: 10px;
     }
 
-    .label {
-        display: inline-block;
-        padding: 5px 8px;
+    .nhcx-container .info-row {
+        flex-wrap: wrap;
+        gap: 5px;
     }
 
-    .text-danger {
-        margin-top: 5px;
-        font-size: 12px;
+    .nhcx-container .info-row label {
+        width: 100%;
+        min-width: 0;
     }
 
-    @media (max-width: 768px) {
-        .nhcx-section-header {
-            align-items: stretch;
-            flex-direction: column;
-        }
+    .nhcx-container .info-row span {
+        width: 100%;
+    }
+
+    .nhcx-container .visit-select {
+        max-width: 100%;
+    }
+
+    .nhcx-container .document-row {
+        grid-template-columns: 1fr;
+    }
+
+    .nhcx-container .nhcx-section-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .nhcx-container .form-inline {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .nhcx-container .form-inline .form-control {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .nhcx-container .action-buttons {
+        flex-direction: column;
+    }
+
+    .nhcx-container .action-buttons .btn {
+        width: 100%;
+    }
+
+    .nhcx-container .communication-message.outbound {
+        margin-left: 12px;
     }
 }
