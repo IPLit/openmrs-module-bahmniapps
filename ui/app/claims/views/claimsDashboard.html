@@ -48,24 +48,43 @@
             </div>
         </div>
 
-        <div ng-if="resultsPresent()" infinite-scroll="nextPage()" infinite-scroll-immediate-check="false"
-             infinite-scroll-disabled="noMoreResultsPresent" class="registraition-search-results-container">
+        <div ng-if="resultsPresent()"
+             infinite-scroll="nextPage()"
+             infinite-scroll-immediate-check="false"
+             infinite-scroll-disabled="noMoreResultsPresent"
+             class="registraition-search-results-container">
+
             <table class="table">
                 <thead>
                 <tr>
-                    <th><strong>{{ ::'REGISTRATION_LABEL_ID' | translate}}</strong></th>
-                    <th ng-repeat="type in ::extraIdentifierTypes track by $index"><strong>{{type.name}}</strong></th>
-                    <th><strong>{{ ::'REGISTRATION_LABEL_NAME' | translate}}</strong></th>
-                    <th><strong>{{ ::'REGISTRATION_LABEL_GENDER' | translate}}</strong></th>
+                    <th>
+                        <strong>{{ ::'REGISTRATION_LABEL_ID' | translate }}</strong>
+                    </th>
+                    <th>
+                        <strong>{{ ::'REGISTRATION_LABEL_NAME' | translate }}</strong>
+                    </th>
+                    <th>
+                        <strong>{{ ::'REGISTRATION_LABEL_GENDER' | translate }}</strong>
+                    </th>
+                    <th>
+                        <strong>Action</strong>
+                    </th>
                 </tr>
                 </thead>
+
                 <tbody>
-                <tr ng-repeat="result in results">
+                <tr ng-repeat="result in results track by result.uuid">
                     <td>
-                        {{::result.identifier || 'Not Assigned'}}
+                        {{ result.identifier || 'Not Assigned' }}
                     </td>
-                    <td>{{::result.givenName}} {{::result.middleName}} {{::result.familyName}}</td>
-                    <td>{{::result.gender}}</td>
+                    <td>
+                        {{ result.givenName }}
+                        {{ result.middleName }}
+                        {{ result.familyName }}
+                    </td>
+                    <td>
+                        {{ result.gender }}
+                    </td>
                     <td>
                         <a ng-click="preauth(result)">
                            Pre-auth
@@ -78,6 +97,9 @@
                         <a ng-click="submit(result)">
                            Submit Claim
                         </a>
+                    </td>
+                    <td>
+                        <a ng-click="openPmjayWorkflow(result)">PM-JAY Workflow</a>
                     </td>
                 </tr>
                 </tbody>

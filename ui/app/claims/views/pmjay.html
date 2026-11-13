@@ -1,0 +1,640 @@
+<div class="nhcx-container">
+    <div class="bahmni-box nhcx-main-card">
+        <div class="nhcx-page-heading">
+            <div>
+                <span class="nhcx-eyebrow">INSURANCE WORKFLOW</span>
+                <h2 class="section-title">NHCX Patient Insurance</h2>
+                <p class="nhcx-page-description">
+                    Review patient coverage details and manage the PM-JAY claim journey.
+                </p>
+            </div>
+        </div>
+
+        <section class="patient-info-section">
+            <div class="subsection-heading">
+                <h3>Patient and Policy Details</h3>
+                <span class="section-hint">Patient information from Bahmni</span>
+            </div>
+
+            <div class="patient-info">
+                <div class="info-row">
+                    <label>Patient Identifier</label>
+                    <span>{{ getPatientIdentifier() }}</span>
+                </div>
+                <div class="info-row">
+                    <label>Patient Name</label>
+                    <span>{{ getPatientName() }}</span>
+                </div>
+                <div class="info-row">
+                    <label>ABHA Number</label>
+                    <span>{{ getAbhaNumber(patient) || '-' }}</span>
+                </div>
+                <div class="info-row">
+                    <label>Policy Number</label>
+                    <span>{{ getPatientAttribute('Insurance Number') }}</span>
+                </div>
+                <div class="info-row">
+                    <label>Payor</label>
+                    <span>{{ getPatientAttribute('Insurance Company Name') }}</span>
+                </div>
+                <div class="info-row">
+                    <label>Policy Period</label>
+                    <span>{{ getCombinedAttributes(['Insurance Start Date', 'Insurance End Date'], ' to ') }}</span>
+                </div>
+                <div class="info-row visit-info-row">
+                    <label for="nhcxVisitSelect">Select Visit</label>
+                    <select id="nhcxVisitSelect"
+                            class="form-control visit-select"
+                            ng-model="selectedVisitUuid"
+                            ng-options="visit.uuid as (
+                                (visit.visitType.display || 'Visit') +
+                                ' - ' +
+                                (visit.startDatetime | date:'dd MMM yyyy, hh:mm a')
+                            ) for visit in visits">
+                        <option value="">Select Visit</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- PM-JAY workflow is isolated in its own controller scope. -->
+        <section class="pmjay-workflow-section" ng-controller="PmjayWorkflowController" ng-init="activeStage = 'eligibility'">
+            <div class="pmjay-heading">
+                <div>
+                    <span class="nhcx-eyebrow">PM-JAY</span>
+                    <h3>Claim workflow</h3>
+                    <p>Complete each stage in sequence. Package search is intentionally not included until its API contract is confirmed.</p>
+                </div>
+                <span class="workflow-context-chip">
+                    <i class="fa fa-shield"></i>
+                    Beneficiary verification
+                </span>
+            </div>
+
+            <div class="alert alert-danger" ng-if="error || actionError">
+                {{ actionError || error }}
+            </div>
+            <div class="alert alert-danger" ng-if="biometricError">
+                {{ biometricError }}
+            </div>
+            <div class="alert alert-success" ng-if="actionMessage">
+                {{ actionMessage }}
+            </div>
+
+            <nav class="pmjay-stage-nav" aria-label="PM-JAY claim stages">
+                <button type="button"
+                        class="pmjay-stage-tab"
+                        ng-class="{ 'active': activeStage === 'eligibility' }"
+                        ng-click="activeStage = 'eligibility'">
+                    <span class="stage-number">1</span>
+                    <span class="stage-tab-copy"><strong>Eligibility</strong><small>Beneficiary check</small></span>
+                </button>
+                <button type="button"
+                        class="pmjay-stage-tab"
+                        ng-class="{ 'active': activeStage === 'preauth' }"
+                        ng-click="activeStage = 'preauth'">
+                    <span class="stage-number">2</span>
+                    <span class="stage-tab-copy"><strong>Preauthorization</strong><small>Before treatment</small></span>
+                </button>
+                <button type="button"
+                        class="pmjay-stage-tab"
+                        ng-class="{ 'active': activeStage === 'enhancement' }"
+                        ng-click="activeStage = 'enhancement'">
+                    <span class="stage-number">3</span>
+                    <span class="stage-tab-copy"><strong>Enhancement</strong><small>Revise approved request</small></span>
+                </button>
+                <button type="button"
+                        class="pmjay-stage-tab"
+                        ng-class="{ 'active': activeStage === 'finalClaim' }"
+                        ng-click="activeStage = 'finalClaim'">
+                    <span class="stage-number">4</span>
+                    <span class="stage-tab-copy"><strong>Final claim</strong><small>After discharge</small></span>
+                </button>
+            </nav>
+
+            <!-- STAGE 1: ELIGIBILITY -->
+            <section class="pmjay-stage-panel" ng-show="activeStage === 'eligibility'">
+                <div class="stage-panel-heading">
+                    <div>
+                        <span class="stage-kicker">STAGE 01</span>
+                        <h4>Beneficiary eligibility</h4>
+                        <p>Enter the available scheme identifiers and verify beneficiary eligibility for the selected visit.</p>
+                    </div>
+                    <span class="stage-status-badge">First step</span>
+                </div>
+
+                <div class="pmjay-field-grid">
+                    <div class="form-group">
+                        <label for="pmjayBeneficiaryId">Beneficiary ID</label>
+                        <input id="pmjayBeneficiaryId" type="text" class="form-control"
+                               ng-model="model.beneficiaryId" placeholder="Enter beneficiary ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="pmjayFamilyId">Family ID</label>
+                        <input id="pmjayFamilyId" type="text" class="form-control"
+                               ng-model="model.familyId" placeholder="Enter family ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="pmjayEmpanelmentId">PM-JAY Hospital / Empanelment ID</label>
+                        <input id="pmjayEmpanelmentId" type="text" class="form-control"
+                               ng-model="model.providerEmpanelmentId" placeholder="Enter hospital empanelment ID">
+                    </div>
+                </div>
+
+                <div class="stage-note">
+                    <i class="fa fa-info-circle"></i>
+                    <span>Eligibility is a separate step. A successful response does not automatically submit a preauthorization request.</span>
+                </div>
+
+                <div class="stage-actions">
+                    <button type="button" class="btn btn-primary"
+                            ng-click="checkEligibility()"
+                            ng-disabled="busy || !$parent.selectedVisitUuid">
+                        <i class="fa fa-check-circle"></i>
+                        {{ busy ? 'Checking...' : 'Check Eligibility' }}
+                    </button>
+                    <button type="button" class="btn btn-default"
+                            ng-click="activeStage = 'preauth'">
+                        Continue to Preauthorization
+                        <i class="fa fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div class="pmjay-result-panel" ng-if="result">
+                    <div class="result-panel-heading">
+                        <strong>Latest PM-JAY response</strong>
+                        <span ng-if="result.claimState">{{ result.claimState }}</span>
+                    </div>
+                    <pre>{{ result | json }}</pre>
+                </div>
+            </section>
+
+            <!-- STAGE 2: PREAUTHORIZATION -->
+            <section class="pmjay-stage-panel" ng-show="activeStage === 'preauth'">
+                <div class="stage-panel-heading">
+                    <div>
+                        <span class="stage-kicker">STAGE 02</span>
+                        <h4>Preauthorization</h4>
+                        <p>Verify beneficiary presence for preauthorization, attach clinical documents, and submit the PM-JAY preauthorization request.</p>
+                    </div>
+                    <span class="stage-status-badge">Before treatment</span>
+                </div>
+
+                <div class="verification-card">
+                    <div class="subsection-heading">
+                        <div>
+                            <h5>Beneficiary presence verification</h5>
+                            <p>Complete PREAUTH authentication or submit a documented exemption.</p>
+                        </div>
+                        <span class="proof-indicator" ng-if="biometricProofs.PREAUTH || biometricProofs.PREAUTH_EXEMPTION">
+                            <i class="fa fa-check-circle"></i> Proof recorded
+                        </span>
+                    </div>
+
+                    <div class="pmjay-field-grid verification-fields">
+                        <div class="form-group">
+                            <label for="preauthAuthMode">Authentication mode</label>
+                            <select id="preauthAuthMode" class="form-control" ng-model="biometric.authMode">
+                                <option value="FINGERPRINT">Fingerprint</option>
+                                <option value="IRIS">Iris</option>
+                                <option value="FACE_AUTH">Face authentication</option>
+                            </select>
+                        </div>
+                        <div class="form-group verification-start">
+                            <label>Start authentication</label>
+                            <button type="button" class="btn btn-primary"
+                                    ng-click="startBiometric('PREAUTH', patient)"
+                                    ng-disabled="busy">
+                                <i class="fa fa-fingerprint"></i> Authenticate for preauthorization
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="face-capture-panel" ng-if="faceQrUrl">
+                        <div>
+                            <strong>Face authentication</strong>
+                            <p>Scan the QR code using the supported authentication app, then check the capture status.</p>
+                            <button type="button" class="btn btn-default"
+                                    ng-click="checkFaceCapture()"
+                                    ng-disabled="busy">
+                                <i class="fa fa-refresh"></i> Check face capture
+                            </button>
+                        </div>
+                        <img ng-src="{{ faceQrUrl }}" alt="Face authentication QR code">
+                    </div>
+
+                    <div class="form-group" ng-if="biometric.process === 'PREAUTH' && biometricResult && biometric.authMode !== 'FACE_AUTH'">
+                        <label for="preauthPidData">Captured PID data</label>
+                        <textarea id="preauthPidData" class="form-control" rows="3"
+                                  ng-model="biometric.pidData"
+                                  placeholder="Enter or paste captured PID data"></textarea>
+                    </div>
+
+                    <div class="pmjay-field-grid" ng-if="biometric.process === 'PREAUTH' && biometricResult && biometric.authMode === 'FACE_AUTH'">
+                        <div class="form-group">
+                            <label for="preauthAadhaar">Aadhaar number</label>
+                            <input id="preauthAadhaar" type="password" class="form-control"
+                                   ng-model="biometric.aadhaarNumber" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="preauthMobile">Aadhaar-linked mobile number</label>
+                            <input id="preauthMobile" type="tel" class="form-control"
+                                   ng-model="biometric.mobileNumber" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="verification-footer" ng-if="biometric.process === 'PREAUTH' && biometricResult">
+                        <span class="authentication-status">
+                            Authentication status: <strong>{{ biometricResult.status || 'Pending verification' }}</strong>
+                        </span>
+                        <button type="button" class="btn btn-primary"
+                                ng-click="verifyBiometric()" ng-disabled="busy">
+                            Verify beneficiary
+                        </button>
+                    </div>
+                    <p class="proof-success" ng-if="biometricProofs.PREAUTH">
+                        <i class="fa fa-check-circle"></i> Preauthorization verification recorded
+                    </p>
+                </div>
+
+                <details class="exemption-panel">
+                    <summary>Use biometric exemption</summary>
+                    <p class="field-help">Use only where biometric authentication cannot be completed, and provide the required supporting details.</p>
+                    <div class="form-group">
+                        <label for="preauthExemptionReason">Exemption reason</label>
+                        <textarea id="preauthExemptionReason" class="form-control"
+                                  ng-model="exemption.reason" rows="3"></textarea>
+                    </div>
+                    <div class="pmjay-field-grid">
+                        <div class="checkbox">
+                            <label><input type="checkbox" ng-model="exemption.patientSigned"> Patient signed</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="preauthRepresentative">Hospital representative</label>
+                            <input id="preauthRepresentative" type="text" class="form-control"
+                                   ng-model="exemption.hospitalRepresentative">
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" ng-model="exemption.hospitalSigned"> Hospital representative signed</label>
+                        </div>
+                        <div class="form-group">
+                            <label>Exemption supporting document</label>
+                            <input type="file" class="form-control"
+                                   onchange="angular.element(this).scope().setExemptionFile(this)">
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-default"
+                            ng-click="biometric.process = 'PREAUTH'; uploadExemption()" ng-disabled="busy">
+                        Submit exemption
+                    </button>
+                    <p class="proof-success" ng-if="biometricProofs.PREAUTH_EXEMPTION">
+                        <i class="fa fa-check-circle"></i> Preauthorization exemption recorded
+                    </p>
+                </details>
+
+                <div class="pmjay-documents-panel">
+                    <div class="subsection-heading">
+                        <div>
+                            <h5>Preauthorization supporting documents</h5>
+                            <p>Attach clinical notes, diagnostic reports, consent forms or other relevant documents.</p>
+                        </div>
+                        <label class="document-picker">
+                            <span class="btn btn-default"><i class="fa fa-paperclip"></i> Choose files</span>
+                            <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png"
+                                   onchange="angular.element(this).scope().addFiles(this)">
+                        </label>
+                    </div>
+                    <div class="selected-file-list" ng-if="files.length">
+                        <div class="selected-file-row" ng-repeat="file in files track by $index">
+                            <i class="fa fa-file-o"></i>
+                            <span>{{ file.name }}</span>
+                            <small>{{ file.size / 1024 | number:1 }} KB</small>
+                        </div>
+                    </div>
+                    <p class="field-help" ng-if="!files.length">No PM-JAY supporting documents selected.</p>
+                </div>
+
+                <div class="stage-actions">
+                    <button type="button" class="btn btn-primary"
+                            ng-click="submitPreauth()"
+                            ng-disabled="busy || !$parent.selectedVisitUuid || (!biometricProofs.PREAUTH && !biometricProofs.PREAUTH_EXEMPTION)">
+                        <i class="fa fa-paper-plane"></i> Submit PM-JAY preauthorization
+                    </button>
+                    <button type="button" class="btn btn-default"
+                            ng-click="activeStage = 'enhancement'">
+                        Continue to Enhancement <i class="fa fa-arrow-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- STAGE 3: ENHANCEMENT -->
+            <section class="pmjay-stage-panel" ng-show="activeStage === 'enhancement'">
+                <div class="stage-panel-heading">
+                    <div>
+                        <span class="stage-kicker">STAGE 03</span>
+                        <h4>Preauthorization enhancement</h4>
+                        <p>Submit a change to an existing preauthorization when additional treatment or a revised amount is required.</p>
+                    </div>
+                    <span class="stage-status-badge">During treatment</span>
+                </div>
+
+                <div class="stage-note">
+                    <i class="fa fa-info-circle"></i>
+                    <span>Use the original preauthorization reference to link this enhancement to the earlier request.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="enhancementPreAuthRef">Original preauthorization reference</label>
+                    <input id="enhancementPreAuthRef" type="text" class="form-control"
+                           ng-model="model.preAuthRef" placeholder="Enter original preauthorization reference">
+                </div>
+                <div class="form-group">
+                    <label for="enhancementReason">Reason for enhancement</label>
+                    <textarea id="enhancementReason" class="form-control" rows="4"
+                              ng-model="model.enhancementReason"
+                              placeholder="Explain why the preauthorization needs to be enhanced"></textarea>
+                </div>
+
+                <div class="proof-summary">
+                    <i class="fa fa-shield"></i>
+                    <span ng-if="biometricProofs.PREAUTH || biometricProofs.PREAUTH_EXEMPTION">
+                        PREAUTH verification or exemption is recorded.
+                    </span>
+                    <span ng-if="!biometricProofs.PREAUTH && !biometricProofs.PREAUTH_EXEMPTION">
+                        PREAUTH verification or exemption is required before submission.
+                    </span>
+                </div>
+
+                <div class="pmjay-documents-panel">
+                    <div class="subsection-heading">
+                        <div>
+                            <h5>Enhancement supporting documents</h5>
+                            <p>Add documents supporting the requested change. Selected files are shared with the PM-JAY submission.</p>
+                        </div>
+                        <label class="document-picker">
+                            <span class="btn btn-default"><i class="fa fa-paperclip"></i> Choose files</span>
+                            <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png"
+                                   onchange="angular.element(this).scope().addFiles(this)">
+                        </label>
+                    </div>
+                    <div class="selected-file-list" ng-if="files.length">
+                        <div class="selected-file-row" ng-repeat="file in files track by $index">
+                            <i class="fa fa-file-o"></i><span>{{ file.name }}</span>
+                            <small>{{ file.size / 1024 | number:1 }} KB</small>
+                        </div>
+                    </div>
+                    <p class="field-help" ng-if="!files.length">No PM-JAY supporting documents selected.</p>
+                </div>
+
+                <div class="stage-actions">
+                    <button type="button" class="btn btn-warning"
+                            ng-click="submitEnhancement()"
+                            ng-disabled="busy || !model.preAuthRef || (!biometricProofs.PREAUTH && !biometricProofs.PREAUTH_EXEMPTION)">
+                        <i class="fa fa-level-up"></i> Submit enhancement
+                    </button>
+                    <button type="button" class="btn btn-default"
+                            ng-click="activeStage = 'finalClaim'">
+                        Continue to Final Claim <i class="fa fa-arrow-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- STAGE 4: FINAL CLAIM -->
+            <section class="pmjay-stage-panel" ng-show="activeStage === 'finalClaim'">
+                <div class="stage-panel-heading">
+                    <div>
+                        <span class="stage-kicker">STAGE 04</span>
+                        <h4>Final claim submission</h4>
+                        <p>Complete discharge verification and submit the final PM-JAY claim against the original preauthorization.</p>
+                    </div>
+                    <span class="stage-status-badge">After discharge</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="finalPreAuthRef">Original preauthorization reference</label>
+                    <input id="finalPreAuthRef" type="text" class="form-control"
+                           ng-model="model.preAuthRef" placeholder="Enter original preauthorization reference">
+                </div>
+
+                <div class="verification-card">
+                    <div class="subsection-heading">
+                        <div>
+                            <h5>Discharge beneficiary verification</h5>
+                            <p>Complete DISCHARGE authentication or submit a documented exemption.</p>
+                        </div>
+                        <span class="proof-indicator" ng-if="biometricProofs.DISCHARGE || biometricProofs.DISCHARGE_EXEMPTION">
+                            <i class="fa fa-check-circle"></i> Proof recorded
+                        </span>
+                    </div>
+
+                    <div class="pmjay-field-grid verification-fields">
+                        <div class="form-group">
+                            <label for="dischargeAuthMode">Authentication mode</label>
+                            <select id="dischargeAuthMode" class="form-control" ng-model="biometric.authMode">
+                                <option value="FINGERPRINT">Fingerprint</option>
+                                <option value="IRIS">Iris</option>
+                                <option value="FACE_AUTH">Face authentication</option>
+                            </select>
+                        </div>
+                        <div class="form-group verification-start">
+                            <label>Start authentication</label>
+                            <button type="button" class="btn btn-primary"
+                                    ng-click="startBiometric('DISCHARGE', patient)"
+                                    ng-disabled="busy">
+                                <i class="fa fa-fingerprint"></i> Authenticate for discharge
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="face-capture-panel" ng-if="faceQrUrl">
+                        <div>
+                            <strong>Face authentication</strong>
+                            <p>Scan the QR code using the supported authentication app, then check the capture status.</p>
+                            <button type="button" class="btn btn-default"
+                                    ng-click="checkFaceCapture()" ng-disabled="busy">
+                                <i class="fa fa-refresh"></i> Check face capture
+                            </button>
+                        </div>
+                        <img ng-src="{{ faceQrUrl }}" alt="Face authentication QR code">
+                    </div>
+
+                    <div class="form-group" ng-if="biometric.process === 'DISCHARGE' && biometricResult && biometric.authMode !== 'FACE_AUTH'">
+                        <label for="dischargePidData">Captured PID data</label>
+                        <textarea id="dischargePidData" class="form-control" rows="3"
+                                  ng-model="biometric.pidData"
+                                  placeholder="Enter or paste captured PID data"></textarea>
+                    </div>
+
+                    <div class="pmjay-field-grid" ng-if="biometric.process === 'DISCHARGE' && biometricResult && biometric.authMode === 'FACE_AUTH'">
+                        <div class="form-group">
+                            <label for="dischargeAadhaar">Aadhaar number</label>
+                            <input id="dischargeAadhaar" type="password" class="form-control"
+                                   ng-model="biometric.aadhaarNumber" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="dischargeMobile">Aadhaar-linked mobile number</label>
+                            <input id="dischargeMobile" type="tel" class="form-control"
+                                   ng-model="biometric.mobileNumber" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="verification-footer" ng-if="biometric.process === 'DISCHARGE' && biometricResult">
+                        <span class="authentication-status">
+                            Authentication status: <strong>{{ biometricResult.status || 'Pending verification' }}</strong>
+                        </span>
+                        <button type="button" class="btn btn-primary"
+                                ng-click="verifyBiometric()" ng-disabled="busy">
+                            Verify beneficiary
+                        </button>
+                    </div>
+                    <p class="proof-success" ng-if="biometricProofs.DISCHARGE">
+                        <i class="fa fa-check-circle"></i> Discharge verification recorded
+                    </p>
+                </div>
+
+                <details class="exemption-panel">
+                    <summary>Use biometric exemption for discharge</summary>
+                    <p class="field-help">Provide the exemption reason and supporting details for discharge verification.</p>
+                    <div class="form-group">
+                        <label for="dischargeExemptionReason">Exemption reason</label>
+                        <textarea id="dischargeExemptionReason" class="form-control"
+                                  ng-model="exemption.reason" rows="3"></textarea>
+                    </div>
+                    <div class="pmjay-field-grid">
+                        <div class="checkbox">
+                            <label><input type="checkbox" ng-model="exemption.patientSigned"> Patient signed</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="dischargeRepresentative">Hospital representative</label>
+                            <input id="dischargeRepresentative" type="text" class="form-control"
+                                   ng-model="exemption.hospitalRepresentative">
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" ng-model="exemption.hospitalSigned"> Hospital representative signed</label>
+                        </div>
+                        <div class="form-group">
+                            <label>Exemption supporting document</label>
+                            <input type="file" class="form-control"
+                                   onchange="angular.element(this).scope().setExemptionFile(this)">
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-default"
+                            ng-click="biometric.process = 'DISCHARGE'; uploadExemption()" ng-disabled="busy">
+                        Submit exemption
+                    </button>
+                    <p class="proof-success" ng-if="biometricProofs.DISCHARGE_EXEMPTION">
+                        <i class="fa fa-check-circle"></i> Discharge exemption recorded
+                    </p>
+                </details>
+
+                <div class="pmjay-documents-panel">
+                    <div class="subsection-heading">
+                        <div>
+                            <h5>Final claim supporting documents</h5>
+                            <p>Attach discharge summary, final bill, diagnostic reports and other claim documents.</p>
+                        </div>
+                        <label class="document-picker">
+                            <span class="btn btn-default"><i class="fa fa-paperclip"></i> Choose files</span>
+                            <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png"
+                                   onchange="angular.element(this).scope().addFiles(this)">
+                        </label>
+                    </div>
+                    <div class="selected-file-list" ng-if="files.length">
+                        <div class="selected-file-row" ng-repeat="file in files track by $index">
+                            <i class="fa fa-file-o"></i><span>{{ file.name }}</span>
+                            <small>{{ file.size / 1024 | number:1 }} KB</small>
+                        </div>
+                    </div>
+                    <p class="field-help" ng-if="!files.length">No PM-JAY supporting documents selected.</p>
+                </div>
+
+                <div class="stage-actions">
+                    <button type="button" class="btn btn-success"
+                            ng-click="submitClaim()"
+                            ng-disabled="busy || !model.preAuthRef || (!biometricProofs.DISCHARGE && !biometricProofs.DISCHARGE_EXEMPTION)">
+                        <i class="fa fa-paper-plane"></i> Submit final PM-JAY claim
+                    </button>
+                </div>
+            </section>
+
+            <section class="pmjay-tracking-section" ng-if="tracking">
+                <div class="subsection-heading">
+                    <div>
+                        <h5>PM-JAY request tracking</h5>
+                        <p>Latest tracking response for the submitted request.</p>
+                    </div>
+                </div>
+                <pre>{{ tracking | json }}</pre>
+            </section>
+        </section>
+    </div>
+
+<!--    <section class="nhcx-insurance-plan-section">-->
+<!--        <div class="nhcx-section-header">-->
+<!--            <div>-->
+<!--                <h3>Insurance Plans</h3>-->
+<!--                <p class="text-muted">Fetch insurance plan details for this patient from NHCX.</p>-->
+<!--            </div>-->
+<!--            <button type="button" class="button confirm"-->
+<!--                    ng-click="fetchInsurancePlans()"-->
+<!--                    ng-disabled="insurancePlan.submitting || insurancePlan.loading">-->
+<!--                <i class="fa fa-spinner fa-spin" ng-if="insurancePlan.submitting"></i>-->
+<!--                <i class="fa fa-shield" ng-if="!insurancePlan.submitting"></i>-->
+<!--                <span ng-if="!insurancePlan.submitting">Get Insurance Plans</span>-->
+<!--                <span ng-if="insurancePlan.submitting">Submitting...</span>-->
+<!--            </button>-->
+<!--        </div>-->
+
+<!--        <div class="alert alert-success" ng-if="insurancePlan.message">{{ insurancePlan.message }}</div>-->
+<!--        <div class="alert alert-danger" ng-if="insurancePlan.error">{{ insurancePlan.error }}</div>-->
+
+<!--        <div class="nhcx-loading" ng-if="insurancePlan.loading">-->
+<!--            <i class="fa fa-spinner fa-spin"></i> Loading insurance plan requests...-->
+<!--        </div>-->
+
+<!--        <div class="table-responsive" ng-if="!insurancePlan.loading && insurancePlan.requests.length > 0">-->
+<!--            <table class="table table-bordered table-striped">-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                    <th>Policy Number</th>-->
+<!--                    <th>Provider ID</th>-->
+<!--                    <th>Payer</th>-->
+<!--                    <th>Correlation ID</th>-->
+<!--                    <th>Status</th>-->
+<!--                    <th>Submitted At</th>-->
+<!--                    <th>Action</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                <tr ng-repeat="request in insurancePlan.requests track by request.correlationId">-->
+<!--                    <td>{{ request.policyNumber || '-' }}</td>-->
+<!--                    <td>{{ request.providerId || '-' }}</td>-->
+<!--                    <td>{{ request.payerName || request.payerCode || '-' }}</td>-->
+<!--                    <td class="nhcx-correlation-id">{{ request.correlationId }}</td>-->
+<!--                    <td>-->
+<!--                            <span class="label" ng-class="getInsurancePlanStateClass(request)">-->
+<!--                                {{ getInsurancePlanStateLabel(request) }}-->
+<!--                            </span>-->
+<!--                        <div class="text-danger" ng-if="request.errorMessage">{{ request.errorMessage }}</div>-->
+<!--                    </td>-->
+<!--                    <td>{{ request.submittedAt | date:'dd-MMM-yyyy HH:mm' }}</td>-->
+<!--                    <td>-->
+<!--                        <button type="button" class="button"-->
+<!--                                ng-click="refreshInsurancePlanRequest(request)"-->
+<!--                                ng-disabled="request.refreshing">-->
+<!--                            <i class="fa fa-refresh" ng-class="{ 'fa-spin': request.refreshing }"></i>-->
+<!--                            Refresh-->
+<!--                        </button>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--            </table>-->
+<!--        </div>-->
+
+<!--        <div class="empty-state" ng-if="!insurancePlan.loading && insurancePlan.requests.length === 0">-->
+<!--            No insurance plan requests have been submitted for this patient.-->
+<!--        </div>-->
+<!--    </section>-->
+
+    <ng-include src="'views/claimsHistory.html'"></ng-include>
+</div>

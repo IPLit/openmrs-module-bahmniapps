@@ -264,9 +264,7 @@ angular.module('bahmni.claims')
                         mapCustomAttributesSearchResults(data);
                         mapAddressAttributesSearchResults(data);
                         mapProgramAttributesSearchResults(data);
-                        if (data.pageOfResults.length === 1) {
-                            var patient = data.pageOfResults[0];
-                        } else if (data.pageOfResults.length > 1) {
+                        if (data.pageOfResults.length > 0) {
                             $scope.results = data.pageOfResults;
                             $scope.noResultsMessage = null;
                         } else {
@@ -372,6 +370,13 @@ angular.module('bahmni.claims')
 
             $scope.isExtraIdentifierConfigured = function () {
                 return false;
+            };
+
+            $scope.openPmjayWorkflow = function (patient) {
+                $state.go("claims.pmjayWorkflow", {
+                    patient: patient,
+                    patientUuid: patient.uuid
+                });
             };
 
             $scope.preauth = function (patient) {

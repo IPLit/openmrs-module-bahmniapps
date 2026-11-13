@@ -56,6 +56,16 @@ angular.module('claims')
                 params: {
                     patient: null
                 }
+            }).state('claims.pmjayWorkflow', {
+                url: '/pmjay-workflow/:patientUuid',
+                templateUrl: 'views/pmjay.html',
+                controller: 'NhcxController',
+                data: {
+                    backLinks: [{label: "Home", state: "claims.dashboard", icon: "fa-home"}]
+                },
+                params: {
+                    patient: null
+                }
             });
             $httpProvider.defaults.headers.common['Disable-WWW-Authenticate'] = true;
             $bahmniTranslateProvider.init({app: 'claims', shouldMerge: true});
